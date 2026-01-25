@@ -1,0 +1,35 @@
+# Managed by chezmoi - edit in ~/.local/share/chezmoi/
+# mise global configuration
+# Docs: https://mise.jdx.dev/configuration.html
+
+[tools]
+# Global tool versions (LTS/stable defaults)
+# Project .tool-versions always overrides these
+node = "lts"
+python = "3.12"
+go = "1.22"
+rust = "stable"
+java = "temurin-25"
+ruby = "3"
+terraform = "1.9"
+
+[settings]
+# Enable reading .nvmrc, .python-version, etc.
+idiomatic_version_file_enable_tools = ["node", "python"]
+
+# Auto-install missing tools when entering directories
+not_found_auto_install = true
+exec_auto_install = true
+
+# Performance settings
+jobs = 4
+verbose = false
+
+# Prompt for confirmations on destructive operations
+yes = false
+
+[env]
+# Global environment variables (MISE-02: env var management)
+# Project-specific env vars can override via mise.toml [env] section
+# Example: NODE_ENV = "development"
+# Add global env vars here as needed

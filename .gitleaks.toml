@@ -1,0 +1,40 @@
+# Gitleaks configuration for chezmoi dotfiles repository
+# Detects secrets while allowing chezmoi template syntax and public age keys
+
+[extend]
+useDefault = true  # Inherit all built-in detection rules
+
+[allowlist]
+description = "Allowed patterns for chezmoi dotfiles"
+
+# Regex patterns to allow
+regexes = [
+  # Chezmoi template syntax
+  '''{{.*bitwarden.*}}''',
+  '''{{.*bitwardenFields.*}}''',
+  '''{{.*bitwardenAttachment.*}}''',
+  '''{{.*chezmoi\..*}}''',
+  '''{{.*onepassword.*}}''',
+  '''{{.*keepass.*}}''',
+  '''{{.*vault.*}}''',
+  # Age public keys (safe to commit)
+  '''age1[a-z0-9]{58}''',
+]
+
+# Stopwords - these are template function names, not actual secrets
+stopwords = [
+  "bitwarden",
+  "bitwardenFields",
+  "bitwardenAttachment",
+  "onepassword",
+  "keepass",
+  "chezmoi",
+]
+
+# Safe files that may contain example secrets
+paths = [
+  '''.gitleaks\.toml''',
+  '''.pre-commit-config\.yaml''',
+  '''.*\.md$''',
+  '''README.*''',
+]

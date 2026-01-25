@@ -1,0 +1,48 @@
+# Managed by chezmoi - do not edit directly
+#!/usr/bin/env zsh
+
+# Add directories to the PATH and prevent to add the same directory multiple times upon shell reload.
+add_to_path() {
+  if [[ -d "$1" ]] && [[ ":$PATH:" != *":$1:"* ]]; then
+    export PATH="$1:$PATH"
+  fi
+}
+
+{{- if eq .chezmoi.os "darwin" }}
+
+# macOS: GNU tools from Homebrew (prefer GNU over BSD)
+add_to_path "/opt/homebrew/opt/findutils/libexec/gnubin"
+add_to_path "/opt/homebrew/opt/grep/libexec/gnubin"
+add_to_path "/opt/homebrew/opt/gnu-sed/libexec/gnubin"
+
+# macOS: Homebrew Ruby
+add_to_path "/opt/homebrew/opt/ruby/bin"
+{{- end }}
+
+# Load dotfiles binaries
+add_to_path "$DOTFILES/bin"
+
+# Ruby (cross-platform rbenv)
+add_to_path "$HOME/.rbenv/bin"
+add_to_path "$HOME/.gem/ruby/3.4.0/bin"
+
+# npm
+add_to_path "$HOME/.npm-global/bin/"
+
+# pnpm
+export PNPM_HOME="$HOME/.local/share/pnpm"
+add_to_path "$PNPM_HOME"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+add_to_path "$BUN_INSTALL/bin"
+
+# volta
+export VOLTA_HOME="$HOME/.volta"
+add_to_path "$VOLTA_HOME/bin"
+
+# Load home bins
+add_to_path "$HOME/.bin"
+add_to_path "$HOME/.local/.bin"
+add_to_path "$HOME/.cargo/bin"
+add_to_path "$HOME/.rd/bin"

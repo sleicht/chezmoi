@@ -1,0 +1,29 @@
+# .zshrc - managed by chezmoi
+# To edit: chezmoi edit ~/.zshrc
+# To apply: chezmoi apply
+
+# === ZSH Configuration ===
+typeset -U path cdpath fpath manpath
+
+# History configuration
+HISTSIZE="10000"
+SAVEHIST="10000"
+HISTFILE="$HOME/.zsh_history"
+mkdir -p "$(dirname "$HISTFILE")"
+
+setopt HIST_FCNTL_LOCK
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt SHARE_HISTORY
+
+# XDG directories
+: "${XDG_CONFIG_HOME:=$HOME/.config}"
+: "${XDG_DATA_HOME:=$HOME/.local/share}"
+
+# === san-proxy (if available) ===
+if [ -f "$HOME/.bin/san-proxy.sh" ]; then
+    . "$HOME/.bin/san-proxy.sh"
+fi
+
+# === Plugin management (sheldon) ===
+eval "$(sheldon source)"

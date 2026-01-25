@@ -1,0 +1,30 @@
+# Pre-commit hooks for chezmoi dotfiles repository
+# Scans for secrets and enforces basic code quality
+
+# Install hooks with: pre-commit install --hook-type pre-commit --hook-type pre-push
+
+default_install_hook_types: [pre-commit, pre-push]
+
+repos:
+  # Basic file quality checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-yaml
+        name: Check YAML syntax
+      - id: end-of-file-fixer
+        name: Fix end of files
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+
+  # Secret scanning with gitleaks
+  # Runs on both pre-commit (warns) and pre-push (blocks)
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.2
+    hooks:
+      - id: gitleaks
+        name: Scan for secrets (gitleaks)
+        stages: [pre-commit, pre-push]
+        args: ['--verbose', '--config', '.gitleaks.toml']

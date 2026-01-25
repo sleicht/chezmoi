@@ -1,0 +1,44 @@
+{{- $machineType := "personal" -}}
+{{- $machineType = promptString "Machine type (client/personal/server)" "personal" -}}
+
+{{- $personalEmail := "" -}}
+{{- $personalEmail = promptString "Personal email address" -}}
+
+{{- $workEmail := "" -}}
+{{- if eq $machineType "client" -}}
+{{-   $workEmail = promptString "Work email address" -}}
+{{- end -}}
+
+{{- $osid := .chezmoi.os -}}
+{{- if hasKey .chezmoi "osRelease" -}}
+{{-   if hasKey .chezmoi.osRelease "id" -}}
+{{-     $osid = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
+{{-   end -}}
+{{- end }}
+
+# IDE-friendly workflow: edit in source, manually apply
+edit:
+  apply: false
+
+git:
+  autoCommit: true
+  autoPush: false
+
+diff:
+  pager: "less"
+
+encryption: "age"
+age:
+  identity: "{{ .chezmoi.homeDir }}/.config/age/key-{{ .machine_type }}.txt"
+  recipient: "age1hl7puvh5w5d49qgygxpj7q7zmc9gqyutqufk2p9x55mfm7ul742qg9vjn8"
+
+bitwarden:
+  command: "bw"
+
+data:
+  machine_type: {{ $machineType | quote }}
+  personal_email: {{ $personalEmail | quote }}
+{{- if eq $machineType "client" }}
+  work_email: {{ $workEmail | quote }}
+{{- end }}
+  osid: {{ $osid | quote }}

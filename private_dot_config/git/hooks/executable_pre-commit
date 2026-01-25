@@ -1,0 +1,29 @@
+#!/bin/bash
+# Global pre-commit hook — light secret scanning for all repos
+# Deployed by chezmoi to ~/.config/git/hooks/pre-commit
+
+# Delegate to repo-local hook if it exists (e.g., pre-commit framework)
+if [[ -x .git/hooks/pre-commit ]]; then
+  exec .git/hooks/pre-commit "$@"
+fi
+
+# Skip if gitleaks is not installed
+if ! command -v gitleaks &> /dev/null; then
+  exit 0
+fi
+
+# Scan staged changes
+gitleaks protect --staged --verbose 2>&1
+exit_code=$?
+
+if [[ $exit_code -ne 0 ]]; then
+  echo ""
+  echo "WARNING: Potential secrets detected in staged changes."
+  echo "Review the findings above. If these are false positives:"
+  echo "  - Add '# gitleaks:allow' inline comment"
+  echo "  - Or use SKIP=gitleaks git commit (use sparingly)"
+  echo ""
+fi
+
+# Warn only on commit (exit 0 regardless) — per user decision
+exit 0

@@ -1,0 +1,11 @@
+# Managed by chezmoi - do not edit directly
+# Machine type: {{ .machine_type }}
+# Generated: {{ now | date "2006-01-02" }}
+
+[user]
+  name = {{ (bitwarden "item" "dotfiles/shared/git-config").login.username }} # gitleaks:allow
+{{- if eq .machine_type "client" }}
+  email = {{ (bitwardenFields "item" "dotfiles/shared/git-config").work_email.value }} # gitleaks:allow
+{{- else }}
+  email = {{ (bitwardenFields "item" "dotfiles/shared/git-config").personal_email.value }} # gitleaks:allow
+{{- end }}

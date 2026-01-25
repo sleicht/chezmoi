@@ -1,0 +1,84 @@
+#!/bin/bash
+# Verify and fix permissions on sensitive files
+# Runs after every chezmoi apply to ensure proper security
+
+set -euo pipefail
+
+{{- if ne .chezmoi.os "windows" }}
+
+# Create log directory
+LOG_DIR="${HOME}/.local/state/chezmoi"
+mkdir -p "$LOG_DIR"
+LOG_FILE="${LOG_DIR}/permission-fixes.log"
+
+# Define sensitive files and their required permissions
+# Format: "path_pattern:permission"
+SENSITIVE_FILES=(
+    "${HOME}/.ssh/id_*:600"
+    "${HOME}/.ssh/config:600"
+    "${HOME}/.ssh/authorized_keys:600"
+    "${HOME}/.gnupg/private-keys-v1.d:700"
+    "${HOME}/.config/age/key-*.txt:600"
+    "${HOME}/.kube/config:600"
+    "${HOME}/.aws/credentials:600"
+    "${HOME}/.aws/config:644"
+    "${HOME}/.docker/config.json:600"
+    "${HOME}/.config/gcloud/application_default_credentials.json:600"
+    "${HOME}/.netrc:600"
+    "${HOME}/.git-credentials:600"
+    "${HOME}/.gitconfig_local:600"
+)
+
+# Platform-specific stat function
+get_permissions() {
+    local file="$1"
+    if [[ "$OSTYPE" == darwin* ]]; then
+        stat -f "%Lp" "$file" 2>/dev/null || echo ""
+    else
+        stat -c "%a" "$file" 2>/dev/null || echo ""
+    fi
+}
+
+# Check and fix permissions
+fixes_made=0
+
+for entry in "${SENSITIVE_FILES[@]}"; do
+    IFS=':' read -r pattern required_perm <<< "$entry"
+
+    # Expand glob pattern
+    for file in $pattern; do
+        # Skip if file doesn't exist
+        if [[ ! -e "$file" ]]; then
+            continue
+        fi
+
+        # Get current permissions
+        current_perm=$(get_permissions "$file")
+
+        # Skip if we couldn't get permissions
+        if [[ -z "$current_perm" ]]; then
+            continue
+        fi
+
+        # Check if permissions match
+        if [[ "$current_perm" != "$required_perm" ]]; then
+            # Log the fix
+            timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            echo "[$timestamp] Fixed: $file ($current_perm -> $required_perm)" >> "$LOG_FILE"
+
+            # Fix permissions
+            chmod "$required_perm" "$file"
+            echo "Fixed permissions: $file ($current_perm -> $required_perm)"
+
+            ((fixes_made++))
+        fi
+    done
+done
+
+if [[ $fixes_made -eq 0 ]]; then
+    echo "Permission verification complete - no fixes needed"
+else
+    echo "Permission verification complete - $fixes_made file(s) fixed (see $LOG_FILE)"
+fi
+
+{{- end }}

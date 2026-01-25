@@ -1,0 +1,22 @@
+#!/bin/bash
+# Generate mise completions for ZSH
+# Runs once after initial chezmoi apply
+
+set -e
+
+{{ if ne .chezmoi.os "darwin" -}}
+# Skip on non-macOS systems
+exit 0
+{{ end -}}
+
+# Create completions directory if needed
+COMP_DIR="${HOME}/.local/share/zsh/site-functions"
+mkdir -p "$COMP_DIR"
+
+# Generate mise completions
+if command -v mise > /dev/null; then
+    mise completion zsh > "$COMP_DIR/_mise"
+    echo "Generated mise completions at $COMP_DIR/_mise"
+else
+    echo "WARNING: mise not found, skipping completion generation"
+fi

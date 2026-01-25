@@ -1,0 +1,59 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+set -euo pipefail
+
+echo "==> Checking for Nix references to clean up..."
+
+# Check if Nix is installed
+if [ ! -d "/nix" ]; then
+    echo "==> Nix is not installed. Nothing to clean up."
+    exit 0
+fi
+
+echo "==> Nix installation detected. System-level removal requires manual steps."
+echo ""
+echo "Please run the following commands to completely remove Nix:"
+echo ""
+echo "# 1. Stop and remove Nix daemon"
+echo "sudo launchctl bootout system/org.nixos.nix-daemon 2>/dev/null || true"
+echo "sudo rm -f /Library/LaunchDaemons/org.nixos.nix-daemon.plist"
+echo "sudo rm -f /Library/LaunchDaemons/org.nixos.darwin-store.plist"
+echo ""
+echo "# 2. Remove Nix shell hooks from /etc files"
+echo "# (Back up first, then edit)"
+echo "sudo cp /etc/zshrc /etc/zshrc.backup-pre-nix-removal 2>/dev/null || true"
+echo "sudo cp /etc/bashrc /etc/bashrc.backup-pre-nix-removal 2>/dev/null || true"
+echo "sudo cp /etc/bash.bashrc /etc/bash.bashrc.backup-pre-nix-removal 2>/dev/null || true"
+echo "# Remove the Nix block (between '# Nix' and '# End Nix') from:"
+echo "#   /etc/zshrc"
+echo "#   /etc/bashrc"
+echo "#   /etc/bash.bashrc (if it exists)"
+echo ""
+echo "# 3. Remove Nix users and group"
+echo "for i in \$(seq 1 32); do"
+echo "  sudo dscl . -delete /Users/_nixbld\$i 2>/dev/null || true"
+echo "done"
+echo "sudo dscl . -delete /Groups/nixbld 2>/dev/null || true"
+echo ""
+echo "# 4. Remove Nix from synthetic.conf and fstab"
+echo "sudo sed -i '' '/^nix$/d' /etc/synthetic.conf 2>/dev/null || true"
+echo "sudo sed -i '' '/nix/d' /etc/fstab 2>/dev/null || true"
+echo ""
+echo "# 5. Remove Nix store volume"
+echo "sudo diskutil apfs deleteVolume /nix 2>/dev/null || true"
+echo ""
+echo "# 6. Remove Nix directories"
+echo "sudo rm -rf /nix"
+echo "sudo rm -rf /etc/nix"
+echo "rm -rf ~/.nix-profile"
+echo "rm -rf ~/.nix-defexpr"
+echo "rm -rf ~/.nix-channels"
+echo "rm -rf ~/.local/state/nix"
+echo "rm -rf ~/.cache/nix"
+echo ""
+echo "# 7. Reboot to complete volume removal"
+echo "echo 'Reboot required to finalise Nix removal.'"
+echo ""
+echo "==> Copy and run these commands manually (they require sudo)."
+echo "==> After reboot, verify with: ls /nix 2>/dev/null || echo 'Nix removed successfully'"
+{{ end -}}

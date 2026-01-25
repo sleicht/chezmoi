@@ -1,0 +1,26 @@
+{{- if eq .chezmoi.os "darwin" }}
+#!/bin/bash
+# Remove Homebrew-installed runtimes that conflict with mise
+# Runs once after initial chezmoi apply
+
+set -e
+
+echo "=== Cleaning up Homebrew runtimes (mise will manage these) ==="
+
+# Packages to remove (mise handles these)
+CONFLICTS=("node" "rust" "volta" "rbenv")
+
+for pkg in "${CONFLICTS[@]}"; do
+    if brew list "$pkg" &>/dev/null; then
+        echo "Removing $pkg (mise will manage this)..."
+        brew uninstall --ignore-dependencies "$pkg" || true
+    fi
+done
+
+# Note: python@3.x packages are kept as they're build dependencies
+# They use versioned paths (/opt/homebrew/opt/python@3.12/bin)
+# and don't conflict with mise's python management
+
+echo "=== Homebrew runtime cleanup complete ==="
+echo "Mise now exclusively manages: node, python, go, rust, java, ruby, terraform"
+{{- end }}

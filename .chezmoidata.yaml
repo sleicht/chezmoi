@@ -1,0 +1,297 @@
+# Static data shared across all machines
+# For machine-specific values, use .chezmoi.yaml.tmpl prompts
+
+# Package lists (used in Phase 4)
+packages:
+  darwin:
+    # Taps - merged from all sources, deduplicated
+    taps:
+      - "bramstein/webfonttools"
+      - "cj-systems/gitflow-cjs"
+      - "derailed/k9s"
+      - "ggozad/formulas"
+      - "jandedobbeleer/oh-my-posh"
+      - "koekeishiya/formulae"
+      - "mediosz/tap"
+      - "neurosnap/tap"
+      - "nikitabobko/tap"
+      - "olets/tap"
+      - "rcmdnk/file"
+      - "rsteube/homebrew-tap"
+      - "vet-run/vet"
+
+    # Common brews - packages needed on all machines
+    common_brews:
+      - "ack"
+      - "age"
+      - "archey4"
+      - "argocd"
+      - "atuin"
+      - "bash"
+      - "bat"
+      - "bat-extras"
+      - "bitwarden-cli"
+      - "bottom"
+      - "broot"
+      - "coreutils"
+      - "curl"
+      - "docker"
+      - "docker-completion"
+      - "docker-compose"
+      - "duf"
+      - "dust"
+      - "emojify"
+      - "eza"
+      - "fd"
+      - "findutils"
+      - "fzf"
+      - "gh"
+      - "git"
+      - "gitleaks"
+      - "git-delta"
+      - "git-flow-cjs"
+      - "git-lfs"
+      - "glab"
+      - "glances"
+      - "gnu-sed"
+      - "gnupg"
+      - "grep"
+      - "gs"
+      - "helm"
+      - "htop"
+      - "httpie"
+      - "imagemagick"
+      - "jfrog-cli"
+      - "jq"
+      - "just"
+      - "lazydocker"
+      - "lazygit"
+      - "lsd"
+      - "mackup"
+      - "mas"
+      - "mise"
+      - "moreutils"
+      - "ncdu"
+      - "neovim"
+      - "nushell"
+      - "oh-my-posh"
+      - "openssh"
+      - "opentofu"
+      - "p7zip"
+      - "peco"
+      - "phantom"
+      - "pre-commit"
+      - "pigz"
+      - "pkg-config"
+      - "podman"
+      - "pv"
+      - "rename"
+      - "ripgrep"
+      - "rlwrap"
+      - "rsteube/tap/carapace"
+      - "screen"
+      - "sfnt2woff"
+      - "sfnt2woff-zopfli"
+      - "shellcheck"
+      - "sheldon"
+      - "ssh-copy-id"
+      - "tmux"
+      - "tree"
+      - "trivy"
+      - "uv"
+      - "vale"
+      - "vbindiff"
+      - "vet-run"
+      - "wget"
+      - "woff2"
+      - "yabai"
+      - "zopfli"
+      - "zoxide"
+      - "zsh"
+      - "zsh-abbr"
+
+    # Common casks - casks needed on all machines
+    common_casks:
+      - "aerospace"
+      - "arc"
+      - "bartender"
+      - "beyond-compare"
+      - "claude-code"
+      - "dash"
+      - "deepl"
+      - "finicky"
+      - "fman"
+      - "gcloud-cli"
+      - "ghostty"
+      - "git-credential-manager"
+      - "istat-menus"
+      - "jetbrains-toolbox"
+      - "jordanbaird-ice"
+      - "karabiner-elements"
+      - "raycast"
+      - "slack"
+      - "sublime-text"
+      - "uhk-agent"
+      - "visualvm"
+      - "wezterm"
+
+    # Client-specific brews
+    client_brews:
+      - "autoconf"
+      - "btop"
+      - "derailed/k9s/k9s"
+      - "dive"
+      - "intelli-shell"
+      - "opencode"
+      - "pinentry-mac"
+      - "qqqa"
+      # rbenv removed - mise manages ruby
+      # rust removed - mise manages rust via stable channel
+      # volta removed - mise replaces volta for node management
+
+    # Client-specific casks
+    client_casks:
+      - "apache-directory-studio"
+      - "atuin-desktop"
+      - "bruno"
+      - "camunda-modeler"
+      - "citrix-workspace"
+      - "confluent-cli"
+      - "google-chrome@beta"
+      - "gpg-suite"
+      - "homerow"
+      - "insomnia"
+      - "jprofiler"
+      - "keepassxc"
+      - "keystore-explorer"
+      - "lens"
+      - "logi-options+"
+      - "logitech-g-hub"
+      - "miniconda"
+      - "miro"
+      - "mouseless@preview"
+      - "opcode"
+      - "opencode-desktop"
+      - "openlens"
+      - "oracle-jdk"
+      - "podman-desktop"
+      - "visual-studio-code"
+      - "voiceink"
+      - "wooshy"
+      - "yubico-authenticator"
+
+    # Fanaka-specific brews
+    fanaka_brews:
+      - "bats-core"
+      - "chezmoi"
+      - "exercism"
+      - "firebase-cli"
+      - "neurosnap/tap/zmx"
+      - "qqqa"
+      # rbenv removed - mise manages ruby
+      # rust removed - mise manages rust via stable channel
+      - "tailscale"
+
+    # Fanaka-specific casks
+    fanaka_casks:
+      - "adobe-digital-editions"
+      - "affinity-designer"
+      - "affinity-photo"
+      - "affinity-publisher"
+      - "balenaetcher"
+      - "calibre"
+      - "cardhop"
+      - "claude"
+      - "cleanmymac"
+      - "daisydisk"
+      - "devtoys"
+      - "dropbox"
+      - "fantastical"
+      - "gitbutler"
+      - "google-chrome"
+      - "google-drive"
+      - "google-earth-pro"
+      - "istherenet"
+      - "jaikoz"
+      - "kdrive"
+      - "kobo"
+      - "logi-options+"
+      - "logseq"
+      - "mouseless@preview"
+      - "ngrok"
+      - "nvidia-geforce-now"
+      - "ollama-app"
+      - "ollamac"
+      - "onlyoffice"
+      - "opencode-desktop"
+      - "orbstack"
+      - "path-finder"
+      - "raindropio"
+      - "readdle-spark"
+      - "roon"
+      - "stats"
+      - "steam"
+      - "swipeaerospace"
+      - "the-unarchiver"
+      - "tidal"
+      - "ubersicht"
+      - "virtualbox"
+      - "vivaldi"
+      - "vlc"
+      - "xld"
+      - "zen"
+
+    # Fonts - common to all machines
+    fonts:
+      - "font-fira-code"
+      - "font-fira-code-nerd-font"
+      - "font-fira-mono-nerd-font"
+      - "font-jetbrains-mono-nerd-font"
+      - "font-liberation"
+      - "font-liberation-nerd-font"
+      - "font-noto-nerd-font"
+
+    # Common MAS apps
+    common_mas:
+      Racompass: 1538380685
+      Xcode: 497799835
+
+    # Fanaka MAS apps
+    fanaka_mas:
+      "Ampado PRO": 1423295407
+      "iFinance 5": 1500241909
+      "kChat": 6443845553
+      "LilyView": 529490330
+      "MacFamilyTree 10": 1567970985
+      "Numbers": 409203825
+      "Phiewer PRO": 1270923434
+      "Tailscale": 1475387142
+
+# Bitwarden naming convention for dotfile secrets
+bitwarden:
+  folders:
+    shared: "dotfiles/shared"
+    client: "dotfiles/client"
+    personal: "dotfiles/personal"
+
+# Tool configurations
+tools:
+  mise:
+    # Global runtime versions - used in config.toml template
+    global_tools:
+      node: "lts"
+      python: "3.12"
+      go: "1.22"
+      rust: "stable"
+      java: "temurin-25"
+      ruby: "3"
+      terraform: "1.9"
+    settings:
+      jobs: 4
+      not_found_auto_install: true
+      exec_auto_install: true
+      idiomatic_version_files:
+        - node
+        - python
+  sheldon:
+    # Plugin list goes here when needed
