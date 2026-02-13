@@ -50,7 +50,11 @@ chezmoi diff              # preview pending changes
 chezmoi apply             # deploy to home directory
 ```
 
-> **Never edit files directly in `~/`** — always edit source files here, then apply.
+> **Prefer editing via chezmoi** — but if you edited a managed file directly in `~/`:
+> ```bash
+> chezmoi verify           # check what's drifted
+> chezmoi re-add ~/.zshrc  # pull change back into source (or just: chezmoi re-add)
+> ```
 
 ## 📁 Structure
 
