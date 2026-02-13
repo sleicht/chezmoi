@@ -31,6 +31,7 @@ steps/**
 # appear in the home directory.
 # -----------------------------------------------------------------------------
 README.md
+LICENSE
 LICENSE.md
 AGENTS.md
 AIDER.md
