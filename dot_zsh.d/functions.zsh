@@ -6,6 +6,12 @@
 
 # === Commonly used functions ===
 
+bw-unlock() {
+  local session
+  session=$(bw unlock --raw)
+  export BW_SESSION="$session"
+}
+
 pyclean () {
   # Cleans py[cod] and cache dirs in the current tree:
   fd -I -H \
