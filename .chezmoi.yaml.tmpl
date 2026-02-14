@@ -33,7 +33,7 @@ age:
   recipient: "age1hl7puvh5w5d49qgygxpj7q7zmc9gqyutqufk2p9x55mfm7ul742qg9vjn8"
 
 bitwarden:
-  command: "bw"
+  command: "{{ .chezmoi.homeDir }}/.local/bin/bw"
 
 data:
   machine_type: {{ $machineType | quote }}
