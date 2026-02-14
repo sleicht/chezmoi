@@ -1,5 +1,7 @@
-{{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
+{{- if ne .chezmoi.os "darwin" }}
+exit 0
+{{- end }}
 set -euo pipefail
 
 echo "==> Checking for Nix references to clean up..."
@@ -56,4 +58,3 @@ echo "echo 'Reboot required to finalise Nix removal.'"
 echo ""
 echo "==> Copy and run these commands manually (they require sudo)."
 echo "==> After reboot, verify with: ls /nix 2>/dev/null || echo 'Nix removed successfully'"
-{{ end -}}

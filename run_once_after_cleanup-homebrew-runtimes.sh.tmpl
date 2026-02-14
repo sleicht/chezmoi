@@ -1,5 +1,7 @@
-{{- if eq .chezmoi.os "darwin" }}
 #!/bin/bash
+{{- if ne .chezmoi.os "darwin" }}
+exit 0
+{{- end }}
 # Remove Homebrew-installed runtimes that conflict with mise
 # Runs once after initial chezmoi apply
 
@@ -23,4 +25,3 @@ done
 
 echo "=== Homebrew runtime cleanup complete ==="
 echo "Mise now exclusively manages: node, python, go, rust, java, ruby, terraform"
-{{- end }}

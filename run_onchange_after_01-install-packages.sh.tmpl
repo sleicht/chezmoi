@@ -1,9 +1,10 @@
-{{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
+{{- if ne .chezmoi.os "darwin" }}
+exit 0
+{{- end }}
 # .chezmoidata.yaml packages hash: {{ include ".chezmoidata.yaml" | sha256sum }}
 set -eufo pipefail
 
 echo "==> Installing Homebrew packages..."
 brew bundle --global --verbose
 echo "==> Homebrew package installation complete."
-{{ end -}}
