@@ -1,0 +1,28 @@
+#!/bin/bash
+{{- if ne .chezmoi.os "darwin" }}
+exit 0
+{{- end }}
+set -eufo pipefail
+
+# phantom has a hardcoded shebang pointing to Homebrew's node
+# (#!/opt/homebrew/opt/node/bin/node), but node is managed by mise so that
+# path doesn't exist. This wrapper invokes phantom through PATH-resolved node,
+# bypassing the broken shebang.
+
+PHANTOM_WRAPPER="{{ .chezmoi.homeDir }}/.local/bin/phantom"
+PHANTOM_REAL="/opt/homebrew/bin/phantom"
+
+if [[ ! -x "$PHANTOM_REAL" ]]; then
+  echo "phantom not found at $PHANTOM_REAL — skipping wrapper setup"
+  exit 0
+fi
+
+mkdir -p "$(dirname "$PHANTOM_WRAPPER")"
+
+cat > "$PHANTOM_WRAPPER" << 'WRAPPER'
+#!/bin/sh
+exec node /opt/homebrew/bin/phantom "$@"
+WRAPPER
+
+chmod +x "$PHANTOM_WRAPPER"
+echo "Created phantom wrapper at $PHANTOM_WRAPPER"
