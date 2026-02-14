@@ -27,9 +27,6 @@ export PKG_CONFIG_PATH="$(brew --prefix)/opt/openssl/lib/pkgconfig"
 # GPG agent:
 PATH="/usr/local/opt/gpg-agent/bin:$PATH"
 
-# npm:
-PATH="/usr/local/share/npm/bin:$PATH"
-
 export GEM_HOME=$HOME/.gem
 PATH=$GEM_HOME/bin:$PATH
 
@@ -89,8 +86,6 @@ export PAGER='less'
 # I don't use `bat` here, because I don't like the highlight.
 # sh -c 'col -b | bat -l man -p --theme="$BAT_THEME"'
 export MANPAGER='less'
-
-# === Version managers ===
 
 # === Histories ===
 # Enable persistent REPL history for `node`.
