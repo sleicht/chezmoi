@@ -6,5 +6,5 @@ if (( $+commands[carapace] )); then
   export CARAPACE_BRIDGES='bat,zsh,fish,bash,inshellisense,tofu' # optional
   zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
   # shellcheck disable=SC1090
-  source <(carapace _carapace)
+  _evalcache carapace _carapace
 fi

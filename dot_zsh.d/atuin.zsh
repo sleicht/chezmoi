@@ -4,5 +4,5 @@
 # === Advanced History ===
 if (( $+commands[atuin] )); then
 #  export ATUIN_NOBIND="true"
-  eval "$(atuin init zsh)"
+  _evalcache atuin init zsh
 fi

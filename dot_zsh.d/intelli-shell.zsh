@@ -3,5 +3,5 @@
 
 # === IntelliShell ===
 if (( $+commands[intelli-shell] )); then
-  eval "$(intelli-shell init zsh)"
+  _evalcache intelli-shell init zsh
 fi

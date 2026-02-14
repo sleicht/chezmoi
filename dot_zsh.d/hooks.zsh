@@ -8,7 +8,9 @@ elif [ "$(uname -m)" = "arm64" ]; then
 fi
 
 #if command -v direnv > /dev/null; then eval "$(direnv hook zsh)"; fi
-if (( $+commands[oh-my-posh] )); then eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh.omp.json)"; fi
+if (( $+commands[oh-my-posh] )); then
+  _evalcache oh-my-posh init zsh --config ~/.config/oh-my-posh.omp.json
+fi
 
 : "${REPOSITORIES_PATH:=$HOME/Repositories}"
 : "${GITHUB_REPOSITORIES_PATH=$REPOSITORIES_PATH/github.com}"

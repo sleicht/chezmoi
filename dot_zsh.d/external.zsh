@@ -53,7 +53,9 @@ _fzf_compgen_dir () {
 # but it works only for `z NAME<SPACE><TAB>`,
 # it does not work for `z NAME<TAB>`.
 # So, I have this usecase as a custom completion defined in `.completions`.
-eval "$(zoxide init zsh --no-cmd)"
+if (( $+commands[zoxide] )); then
+  _evalcache zoxide init zsh --no-cmd
+fi
 
 z () {
   # I need this function to setup custom code completion for `zoxide`.
