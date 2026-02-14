@@ -17,11 +17,11 @@ Personal dotfiles for macOS, managed with [chezmoi](https://www.chezmoi.io/) and
 
 | Category | Tools |
 |----------|-------|
-| **Shell** | ZSH · `.profile` (POSIX base env) · [Sheldon](https://sheldon.cli.rs/) (plugin manager) · [Oh My Posh](https://ohmyposh.dev/) (prompt) · [zsh-defer](https://github.com/romkatv/zsh-defer) (lazy loading) |
+| **Shell** | ZSH · `.profile` (POSIX base env) · [Sheldon](https://sheldon.cli.rs/) (plugin manager, cached source) · [Oh My Posh](https://ohmyposh.dev/) (prompt) · [zsh-defer](https://github.com/romkatv/zsh-defer) (lazy loading) · [evalcache](https://github.com/mroth/evalcache) (cached eval inits) |
 | **Terminal** | [Ghostty](https://ghostty.org/) · [Kitty](https://sw.kovidgoyal.net/kitty/) · [WezTerm](https://wezfurlong.org/wezterm/) |
 | **Editor** | EditorConfig · [aider](https://aider.chat/) (AI pair programming) |
 | **Git** | [Lazygit](https://github.com/jesseduffield/lazygit) · [Gitleaks](https://gitleaks.io/) (secret scanning) · global config + hooks |
-| **Dev Tools** | [mise](https://mise.jdx.dev/) (runtime manager) · [bat](https://github.com/sharkdp/bat) · [lsd](https://github.com/lsd-rs/lsd) · [btop](https://github.com/aristocratos/btop) · [atuin](https://atuin.sh/) (shell history) |
+| **Dev Tools** | [mise](https://mise.jdx.dev/) (runtime manager + tasks) · [bat](https://github.com/sharkdp/bat) · [lsd](https://github.com/lsd-rs/lsd) · [btop](https://github.com/aristocratos/btop) · [atuin](https://atuin.sh/) (shell history) · [worktrunk](https://worktrunk.dev/) (git worktree manager) |
 | **macOS** | [Homebrew](https://brew.sh/) (Brewfile) · [AeroSpace](https://github.com/nikitabobko/AeroSpace) (tiling WM) · [Karabiner-Elements](https://karabiner-elements.pqrs.org/) · [Finicky](https://github.com/nickmilo/finicky) (browser routing) |
 | **Security** | age encryption for SSH keys · Bitwarden for secrets · permission hardening |
 
@@ -74,19 +74,25 @@ chezmoi apply             # deploy to home directory
 .
 ├── dot_profile.tmpl                   # → ~/.profile (POSIX env vars + PATH)
 ├── dot_bash_profile                   # → ~/.bash_profile (sources .profile)
-├── dot_zshrc.tmpl                     # → ~/.zshrc (sources .profile, loads Sheldon)
-├── dot_zsh.d/                         # → ~/.zsh.d/ (modular ZSH config)
+├── dot_zshenv                         # → ~/.zshenv (startup timing, zprof, PATH dedup)
+├── dot_zprofile                       # → ~/.zprofile (Homebrew, mise shims)
+├── dot_zshrc.tmpl                     # → ~/.zshrc (sources .profile, cached Sheldon)
+├── dot_zlogin                         # → ~/.zlogin (background zcompile)
+├── dot_zsh.d/                         # → ~/.zsh.d/ (modular ZSH config, sync/defer split)
 ├── dot_Brewfile.tmpl                  # → ~/.Brewfile (machine-aware packages)
 ├── private_dot_config/                # → ~/.config/
-│   ├── sheldon/plugins.toml           #   plugin manager config
+│   ├── sheldon/plugins.toml           #   plugin manager (sync + defer groups)
 │   ├── ghostty/config                 #   terminal config
 │   ├── mise/config.toml.tmpl          #   runtime versions
+│   ├── mise/tasks/                    #   mise task scripts (dotfiles, git)
+│   ├── worktrunk/config.toml          #   git worktree manager config
 │   └── ...                            #   + 10 more tools
 ├── private_dot_ssh/                   # → ~/.ssh/
 │   ├── encrypted_private_config.age   #   age-encrypted SSH config
 │   └── encrypted_*.age                #   age-encrypted private keys
-├── run_once_before_*                  # bootstrap scripts (Homebrew, etc.)
-├── run_onchange_after_*               # package install/cleanup on change
+├── run_once_before_*                  # bootstrap scripts (Homebrew, bw-wrapper, etc.)
+├── run_once_after_*                   # one-time cleanup scripts
+├── run_onchange_after_*               # package install/cleanup/evalcache on change
 └── run_after_*                        # permission hardening on every apply
 ```
 
