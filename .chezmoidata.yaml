@@ -6,7 +6,6 @@ packages:
   darwin:
     # Taps - merged from all sources, deduplicated
     taps:
-      - "bramstein/webfonttools"
       - "cj-systems/gitflow-cjs"
       - "derailed/k9s"
       - "ggozad/formulas"
@@ -40,7 +39,6 @@ packages:
       - "docker-compose"
       - "duf"
       - "dust"
-      - "emojify"
       - "eza"
       - "fd"
       - "findutils"
@@ -87,8 +85,6 @@ packages:
       - "rlwrap"
       - "rsteube/tap/carapace"
       - "screen"
-      - "sfnt2woff"
-      - "sfnt2woff-zopfli"
       - "shellcheck"
       - "sheldon"
       - "ssh-copy-id"
@@ -103,7 +99,6 @@ packages:
       - "woff2"
       - "worktrunk"
       - "yabai"
-      - "zopfli"
       - "zoxide"
       - "zsh"
       - "zsh-abbr"
@@ -171,7 +166,6 @@ packages:
       - "mouseless@preview"
       - "opcode"
       - "opencode-desktop"
-      - "openlens"
       - "oracle-jdk"
       - "podman-desktop"
       - "visual-studio-code"
