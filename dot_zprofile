@@ -10,3 +10,8 @@ test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/bre
 
 # Adds .local binary files
 export PATH="$HOME/.local/bin:$PATH"
+
+# mise shims: immediate PATH access (full activation deferred in .zshrc)
+if (( $+commands[mise] )); then
+  eval "$(mise activate zsh --shims)"
+fi
