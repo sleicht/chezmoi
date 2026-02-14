@@ -9,6 +9,8 @@ Personal dotfiles for macOS, managed with [chezmoi](https://www.chezmoi.io/) and
 
 **[@sleicht](https://github.com/sleicht)** · Stephan Leicht Vogt · [Fanaka GmbH](https://fanaka.ch)
 
+> **Note:** These are my personal dotfiles, tailored to my workflow and preferences. You're welcome to fork, browse, or borrow ideas — but this isn't a supported project. No pull requests, issues, or support are expected.
+
 ---
 
 ## ✨ What's Inside
@@ -41,6 +43,16 @@ chezmoi init sleicht/chezmoi
 chezmoi diff    # preview changes
 chezmoi apply   # deploy
 ```
+
+### Forking
+
+If you'd like to use this as a starting point for your own dotfiles:
+
+1. Fork this repository
+2. Replace `.chezmoidata.yaml` with your own package lists
+3. Update `.chezmoi.yaml.tmpl` with your own prompts and age recipient
+4. Remove or replace the encrypted files (`encrypted_*.age`) with your own
+5. Run `chezmoi init --apply <your-username>/chezmoi`
 
 ## 🔧 Daily Workflow
 
