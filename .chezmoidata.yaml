@@ -104,6 +104,7 @@ packages:
       - "vet-run"
       - "wget"
       - "woff2"
+      - "worktrunk"
       - "yabai"
       - "zopfli"
       - "zoxide"
