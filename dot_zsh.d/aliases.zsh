@@ -12,7 +12,7 @@ alias -- -="z -"
 
 # Shortcuts
 #alias copyssh="pbcopy < $HOME/.ssh/id_ed25519.pub"
-alias reloadshell="omz reload"
+alias reloadshell="exec ${SHELL} -l"
 alias reloaddns="dscacheutil -flushcache && sudo killall -HUP mDNSResponder"
 
 ## Copy public key to clipboard
@@ -64,7 +64,7 @@ alias ibrew='arch -x86_64 /usr/local/bin/brew'
 alias mbrew='arch -ar64e /opt/homebrew/bin/brew'
 
 ## Get macOS Software Updates, and update installed Ruby gems, Homebrew, npm, and their installed packages
-alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup; npm install npm -g; npm update -g; sudo gem update --system; sudo gem update; sudo gem cleanup'
+alias update='sudo softwareupdate -i -a; brew update; brew upgrade; brew cleanup'
 
 # Google Chrome
 alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
@@ -137,7 +137,7 @@ alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && 
 alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
 
 ## URL-encode strings
-alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
+alias urlencode='python3 -c "import sys, urllib.parse; print(urllib.parse.quote_plus(sys.argv[1]))"'
 
 ## Merge PDF files, preserving hyperlinks
 # Usage: `mergepdf input{1,2,3}.pdf`
