@@ -73,7 +73,6 @@ packages:
       - "openssh"
       - "opentofu"
       - "p7zip"
-      - "peco"
       - "phantom"
       - "pre-commit"
       - "pigz"
