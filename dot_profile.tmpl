@@ -1,0 +1,122 @@
+# shellcheck shell=sh
+# ~/.profile - managed by chezmoi
+# POSIX-portable base environment sourced by bash/sh login shells and by zsh via .zshrc.
+# To edit: chezmoi edit ~/.profile
+# To apply: chezmoi apply
+
+# Double-source guard
+[ -n "$_PROFILE_SOURCED" ] && return
+_PROFILE_SOURCED=1
+
+# === Dotfiles location ===
+export DOTFILES="${HOME}/.dotfiles"
+
+# === XDG base directories ===
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+# === Architecture / Homebrew detection ===
+ARCH="$(uname -m)"
+if [ "$ARCH" = "x86_64" ]; then
+  export ARCHFLAGS="-arch x86_64"
+  export HOMEBREW_PREFIX="/usr/local"
+  export HOMEBREW_CELLAR="/usr/local/Cellar"
+  export HOMEBREW_REPOSITORY="/usr/local/Homebrew"
+
+  export BUNDLE_USER_HOME="$XDG_DATA_HOME/bundle/x86_64"
+  export BUNDLE_USER_CONFIG="$XDG_CONFIG_HOME/bundle/x86_64/config"
+  export BUNDLE_USER_CACHE="$XDG_CACHE_HOME/bundle/x86_64"
+  export BUNDLE_USER_PLUGIN="$XDG_DATA_HOME/bundle/x86_64/plugin"
+elif [ "$ARCH" = "arm64" ]; then
+  export ARCHFLAGS="-arch arm64"
+  export HOMEBREW_PREFIX="/opt/homebrew"
+  export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+  export HOMEBREW_REPOSITORY="/opt/homebrew"
+
+  export BUNDLE_USER_HOME="$XDG_DATA_HOME/bundle/arm64"
+  export BUNDLE_USER_CONFIG="$XDG_CONFIG_HOME/bundle/arm64/config"
+  export BUNDLE_USER_CACHE="$XDG_CACHE_HOME/bundle/arm64"
+  export BUNDLE_USER_PLUGIN="$XDG_DATA_HOME/bundle/arm64/plugin"
+fi
+unset ARCH
+
+# === Compiler flags ===
+# Required because openssl is keg-only in brew (see: brew info openssl)
+export LDFLAGS="-L$HOMEBREW_PREFIX/opt/openssl/lib"
+export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openssl/include"
+export PKG_CONFIG_PATH="$HOMEBREW_PREFIX/opt/openssl/lib/pkgconfig"
+
+# === Locale ===
+export LANG='en_US.UTF-8'
+export LC_ALL='en_US.UTF-8'
+
+# === Python ===
+export PYTHONIOENCODING='UTF-8'
+
+# === Tools ===
+export HOMEBREW_NO_ANALYTICS=1
+
+# === Runtime homes ===
+export GEM_HOME="$HOME/.gem"
+export PNPM_HOME="$HOME/.local/share/pnpm"
+export BUN_INSTALL="$HOME/.bun"
+export VOLTA_HOME="$HOME/.volta"
+
+# === PATH ===
+add_to_path() {
+  [ -d "$1" ] || return
+  case ":$PATH:" in *":$1:"*) return ;; esac
+  PATH="$1:$PATH"
+}
+
+{{- if eq .chezmoi.os "darwin" }}
+
+# macOS: GNU tools from Homebrew (prefer GNU over BSD)
+add_to_path "$HOMEBREW_PREFIX/opt/findutils/libexec/gnubin"
+add_to_path "$HOMEBREW_PREFIX/opt/grep/libexec/gnubin"
+add_to_path "$HOMEBREW_PREFIX/opt/gnu-sed/libexec/gnubin"
+
+# macOS: Homebrew Ruby
+add_to_path "$HOMEBREW_PREFIX/opt/ruby/bin"
+{{- end }}
+
+# Dotfiles binaries
+add_to_path "$DOTFILES/bin"
+
+# Ruby (rbenv)
+add_to_path "$HOME/.rbenv/bin"
+
+# npm
+add_to_path "$HOME/.npm-global/bin"
+
+# pnpm
+add_to_path "$PNPM_HOME"
+
+# bun
+add_to_path "$BUN_INSTALL/bin"
+
+# volta
+add_to_path "$VOLTA_HOME/bin"
+
+# Home bins
+add_to_path "$HOME/.bin"
+add_to_path "$HOME/.local/.bin"
+add_to_path "$HOME/.cargo/bin"
+add_to_path "$HOME/.rd/bin"
+add_to_path "$GEM_HOME/bin"
+
+# GPG agent
+add_to_path "/usr/local/opt/gpg-agent/bin"
+
+export PATH
+
+# === Sourced scripts ===
+
+# uv / other tools that install to ~/.local/bin/env
+if [ -f "$HOME/.local/bin/env" ]; then
+  # shellcheck source=/dev/null
+  . "$HOME/.local/bin/env"
+fi
+

@@ -1,0 +1,4 @@
+# ~/.bash_profile - managed by chezmoi
+# Bash login shells read this instead of ~/.profile, so we source it explicitly.
+
+. "$HOME/.profile"

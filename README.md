@@ -15,7 +15,7 @@ Personal dotfiles for macOS, managed with [chezmoi](https://www.chezmoi.io/) and
 
 | Category | Tools |
 |----------|-------|
-| **Shell** | ZSH · [Sheldon](https://sheldon.cli.rs/) (plugin manager) · [Oh My Posh](https://ohmyposh.dev/) (prompt) · [zsh-defer](https://github.com/romkatv/zsh-defer) (lazy loading) |
+| **Shell** | ZSH · `.profile` (POSIX base env) · [Sheldon](https://sheldon.cli.rs/) (plugin manager) · [Oh My Posh](https://ohmyposh.dev/) (prompt) · [zsh-defer](https://github.com/romkatv/zsh-defer) (lazy loading) |
 | **Terminal** | [Ghostty](https://ghostty.org/) · [Kitty](https://sw.kovidgoyal.net/kitty/) · [WezTerm](https://wezfurlong.org/wezterm/) |
 | **Editor** | EditorConfig · [aider](https://aider.chat/) (AI pair programming) |
 | **Git** | [Lazygit](https://github.com/jesseduffield/lazygit) · [Gitleaks](https://gitleaks.io/) (secret scanning) · global config + hooks |
@@ -60,7 +60,9 @@ chezmoi apply             # deploy to home directory
 
 ```
 .
-├── dot_zshrc                          # → ~/.zshrc (loads Sheldon + modules)
+├── dot_profile.tmpl                   # → ~/.profile (POSIX env vars + PATH)
+├── dot_bash_profile                   # → ~/.bash_profile (sources .profile)
+├── dot_zshrc.tmpl                     # → ~/.zshrc (sources .profile, loads Sheldon)
 ├── dot_zsh.d/                         # → ~/.zsh.d/ (modular ZSH config)
 ├── dot_Brewfile.tmpl                  # → ~/.Brewfile (machine-aware packages)
 ├── private_dot_config/                # → ~/.config/
