@@ -7,21 +7,16 @@ elif [ "$(uname -m)" = "arm64" ]; then
   : "${HOMEBREW_PREFIX:=/opt/homebrew}"
 fi
 
-#if command -v direnv > /dev/null; then eval "$(direnv hook zsh)"; fi
+# Prompt: must be sync (sets precmd hooks)
 if (( $+commands[oh-my-posh] )); then
   _evalcache oh-my-posh init zsh --config ~/.config/oh-my-posh.omp.json
 fi
 
-: "${REPOSITORIES_PATH:=$HOME/Repositories}"
-: "${GITHUB_REPOSITORIES_PATH=$REPOSITORIES_PATH/github.com}"
-
+# FZF keybindings: must be sync (Ctrl+T, Alt+C widgets)
 if [ -r "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh" ]; then source "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh"; fi
 if [ -r "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh" ]; then source "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"; fi
+
+# Atuin keybindings: must be sync (Ctrl+R widget)
 source "$XDG_CONFIG_HOME/atuin/atuin-keybindings.zsh"
 
-#if [ -r "$GITHUB_REPOSITORIES_PATH/seebi/dircolors-solarized/dircolors.ansi-universal" ]; then eval $(gdircolors "$GITHUB_REPOSITORIES_PATH/seebi/dircolors-solarized/dircolors.ansi-universal"); fi
-
 preexec() { print '' }
-
-unset GITHUB_REPOSITORIES_PATH
-unset REPOSITORIES_PATH

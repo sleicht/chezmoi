@@ -13,10 +13,6 @@ fi
 #FPATH="/run/current-system/sw/share/zsh/zsh-abbr":$FPATH
 #FPATH="$HOMEBREW_PREFIX/share/zsh-abbr":$FPATH
 #fpath=("$RUSTUP_HOME" "$HOMEBREW_PREFIX/opt/zsh-completions/share/zsh-completions" $fpath)
-_cache_hosts=()
-if [[ -r $HOME/.ssh/config ]]; then
-  _cache_hosts=(${${${(M)${(f)"$(<$HOME/.ssh/config)"}:#Host *}#Host }:#*[*?]*})
-fi
 
 autoload -Uz colors
 colors
@@ -44,11 +40,3 @@ zstyle ':completion:*:sudo:*' command-path $HOMEBREW_PREFIX/sbin $HOMEBREW_PREFI
 zstyle ':completion:*:processes' command 'ps x -o pid,s,args'
 zstyle ':completion:*:*:docker:*' option-stacking yes
 zstyle ':completion:*:*:docker-*:*' option-stacking yes
-
-# bun completions
-[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
-
-# phantom completions (requires working node runtime)
-if (( $+commands[phantom] )); then
-  eval "$(phantom completion zsh 2>/dev/null)" || true
-fi

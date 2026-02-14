@@ -1,7 +1,7 @@
 # Managed by chezmoi - edit in ~/.local/share/chezmoi/dot_zsh.d/
 #!/usr/bin/env zsh
 
-# `external.zsh` handles all complex external tools.
+# `external-sync.zsh` handles FZF exports and compgen functions.
 
 
 # === fzf ===
@@ -44,24 +44,3 @@ _fzf_compgen_dir () {
 }
 
 # See `.completions` file for all the list of fast tab completions.
-
-
-# === z ===
-# https://github.com/ajeetdsouza/zoxide
-
-# `zoxide` has an option to use `fzf` to provide completions natively,
-# but it works only for `z NAME<SPACE><TAB>`,
-# it does not work for `z NAME<TAB>`.
-# So, I have this usecase as a custom completion defined in `.completions`.
-if (( $+commands[zoxide] )); then
-  _evalcache zoxide init zsh --no-cmd
-fi
-
-z () {
-  # I need this function to setup custom code completion for `zoxide`.
-  \__zoxide_z "$@"
-}
-
-# === mise ===
-# https://mise.jdx.dev/
-eval "$(mise activate zsh)"
