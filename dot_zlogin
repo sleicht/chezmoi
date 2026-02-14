@@ -1,0 +1,11 @@
+# .zlogin - managed by chezmoi
+# Runs once per login session (not per shell)
+
+# Compile zsh completion dump in background for faster loading
+{
+  local zcompdump="${ZDOTDIR:-$HOME}/.zcompdump"
+
+  if [[ -s "$zcompdump" && (! -s "${zcompdump}.zwc" || "$zcompdump" -nt "${zcompdump}.zwc") ]]; then
+    zcompile "$zcompdump"
+  fi
+} &!

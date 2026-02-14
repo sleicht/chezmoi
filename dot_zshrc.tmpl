@@ -31,4 +31,15 @@ fi
 {{- end }}
 
 # === Plugin management (sheldon) ===
-eval "$(sheldon source)"
+() {
+  local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/sheldon"
+  local cache_file="$cache_dir/source.zsh"
+  local lock_file="${XDG_CONFIG_HOME:-$HOME/.config}/sheldon/plugins.lock"
+
+  if [[ ! -f "$cache_file" || "$lock_file" -nt "$cache_file" ]]; then
+    mkdir -p "$cache_dir"
+    sheldon source > "$cache_file"
+  fi
+
+  source "$cache_file"
+}
