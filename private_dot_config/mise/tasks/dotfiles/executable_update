@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="Pull latest dotfiles and apply"
+#MISE alias="u"
+
+set -euo pipefail
+
+echo "Pulling and applying dotfiles..."
+chezmoi update --apply --verbose
+
+echo "Done — dotfiles updated and applied"

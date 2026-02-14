@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#MISE description="Validate shell functionality"
+
+set -euo pipefail
+
+SCRIPT_PATH="${HOME}/.local/share/chezmoi/scripts/zsh-smoke-test"
+
+if [[ ! -x "$SCRIPT_PATH" ]]; then
+  echo "ERROR: Smoke test script not found: $SCRIPT_PATH" >&2
+  exit 1
+fi
+
+echo "Running ZSH smoke test..."
+"$SCRIPT_PATH"
+
+echo "Done — smoke test passed"

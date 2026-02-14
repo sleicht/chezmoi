@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
-#MISE description="Verify dotfile configuration"
-#MISE sources=["~/.zshrc", "~/.config/mise/config.toml"]
-#MISE outputs=["/tmp/dotfiles-verify.timestamp"]
+#MISE description="Run configuration verification checks"
+#MISE alias="v"
 
 set -euo pipefail
 
-echo "Verifying dotfile configuration..."
-echo "This is a stub task - Phase 24 will implement real verification logic"
+SCRIPT_PATH="${HOME}/.local/share/chezmoi/scripts/verify-configs.sh"
 
-touch /tmp/dotfiles-verify.timestamp
+if [[ ! -x "$SCRIPT_PATH" ]]; then
+  echo "ERROR: Verification script not found: $SCRIPT_PATH" >&2
+  exit 1
+fi
+
+echo "Running verification checks..."
+"$SCRIPT_PATH"
+
+echo "Done — verification complete"

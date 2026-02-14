@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+#MISE description="Preview dotfile changes before applying"
+#MISE alias="d"
+
+set -euo pipefail
+
+echo "Showing pending dotfile changes..."
+echo ""
+
+chezmoi diff
+
+echo ""
+echo "No changes made. Run 'mise run dotfiles:apply' to apply."
