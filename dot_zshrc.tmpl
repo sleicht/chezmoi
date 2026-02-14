@@ -20,10 +20,12 @@ setopt SHARE_HISTORY
 : "${XDG_CONFIG_HOME:=$HOME/.config}"
 : "${XDG_DATA_HOME:=$HOME/.local/share}"
 
-# === san-proxy (if available) ===
+{{- if eq .machine_type "client" }}
+# === san-proxy (work network proxy) ===
 if [ -f "$HOME/.bin/san-proxy.sh" ]; then
     . "$HOME/.bin/san-proxy.sh"
 fi
+{{- end }}
 
 # === Plugin management (sheldon) ===
 eval "$(sheldon source)"
