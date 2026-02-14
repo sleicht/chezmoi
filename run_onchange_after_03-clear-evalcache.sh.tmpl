@@ -1,0 +1,19 @@
+#!/bin/bash
+# Clears evalcache when tracked tool versions change.
+# Only tracks tools cached via evalcache (Phase 20-02):
+# oh-my-posh, zoxide, atuin, carapace
+# Does NOT track mise (directory-dependent, not cached).
+# Does NOT track intelli-shell (not available on this system).
+
+{{- if eq .chezmoi.os "darwin" }}
+# oh-my-posh: {{ output "oh-my-posh" "--version" | trim | sha256sum }}
+# zoxide: {{ output "zoxide" "--version" | trim | sha256sum }}
+# atuin: {{ output "atuin" "--version" | trim | sha256sum }}
+# carapace: {{ output "carapace" "--version" | trim | sha256sum }}
+{{- end }}
+
+set -eufo pipefail
+
+echo "==> Tool version changed, clearing evalcache..."
+rm -rf "${HOME}/.zsh-evalcache" 2>/dev/null || true
+echo "==> Evalcache cleared. Next shell startup will regenerate cache."
