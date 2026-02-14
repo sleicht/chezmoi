@@ -8,7 +8,7 @@ elif [ "$(uname -m)" = "arm64" ]; then
 fi
 
 #if command -v direnv > /dev/null; then eval "$(direnv hook zsh)"; fi
-if command -v oh-my-posh > /dev/null; then eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh.omp.json)"; fi
+if (( $+commands[oh-my-posh] )); then eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh.omp.json)"; fi
 
 : "${REPOSITORIES_PATH:=$HOME/Repositories}"
 : "${GITHUB_REPOSITORIES_PATH=$REPOSITORIES_PATH/github.com}"
@@ -16,8 +16,6 @@ if command -v oh-my-posh > /dev/null; then eval "$(oh-my-posh init zsh --config 
 if [ -r "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh" ]; then source "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh"; fi
 if [ -r "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh" ]; then source "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"; fi
 source "$XDG_CONFIG_HOME/atuin/atuin-keybindings.zsh"
-if [ -r "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then source "$HOMEBREW_PREFIX/opt/zsh-autosuggestions/share/zsh-autosuggestions/zsh-autosuggestions.zsh"; fi
-if [ -r "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then source "$HOMEBREW_PREFIX/opt/zsh-syntax-highlighting/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"; fi
 
 #if [ -r "$GITHUB_REPOSITORIES_PATH/seebi/dircolors-solarized/dircolors.ansi-universal" ]; then eval $(gdircolors "$GITHUB_REPOSITORIES_PATH/seebi/dircolors-solarized/dircolors.ansi-universal"); fi
 

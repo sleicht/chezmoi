@@ -2,6 +2,6 @@
 #!/usr/bin/env zsh
 
 # === IntelliShell ===
-if command -v intelli-shell > /dev/null; then
+if (( $+commands[intelli-shell] )); then
   eval "$(intelli-shell init zsh)"
 fi

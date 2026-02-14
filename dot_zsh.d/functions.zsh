@@ -284,7 +284,7 @@ clone () {
       local existing_repo
 
       # Try to use fd if available (faster), fall back to find
-      if command -v fd >/dev/null 2>&1; then
+      if (( $+commands[fd] )); then
         existing_repo=$(fd -t d -H "^${REPO_NAME}$" "$search_dir" 2>/dev/null | eval "fzf $fzf_opts 2>/dev/null")
       else
         existing_repo=$(find "$search_dir" -type d -name "$REPO_NAME" 2>/dev/null | eval "fzf $fzf_opts 2>/dev/null")

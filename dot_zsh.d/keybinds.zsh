@@ -13,7 +13,7 @@ bindkey "^[r" redo
 bindkey '^[[A' up-line-or-search
 bindkey '^[[B' down-line-or-search
 
-if command -v abbr >/dev/null; then
+if (( $+commands[abbr] )); then
   bindkey '^X' abbr-expand
   bindkey '^[ ' magic-space
 fi

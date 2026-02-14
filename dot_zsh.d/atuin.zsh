@@ -2,7 +2,7 @@
 #!/usr/bin/env zsh
 
 # === Advanced History ===
-if command -v atuin > /dev/null; then
+if (( $+commands[atuin] )); then
 #  export ATUIN_NOBIND="true"
   eval "$(atuin init zsh)"
 fi
