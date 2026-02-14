@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-#MISE description="Apply dotfiles with verbose output"
+#MISE description="Apply dotfiles configuration"
 #MISE alias="a"
 
 set -euo pipefail
 
 echo "Applying dotfiles..."
-chezmoi apply --verbose
+chezmoi apply
 
 echo "Done — dotfiles applied successfully"
