@@ -4,6 +4,15 @@
 #
 # This file is sourced for all shells, not just interactive ones like .zshrc.
 
+# Startup time monitoring
+zmodload zsh/datetime
+ZSHRC_START_TIME=$EPOCHREALTIME
+
+# Conditional profiling (run: ZSH_PROFILE_STARTUP=1 zsh -i -c exit)
+if [[ -n "$ZSH_PROFILE_STARTUP" ]]; then
+  zmodload zsh/zprof
+fi
+
 # Ensure PATH and FPATH entries are unique
 typeset -U PATH path FPATH fpath
 

@@ -43,3 +43,22 @@ fi
 
   source "$cache_file"
 }
+
+# === Startup monitoring ===
+if [[ -n "$ZSHRC_START_TIME" ]]; then
+  typeset -F _zshrc_elapsed
+  _zshrc_elapsed=$(( (EPOCHREALTIME - ZSHRC_START_TIME) * 1000 ))
+  export LAST_SHELL_STARTUP_MS=${_zshrc_elapsed%.*}
+
+  if (( LAST_SHELL_STARTUP_MS > 300 )); then
+    print -P "%F{yellow}Warning: shell startup ${LAST_SHELL_STARTUP_MS}ms (exceeds 300ms target)%f"
+    print -P "%F{yellow}  Run: ZSH_PROFILE_STARTUP=1 zsh -i -c exit%f"
+  fi
+
+  unset ZSHRC_START_TIME _zshrc_elapsed
+fi
+
+# Conditional profiling output
+if [[ -n "$ZSH_PROFILE_STARTUP" ]]; then
+  zprof | head -20
+fi
