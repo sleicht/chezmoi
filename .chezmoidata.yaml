@@ -48,7 +48,6 @@ packages:
       - "gh"
       - "git"
       - "gitleaks"
-      - "git-delta"
       - "glab"
       - "glances"
       - "gnu-sed"
