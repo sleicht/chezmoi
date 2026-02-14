@@ -55,12 +55,17 @@ dir = "plugins"
 use = ["{gitfast,zoxide,kubectl,gcloud,mvn,macos}/*.plugin.zsh"]
 apply = ["defer"]
 
-[plugins.dotfiles]
+[plugins.dotfiles-sync]
 local = "~/.zsh.d"
-use = ["*.zsh"]
+use = ["prompt.zsh", "external-sync.zsh", "completions-sync.zsh", "aliases.zsh", "functions.zsh", "variables.zsh", "keybinds.zsh", "path.zsh"]
 apply = ["source"]
 
 [plugins.dotfiles-private]
 local = "~/.zsh.d.private"
 use = ["*.zsh"]
 apply = ["source"]
+
+[plugins.dotfiles-defer]
+local = "~/.zsh.d"
+use = ["external-defer.zsh", "completions-defer.zsh", "atuin.zsh", "carapace.zsh", "intelli-shell.zsh", "ssh-defer.zsh", "lens-completion.zsh", "wt.zsh", "xlaude.zsh"]
+apply = ["defer"]
