@@ -22,10 +22,6 @@ add_to_path "/opt/homebrew/opt/ruby/bin"
 # Load dotfiles binaries
 add_to_path "$DOTFILES/bin"
 
-# Ruby (cross-platform rbenv)
-add_to_path "$HOME/.rbenv/bin"
-add_to_path "$HOME/.gem/ruby/3.4.0/bin"
-
 # npm
 add_to_path "$HOME/.npm-global/bin/"
 
@@ -36,10 +32,6 @@ add_to_path "$PNPM_HOME"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 add_to_path "$BUN_INSTALL/bin"
-
-# volta
-export VOLTA_HOME="$HOME/.volta"
-add_to_path "$VOLTA_HOME/bin"
 
 # Load home bins
 add_to_path "$HOME/.bin"
