@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#MISE description="Verify dotfile configuration"
+#MISE sources=["~/.zshrc", "~/.config/mise/config.toml"]
+#MISE outputs=["/tmp/dotfiles-verify.timestamp"]
+
+set -euo pipefail
+
+echo "Verifying dotfile configuration..."
+echo "This is a stub task - Phase 24 will implement real verification logic"
+
+touch /tmp/dotfiles-verify.timestamp

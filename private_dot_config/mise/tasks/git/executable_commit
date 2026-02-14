@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#MISE description="Create conventional commit with Jira prefix"
+
+set -euo pipefail
+
+echo "Placeholder: Phase 25 will implement conventional commit workflow with Jira prefix"
+echo "This task proves cross-namespace capability (git:commit alongside dotfiles:*)"

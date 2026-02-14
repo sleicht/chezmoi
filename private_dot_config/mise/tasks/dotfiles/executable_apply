@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#MISE description="Apply dotfiles with chezmoi"
+#MISE alias="a"
+
+set -euo pipefail
+
+chezmoi apply --verbose
