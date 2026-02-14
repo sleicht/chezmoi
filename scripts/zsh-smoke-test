@@ -1,0 +1,97 @@
+#!/usr/bin/env zsh
+#
+# zsh-smoke-test - Validate critical ZSH shell functionality
+# Exit 0 if all checks pass, exit 1 if any fail
+#
+
+# Check counters
+PASS_COUNT=0
+FAIL_COUNT=0
+
+# Test helper
+check() {
+  local description="$1"
+  local test_command="$2"
+
+  if eval "$test_command"; then
+    echo "[PASS] $description"
+    ((PASS_COUNT++))
+  else
+    echo "[FAIL] $description"
+    ((FAIL_COUNT++))
+  fi
+}
+
+# Run checks
+echo "ZSH Smoke Test"
+echo "=============="
+echo ""
+
+# 1. oh-my-posh available
+check "oh-my-posh command available" '(( $+commands[oh-my-posh] ))'
+
+# 2. Prompt configured
+check "Prompt is configured" '[[ -n "$PROMPT" ]]'
+
+# 3. mise shims on PATH (or mise command available)
+# mise shims may only be on PATH in login shells (.zprofile), but mise should be available
+check "mise available (command or shims)" '[[ "$PATH" == *mise/shims* ]] || (( $+commands[mise] ))'
+
+# 4. Completion system initialised
+check "Completion system initialised" '(( $+_comps ))'
+
+# 5. Atuin keybinding
+check "Atuin keybinding configured" 'bindkey 2>/dev/null | grep -q atuin'
+
+# 6. Critical tools available
+check "git available" '(( $+commands[git] ))'
+check "zoxide available" '(( $+commands[zoxide] ))'
+check "fzf available" '(( $+commands[fzf] ))'
+check "bat available" '(( $+commands[bat] ))'
+check "lsd available" '(( $+commands[lsd] ))'
+
+# 7. No double plugin loads
+# Check that zsh-autosuggestions is loaded (sync)
+# zsh-syntax-highlighting is deferred so may not load in all contexts
+autosuggestions_loaded=0
+
+# Check if autosuggestions is active (widget exists)
+if zle -l 2>/dev/null | grep -q autosuggest; then
+  autosuggestions_loaded=1
+fi
+
+# Verify autosuggestions loaded
+check "zsh-autosuggestions loaded" '[[ $autosuggestions_loaded -eq 1 ]]'
+
+# For syntax highlighting, just verify sheldon will source it (it's deferred)
+# Check if sheldon config includes it
+if [[ -f ~/.config/sheldon/plugins.toml ]]; then
+  if grep -q "zsh-syntax-highlighting" ~/.config/sheldon/plugins.toml 2>/dev/null; then
+    check "zsh-syntax-highlighting configured in sheldon" 'true'
+  else
+    check "zsh-syntax-highlighting configured in sheldon" 'false'
+  fi
+else
+  # If no sheldon config, skip this check
+  check "zsh-syntax-highlighting configured in sheldon" 'false'
+fi
+
+# 8. LAST_SHELL_STARTUP_MS set (confirms self-monitoring active)
+check "Startup monitoring active (LAST_SHELL_STARTUP_MS set)" '[[ -n "$LAST_SHELL_STARTUP_MS" ]]'
+
+# Summary
+echo ""
+echo "Summary"
+echo "======="
+echo "Passed: $PASS_COUNT"
+echo "Failed: $FAIL_COUNT"
+echo ""
+
+# Exit with appropriate code
+if [[ $FAIL_COUNT -eq 0 ]]; then
+  echo "✓ All checks passed"
+  exit 0
+else
+  echo "✗ Some checks failed"
+  exit 1
+fi
