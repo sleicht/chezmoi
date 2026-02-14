@@ -4,4 +4,4 @@
 
 set -euo pipefail
 
-chezmoi apply --verbose
+chezmoi apply
