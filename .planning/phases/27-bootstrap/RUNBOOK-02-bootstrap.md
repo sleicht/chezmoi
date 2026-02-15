@@ -33,54 +33,43 @@ This is the critical bootstrap chain: the age key decrypts SSH keys and other se
    - The public key (recipient) is hardcoded in `.chezmoi.yaml.tmpl`: `age1hl7puvh5w5d49qgygxpj7q7zmc9gqyutqufk2p9x55mfm7ul742qg9vjn8`
    - The user needs the private key that matches this public key to decrypt secrets
 
-3. Retrieve the age private key. There are two options:
+3. Create the age key directory:
+   ```bash
+   mkdir -p ~/.config/age
+   chmod 700 ~/.config/age
+   ```
+
+4. Retrieve the age private key and write it directly to the target path. There are two options:
    - **Option A: From Bitwarden** (preferred):
      ```bash
      # Log in to Bitwarden CLI
      export BW_SESSION=$(bw login --raw)  # or bw unlock --raw if already logged in
 
-     # Retrieve the age key from dotfiles/shared folder
-     bw get notes "age-private-key" --folderid $(bw get folder "dotfiles/shared" | jq -r '.id') > /tmp/age-key.txt
-     ```
-     Or simply search by name if the item name is unique:
-     ```bash
-     bw get notes "age-private-key" > /tmp/age-key.txt
+     # Retrieve the age key directly to the target path
+     bw get notes "age-private-key" > ~/.config/age/key-client.txt
+     chmod 600 ~/.config/age/key-client.txt
      ```
    - **Option B: Copy from personal Mac** (simpler):
      ```bash
-     # On personal Mac:
+     # On personal Mac, print the key:
      cat ~/.config/age/key-personal.txt
-     # Copy the output and paste on client Mac (see step 4)
+
+     # On client Mac, paste the output into the target file:
+     # It should start with "# created:" and "AGE-SECRET-KEY-..."
+     cat > ~/.config/age/key-client.txt << 'EOF'
+     # created: <timestamp>
+     # public key: age1hl7puvh5w5d49qgygxpj7q7zmc9gqyutqufk2p9x55mfm7ul742qg9vjn8
+     AGE-SECRET-KEY-<your-secret-key-here>
+     EOF
+
+     chmod 600 ~/.config/age/key-client.txt
      ```
-
-4. Create the age key directory and install the private key on the client Mac:
-   ```bash
-   mkdir -p ~/.config/age
-   chmod 700 ~/.config/age
-   ```
-   Then write the key file (paste the private key content retrieved in step 3):
-   ```bash
-   # Paste the private key into this file
-   # It should start with "# created:" and "AGE-SECRET-KEY-..."
-   cat > ~/.config/age/key-client.txt << 'EOF'
-   # created: <timestamp>
-   # public key: age1hl7puvh5w5d49qgygxpj7q7zmc9gqyutqufk2p9x55mfm7ul742qg9vjn8
-   AGE-SECRET-KEY-<your-secret-key-here>
-   EOF
-
-   chmod 600 ~/.config/age/key-client.txt
-   ```
 
 5. Verify the key works:
    ```bash
    # Quick test: encrypt and decrypt a test string
    echo "test" | age -r age1hl7puvh5w5d49qgygxpj7q7zmc9gqyutqufk2p9x55mfm7ul742qg9vjn8 | age -d -i ~/.config/age/key-client.txt
    # Expected output: "test"
-   ```
-
-6. Clean up temporary files:
-   ```bash
-   rm -f /tmp/age-key.txt
    ```
 
 ### Expected Output
