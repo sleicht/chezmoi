@@ -7,6 +7,7 @@
 - ✅ **v1.2 Legacy Cleanup** -- Phases 13-18 (shipped 2026-02-14)
 - ✅ **v2.0 Performance** -- Phases 19-22 (shipped 2026-02-14)
 - ✅ **v2.1 Mise Task Runner** -- Phases 23-25 (shipped 2026-02-15)
+- 🚧 **v3.0 Client Migration** -- Phases 26-31 (in progress)
 
 ## Phases
 
@@ -85,6 +86,89 @@ Implemented mise task runner for dotfiles operations and git workflows with 10 u
 
 </details>
 
+### 🚧 v3.0 Client Migration (In Progress)
+
+**Milestone Goal:** Produce a step-by-step runbook for migrating the client macOS from the frozen dotfiles-zsh (Dotbot) repo to the chezmoi-managed stack, including local state capture, age key bootstrap, symlink-to-real-file transition, and post-migration verification.
+
+#### Phase 26: Pre-Migration Audit
+**Goal**: Document procedures for capturing local state before migration
+**Depends on**: Nothing (first phase of milestone)
+**Requirements**: AUDIT-01, AUDIT-02, AUDIT-03, AUDIT-04
+**Success Criteria** (what must be TRUE):
+  1. User can list all Dotbot symlinks and their targets to identify what will be replaced
+  2. User can identify custom scripts and bins not tracked in either repo for preservation
+  3. User can capture machine-specific environment variables unique to the client Mac
+  4. User can diff drifted configs against the old repo to identify valuable local edits
+**Plans**: TBD
+
+Plans:
+- [ ] 26-01: TBD
+
+#### Phase 27: Bootstrap
+**Goal**: Document procedures for setting up chezmoi infrastructure on client Mac
+**Depends on**: Phase 26
+**Requirements**: BOOT-01, BOOT-02, BOOT-03
+**Success Criteria** (what must be TRUE):
+  1. User can generate an age encryption key and securely store its public key in Bitwarden
+  2. User can clone the chezmoi source repo to the expected location on client Mac
+  3. User can run chezmoi init with correct machine_type, email, and encryption settings
+**Plans**: TBD
+
+Plans:
+- [ ] 27-01: TBD
+
+#### Phase 28: Migration
+**Goal**: Document procedures for safe Dotbot removal and chezmoi deployment
+**Depends on**: Phase 27
+**Requirements**: MIG-01, MIG-02, MIG-03
+**Success Criteria** (what must be TRUE):
+  1. User can safely convert Dotbot symlinks to real files before running chezmoi apply
+  2. User can execute chezmoi apply with client-specific templates correctly rendered
+  3. User has a documented conflict resolution procedure for pre-existing files
+**Plans**: TBD
+
+Plans:
+- [ ] 28-01: TBD
+
+#### Phase 29: Reintegration
+**Goal**: Document procedures for merging captured local tweaks into chezmoi
+**Depends on**: Phase 28
+**Requirements**: REINT-01, REINT-02, REINT-03
+**Success Criteria** (what must be TRUE):
+  1. User can evaluate custom scripts and decide: add to chezmoi, keep local, or discard
+  2. User can reintegrate machine-specific env vars via templates or local override files
+  3. User can merge valuable config edits from drifted files into chezmoi source
+**Plans**: TBD
+
+Plans:
+- [ ] 29-01: TBD
+
+#### Phase 30: Verification
+**Goal**: Document procedures for confirming migration success
+**Depends on**: Phase 29
+**Requirements**: VERIF-01, VERIF-02, VERIF-03, VERIF-04
+**Success Criteria** (what must be TRUE):
+  1. User can verify shell functionality: aliases work, prompt renders, plugins load
+  2. User can verify git workflows: commits work, mise tasks function, hooks trigger
+  3. User can verify tool availability: mise runtimes respond, Homebrew packages exist, keys decrypt
+  4. User can run the 13-check smoke test script and all checks pass
+**Plans**: TBD
+
+Plans:
+- [ ] 30-01: TBD
+
+#### Phase 31: Rollback Documentation
+**Goal**: Document safety net procedures for reverting to old Dotbot setup
+**Depends on**: Phase 30
+**Requirements**: ROLL-01, ROLL-02
+**Success Criteria** (what must be TRUE):
+  1. User has step-by-step rollback instructions to restore Dotbot symlinks from old repo
+  2. User has decision criteria for when to rollback vs. debug forward
+**Plans**: TBD
+
+Plans:
+- [ ] 31-01: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -114,6 +198,12 @@ Implemented mise task runner for dotfiles operations and git workflows with 10 u
 | 23. Task Infrastructure | v2.1 | 1/1 | Complete | 2026-02-14 |
 | 24. Dotfiles Operations | v2.1 | 1/1 | Complete | 2026-02-14 |
 | 25. Git Workflow Tasks | v2.1 | 2/2 | Complete | 2026-02-15 |
+| 26. Pre-Migration Audit | v3.0 | 0/? | Not started | - |
+| 27. Bootstrap | v3.0 | 0/? | Not started | - |
+| 28. Migration | v3.0 | 0/? | Not started | - |
+| 29. Reintegration | v3.0 | 0/? | Not started | - |
+| 30. Verification | v3.0 | 0/? | Not started | - |
+| 31. Rollback Documentation | v3.0 | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-02-15 -- v2.1 Mise Task Runner shipped*
+*Last updated: 2026-02-15 -- v3.0 Client Migration started*

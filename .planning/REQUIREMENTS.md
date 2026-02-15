@@ -63,31 +63,31 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUDIT-01 | — | Pending |
-| AUDIT-02 | — | Pending |
-| AUDIT-03 | — | Pending |
-| AUDIT-04 | — | Pending |
-| BOOT-01 | — | Pending |
-| BOOT-02 | — | Pending |
-| BOOT-03 | — | Pending |
-| MIG-01 | — | Pending |
-| MIG-02 | — | Pending |
-| MIG-03 | — | Pending |
-| REINT-01 | — | Pending |
-| REINT-02 | — | Pending |
-| REINT-03 | — | Pending |
-| VERIF-01 | — | Pending |
-| VERIF-02 | — | Pending |
-| VERIF-03 | — | Pending |
-| VERIF-04 | — | Pending |
-| ROLL-01 | — | Pending |
-| ROLL-02 | — | Pending |
+| AUDIT-01 | Phase 26 | Pending |
+| AUDIT-02 | Phase 26 | Pending |
+| AUDIT-03 | Phase 26 | Pending |
+| AUDIT-04 | Phase 26 | Pending |
+| BOOT-01 | Phase 27 | Pending |
+| BOOT-02 | Phase 27 | Pending |
+| BOOT-03 | Phase 27 | Pending |
+| MIG-01 | Phase 28 | Pending |
+| MIG-02 | Phase 28 | Pending |
+| MIG-03 | Phase 28 | Pending |
+| REINT-01 | Phase 29 | Pending |
+| REINT-02 | Phase 29 | Pending |
+| REINT-03 | Phase 29 | Pending |
+| VERIF-01 | Phase 30 | Pending |
+| VERIF-02 | Phase 30 | Pending |
+| VERIF-03 | Phase 30 | Pending |
+| VERIF-04 | Phase 30 | Pending |
+| ROLL-01 | Phase 31 | Pending |
+| ROLL-02 | Phase 31 | Pending |
 
 **Coverage:**
 - v3.0 requirements: 19 total
-- Mapped to phases: 0
-- Unmapped: 19 ⚠️
+- Mapped to phases: 19
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-15*
-*Last updated: 2026-02-15 after initial definition*
+*Last updated: 2026-02-15 after roadmap creation*
