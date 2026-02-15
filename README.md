@@ -21,7 +21,7 @@ Personal dotfiles for macOS, managed with [chezmoi](https://www.chezmoi.io/) and
 | **Terminal** | [Ghostty](https://ghostty.org/) · [Kitty](https://sw.kovidgoyal.net/kitty/) · [WezTerm](https://wezfurlong.org/wezterm/) |
 | **Editor** | EditorConfig · [aider](https://aider.chat/) (AI pair programming) |
 | **Git** | [Lazygit](https://github.com/jesseduffield/lazygit) · [Gitleaks](https://gitleaks.io/) (secret scanning) · global config + hooks |
-| **Dev Tools** | [mise](https://mise.jdx.dev/) (runtime manager + task runner) · [bat](https://github.com/sharkdp/bat) · [lsd](https://github.com/lsd-rs/lsd) · [btop](https://github.com/aristocratos/btop) · [atuin](https://atuin.sh/) (shell history) · [worktrunk](https://worktrunk.dev/) (git worktree manager) |
+| **Dev Tools** | [mise](https://mise.jdx.dev/) (runtime manager + task runner) · [topgrade](https://github.com/topgrade-rs/topgrade) (all-in-one updater) · [bat](https://github.com/sharkdp/bat) · [lsd](https://github.com/lsd-rs/lsd) · [btop](https://github.com/aristocratos/btop) · [atuin](https://atuin.sh/) (shell history) · [worktrunk](https://worktrunk.dev/) (git worktree manager) |
 | **macOS** | [Homebrew](https://brew.sh/) (Brewfile) · [AeroSpace](https://github.com/nikitabobko/AeroSpace) (tiling WM) · [Karabiner-Elements](https://karabiner-elements.pqrs.org/) · [Finicky](https://github.com/nickmilo/finicky) (browser routing) |
 | **Security** | age encryption for SSH keys · Bitwarden for secrets · permission hardening |
 
@@ -74,6 +74,13 @@ mise run git:pr           # create PR/MR via gh or glab (auto-detects platform)
 mise run git:cleanup      # prune merged local branches
 ```
 
+Update everything (Homebrew, mise, chezmoi, sheldon, etc.) in one go with [topgrade](https://github.com/topgrade-rs/topgrade):
+
+```bash
+topgrade                  # update all detected tools
+topgrade -n               # dry-run — preview what would be updated
+```
+
 > **Raw chezmoi** still works for anything not covered by tasks:
 > ```bash
 > chezmoi edit ~/.zshrc     # edit source file
@@ -97,6 +104,7 @@ mise run git:cleanup      # prune merged local branches
 │   ├── ghostty/config                 #   terminal config
 │   ├── mise/config.toml.tmpl          #   runtime versions
 │   ├── mise/tasks/                    #   mise task scripts (dotfiles, git)
+│   ├── topgrade/topgrade.toml         #   all-in-one updater config
 │   ├── worktrunk/config.toml          #   git worktree manager config
 │   └── ...                            #   + 10 more tools
 ├── private_dot_ssh/                   # → ~/.ssh/

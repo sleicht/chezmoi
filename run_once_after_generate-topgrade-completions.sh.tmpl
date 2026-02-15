@@ -1,0 +1,22 @@
+#!/bin/bash
+# Generate topgrade completions for ZSH
+# Runs once after initial chezmoi apply
+
+set -e
+
+{{ if ne .chezmoi.os "darwin" -}}
+# Skip on non-macOS systems
+exit 0
+{{ end -}}
+
+# Create completions directory if needed
+COMP_DIR="${HOME}/.local/share/zsh/site-functions"
+mkdir -p "$COMP_DIR"
+
+# Generate topgrade completions
+if command -v topgrade > /dev/null; then
+    topgrade --gen-completion zsh > "$COMP_DIR/_topgrade"
+    echo "Generated topgrade completions at $COMP_DIR/_topgrade"
+else
+    echo "WARNING: topgrade not found, skipping completion generation"
+fi
