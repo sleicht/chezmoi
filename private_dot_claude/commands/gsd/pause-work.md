@@ -20,11 +20,11 @@ Routes to the pause-work workflow which handles:
 
 <execution_context>
 @.planning/STATE.md
-@/Users/stephanlv_fanaka/.claude/get-shit-done/workflows/pause-work.md
+@$HOME/.claude/get-shit-done/workflows/pause-work.md
 </execution_context>
 
 <process>
-**Follow the pause-work workflow** from `@/Users/stephanlv_fanaka/.claude/get-shit-done/workflows/pause-work.md`.
+**Follow the pause-work workflow** from `@$HOME/.claude/get-shit-done/workflows/pause-work.md`.
 
 The workflow handles all logic including:
 1. Phase directory detection

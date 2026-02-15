@@ -54,7 +54,7 @@ Set `is_re_verification = false`, proceed with Step 1.
 ```bash
 ls "$PHASE_DIR"/*-PLAN.md 2>/dev/null
 ls "$PHASE_DIR"/*-SUMMARY.md 2>/dev/null
-node /Users/stephanlv_fanaka/.claude/get-shit-done/bin/gsd-tools.js roadmap get-phase "$PHASE_NUM"
+node $HOME/.claude/get-shit-done/bin/gsd-tools.js roadmap get-phase "$PHASE_NUM"
 grep -E "^| $PHASE_NUM" .planning/REQUIREMENTS.md 2>/dev/null
 ```
 
@@ -118,7 +118,7 @@ For each truth:
 Use gsd-tools for artifact verification against must_haves in PLAN frontmatter:
 
 ```bash
-ARTIFACT_RESULT=$(node /Users/stephanlv_fanaka/.claude/get-shit-done/bin/gsd-tools.js verify artifacts "$PLAN_PATH")
+ARTIFACT_RESULT=$(node $HOME/.claude/get-shit-done/bin/gsd-tools.js verify artifacts "$PLAN_PATH")
 ```
 
 Parse JSON result: `{ all_passed, passed, total, artifacts: [{path, exists, issues, passed}] }`
@@ -167,7 +167,7 @@ Key links are critical connections. If broken, the goal fails even with all arti
 Use gsd-tools for key link verification against must_haves in PLAN frontmatter:
 
 ```bash
-LINKS_RESULT=$(node /Users/stephanlv_fanaka/.claude/get-shit-done/bin/gsd-tools.js verify key-links "$PLAN_PATH")
+LINKS_RESULT=$(node $HOME/.claude/get-shit-done/bin/gsd-tools.js verify key-links "$PLAN_PATH")
 ```
 
 Parse JSON result: `{ all_verified, verified, total, links: [{from, to, via, verified, detail}] }`
@@ -235,12 +235,12 @@ Identify files modified in this phase from SUMMARY.md key-files section, or extr
 
 ```bash
 # Option 1: Extract from SUMMARY frontmatter
-SUMMARY_FILES=$(node /Users/stephanlv_fanaka/.claude/get-shit-done/bin/gsd-tools.js summary-extract "$PHASE_DIR"/*-SUMMARY.md --fields key-files)
+SUMMARY_FILES=$(node $HOME/.claude/get-shit-done/bin/gsd-tools.js summary-extract "$PHASE_DIR"/*-SUMMARY.md --fields key-files)
 
 # Option 2: Verify commits exist (if commit hashes documented)
 COMMIT_HASHES=$(grep -oE "[a-f0-9]{7,40}" "$PHASE_DIR"/*-SUMMARY.md | head -10)
 if [ -n "$COMMIT_HASHES" ]; then
-  COMMITS_VALID=$(node /Users/stephanlv_fanaka/.claude/get-shit-done/bin/gsd-tools.js verify commits $COMMIT_HASHES)
+  COMMITS_VALID=$(node $HOME/.claude/get-shit-done/bin/gsd-tools.js verify commits $COMMIT_HASHES)
 fi
 
 # Fallback: grep for files
@@ -317,7 +317,7 @@ gaps:
 
 ## Create VERIFICATION.md
 
-Create `.planning/phases/{phase_dir}/{phase}-VERIFICATION.md`:
+Create `.planning/phases/{phase_dir}/{phase_num}-VERIFICATION.md`:
 
 ```markdown
 ---
@@ -411,7 +411,7 @@ Return with:
 
 **Status:** {passed | gaps_found | human_needed}
 **Score:** {N}/{M} must-haves verified
-**Report:** .planning/phases/{phase_dir}/{phase}-VERIFICATION.md
+**Report:** .planning/phases/{phase_dir}/{phase_num}-VERIFICATION.md
 
 {If passed:}
 All must-haves verified. Phase goal achieved. Ready to proceed.

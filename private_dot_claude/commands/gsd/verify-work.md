@@ -16,12 +16,12 @@ Validate built features through conversational testing with persistent state.
 
 Purpose: Confirm what Claude built actually works from user's perspective. One test at a time, plain text responses, no interrogation. When issues are found, automatically diagnose, plan fixes, and prepare for execution.
 
-Output: {phase}-UAT.md tracking all test results. If issues found: diagnosed gaps, verified fix plans ready for /gsd:execute-phase
+Output: {phase_num}-UAT.md tracking all test results. If issues found: diagnosed gaps, verified fix plans ready for /gsd:execute-phase
 </objective>
 
 <execution_context>
-@/Users/stephanlv_fanaka/.claude/get-shit-done/workflows/verify-work.md
-@/Users/stephanlv_fanaka/.claude/get-shit-done/templates/UAT.md
+@$HOME/.claude/get-shit-done/workflows/verify-work.md
+@$HOME/.claude/get-shit-done/templates/UAT.md
 </execution_context>
 
 <context>
@@ -34,6 +34,6 @@ Phase: $ARGUMENTS (optional)
 </context>
 
 <process>
-Execute the verify-work workflow from @/Users/stephanlv_fanaka/.claude/get-shit-done/workflows/verify-work.md end-to-end.
+Execute the verify-work workflow from @$HOME/.claude/get-shit-done/workflows/verify-work.md end-to-end.
 Preserve all workflow gates (session management, test presentation, diagnosis, fix planning, routing).
 </process>
