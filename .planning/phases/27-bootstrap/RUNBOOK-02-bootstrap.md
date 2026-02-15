@@ -209,33 +209,26 @@ Chezmoi source repo at `~/.local/share/chezmoi/` with all files present.
    - `machine_type` is `"client"`
    - `work_email` is present (only set for client machines)
 
-4. Test that age decryption works through chezmoi:
-   ```bash
-   # Try to view an encrypted file -- should decrypt successfully
-   chezmoi cat ~/.ssh/config
-   ```
-   If this prints the SSH config content, age encryption is working correctly.
-
-5. Preview what chezmoi would deploy (DO NOT apply yet -- that is Phase 28):
+4. Preview what chezmoi would deploy (DO NOT apply yet -- that is Phase 28):
    ```bash
    chezmoi diff | head -50
    ```
-   This should show a large diff of files chezmoi would create/modify. Review the first few entries to confirm templates are rendering with client-specific values.
+   This should show a large diff of files chezmoi would create/modify. If age decryption is working, you'll see decrypted SSH file contents in the diff (e.g., `.ssh/config`, `.ssh/id_rsa`). If decryption fails, chezmoi will error here — go back to Procedure 1.
 
 ### Expected Output
 
-`~/.config/chezmoi/chezmoi.yaml` exists with correct machine_type=client and age encryption settings. `chezmoi cat` successfully decrypts files.
+`~/.config/chezmoi/chezmoi.yaml` exists with correct machine_type=client and age encryption settings. `chezmoi diff` runs without decryption errors.
 
 ### Troubleshooting
 
 - If `chezmoi init` fails with "age: decryption failed": the age key at `key-client.txt` does not match the recipient. Go back to Procedure 1.
 - If `chezmoi init` fails with "bitwarden: command not found": either install bw or create the symlink in step 1. If you don't need Bitwarden secrets immediately, you can also temporarily comment out the bitwarden section in `.chezmoi.yaml.tmpl` (not recommended).
 - If prompts don't appear: chezmoi may have found an existing `chezmoi.yaml` from a previous run. Delete `~/.config/chezmoi/chezmoi.yaml` and rerun.
-- If `chezmoi cat` fails on encrypted files but `chezmoi init` succeeded: verify the age key file path and permissions (`ls -la ~/.config/age/key-client.txt` should show `-rw-------`).
+- If `chezmoi diff` fails with age decryption errors but `chezmoi init` succeeded: verify the age key file path and permissions (`ls -la ~/.config/age/key-client.txt` should show `-rw-------`).
 
 ### Output
 
-`~/.config/chezmoi/chezmoi.yaml` with client configuration. Age decryption verified. Ready for Phase 28 (Migration).
+`~/.config/chezmoi/chezmoi.yaml` with client configuration. `chezmoi diff` confirms age decryption works. Ready for Phase 28 (Migration).
 
 ---
 
@@ -276,11 +269,11 @@ else
   echo "✗ MISSING: ~/.config/chezmoi/chezmoi.yaml"
 fi
 
-# Age decryption test
-if chezmoi cat ~/.ssh/config >/dev/null 2>&1; then
-  echo "✓ Age decryption working"
+# Age decryption test (chezmoi diff must be able to decrypt .age files)
+if chezmoi diff >/dev/null 2>&1; then
+  echo "✓ Age decryption working (chezmoi diff succeeded)"
 else
-  echo "✗ Age decryption failed"
+  echo "✗ Age decryption failed (chezmoi diff errored)"
 fi
 ```
 
