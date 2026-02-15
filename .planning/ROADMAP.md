@@ -86,7 +86,7 @@ Implemented mise task runner for dotfiles operations and git workflows with 10 u
 
 </details>
 
-### 🚧 v3.0 Client Migration (In Progress)
+### v3.0 Client Migration (In Progress)
 
 **Milestone Goal:** Produce a step-by-step runbook for migrating the client macOS from the frozen dotfiles-zsh (Dotbot) repo to the chezmoi-managed stack, including local state capture, age key bootstrap, symlink-to-real-file transition, and post-migration verification.
 
@@ -99,10 +99,10 @@ Implemented mise task runner for dotfiles operations and git workflows with 10 u
   2. User can identify custom scripts and bins not tracked in either repo for preservation
   3. User can capture machine-specific environment variables unique to the client Mac
   4. User can diff drifted configs against the old repo to identify valuable local edits
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 26-01: TBD
+- [ ] 26-01-PLAN.md -- Pre-migration audit runbook (4 procedures: symlinks, custom scripts, env vars, config drift)
 
 #### Phase 27: Bootstrap
 **Goal**: Document procedures for setting up chezmoi infrastructure on client Mac
@@ -198,7 +198,7 @@ Plans:
 | 23. Task Infrastructure | v2.1 | 1/1 | Complete | 2026-02-14 |
 | 24. Dotfiles Operations | v2.1 | 1/1 | Complete | 2026-02-14 |
 | 25. Git Workflow Tasks | v2.1 | 2/2 | Complete | 2026-02-15 |
-| 26. Pre-Migration Audit | v3.0 | 0/? | Not started | - |
+| 26. Pre-Migration Audit | v3.0 | 0/1 | Not started | - |
 | 27. Bootstrap | v3.0 | 0/? | Not started | - |
 | 28. Migration | v3.0 | 0/? | Not started | - |
 | 29. Reintegration | v3.0 | 0/? | Not started | - |
@@ -206,4 +206,4 @@ Plans:
 | 31. Rollback Documentation | v3.0 | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-02-15 -- v3.0 Client Migration started*
+*Last updated: 2026-02-15 -- Phase 26 planned (1 plan)*
