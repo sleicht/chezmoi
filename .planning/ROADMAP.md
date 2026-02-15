@@ -164,10 +164,10 @@ Plans:
 **Success Criteria** (what must be TRUE):
   1. User has step-by-step rollback instructions to restore Dotbot symlinks from old repo
   2. User has decision criteria for when to rollback vs. debug forward
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 31-01: TBD
+- [ ] 31-01-PLAN.md -- Rollback runbook (2 procedures: rollback decision criteria, Dotbot symlink restoration)
 
 ## Progress
 
@@ -203,7 +203,7 @@ Plans:
 | 28. Migration | v3.0 | Complete    | 2026-02-15 | - |
 | 29. Reintegration | v3.0 | Complete    | 2026-02-15 | - |
 | 30. Verification | v3.0 | Complete    | 2026-02-15 | - |
-| 31. Rollback Documentation | v3.0 | 0/? | Not started | - |
+| 31. Rollback Documentation | v3.0 | 0/1 | Planned | - |
 
 ---
-*Last updated: 2026-02-15 -- Phase 30 planned (1 plan)*
+*Last updated: 2026-02-15 -- Phase 31 planned (1 plan)*
