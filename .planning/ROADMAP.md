@@ -115,7 +115,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 27-01-PLAN.md -- Bootstrap runbook (3 procedures: age key setup, repo clone, chezmoi init)
+- [x] 27-01-PLAN.md -- Bootstrap runbook (3 procedures: age key setup, repo clone, chezmoi init)
 
 #### Phase 28: Migration
 **Goal**: Document procedures for safe Dotbot removal and chezmoi deployment
@@ -199,11 +199,11 @@ Plans:
 | 24. Dotfiles Operations | v2.1 | 1/1 | Complete | 2026-02-14 |
 | 25. Git Workflow Tasks | v2.1 | 2/2 | Complete | 2026-02-15 |
 | 26. Pre-Migration Audit | v3.0 | 1/1 | Complete | 2026-02-15 |
-| 27. Bootstrap | v3.0 | 0/? | Not started | - |
+| 27. Bootstrap | v3.0 | 1/1 | Complete | 2026-02-15 |
 | 28. Migration | v3.0 | 0/? | Not started | - |
 | 29. Reintegration | v3.0 | 0/? | Not started | - |
 | 30. Verification | v3.0 | 0/? | Not started | - |
 | 31. Rollback Documentation | v3.0 | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-02-15 -- Phase 26 complete (1/1 plans)*
+*Last updated: 2026-02-15 -- Phase 27 complete (1/1 plans)*
