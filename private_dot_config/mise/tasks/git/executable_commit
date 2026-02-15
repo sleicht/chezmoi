@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #MISE description="Create conventional commit with Jira prefix"
 #MISE alias="c"
+#MISE dir="{{cwd}}"
 
 set -euo pipefail
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #MISE description="Create feature branch with naming convention"
 #MISE alias="b"
+#MISE dir="{{cwd}}"
 
 set -euo pipefail
 
