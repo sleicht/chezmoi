@@ -125,10 +125,10 @@ Plans:
   1. User can safely convert Dotbot symlinks to real files before running chezmoi apply
   2. User can execute chezmoi apply with client-specific templates correctly rendered
   3. User has a documented conflict resolution procedure for pre-existing files
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 28-01: TBD
+- [ ] 28-01-PLAN.md -- Migration runbook (3 procedures: symlink materialisation, chezmoi apply, conflict resolution)
 
 #### Phase 29: Reintegration
 **Goal**: Document procedures for merging captured local tweaks into chezmoi
@@ -200,10 +200,10 @@ Plans:
 | 25. Git Workflow Tasks | v2.1 | 2/2 | Complete | 2026-02-15 |
 | 26. Pre-Migration Audit | v3.0 | 1/1 | Complete | 2026-02-15 |
 | 27. Bootstrap | v3.0 | 1/1 | Complete | 2026-02-15 |
-| 28. Migration | v3.0 | 0/? | Not started | - |
+| 28. Migration | v3.0 | 0/1 | Not started | - |
 | 29. Reintegration | v3.0 | 0/? | Not started | - |
 | 30. Verification | v3.0 | 0/? | Not started | - |
 | 31. Rollback Documentation | v3.0 | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-02-15 -- Phase 27 complete (1/1 plans)*
+*Last updated: 2026-02-15 -- Phase 28 planned (1 plan)*
