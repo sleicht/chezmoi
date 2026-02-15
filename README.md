@@ -21,7 +21,7 @@ Personal dotfiles for macOS, managed with [chezmoi](https://www.chezmoi.io/) and
 | **Terminal** | [Ghostty](https://ghostty.org/) · [Kitty](https://sw.kovidgoyal.net/kitty/) · [WezTerm](https://wezfurlong.org/wezterm/) |
 | **Editor** | EditorConfig · [aider](https://aider.chat/) (AI pair programming) |
 | **Git** | [Lazygit](https://github.com/jesseduffield/lazygit) · [Gitleaks](https://gitleaks.io/) (secret scanning) · global config + hooks |
-| **Dev Tools** | [mise](https://mise.jdx.dev/) (runtime manager + tasks) · [bat](https://github.com/sharkdp/bat) · [lsd](https://github.com/lsd-rs/lsd) · [btop](https://github.com/aristocratos/btop) · [atuin](https://atuin.sh/) (shell history) · [worktrunk](https://worktrunk.dev/) (git worktree manager) |
+| **Dev Tools** | [mise](https://mise.jdx.dev/) (runtime manager + task runner) · [bat](https://github.com/sharkdp/bat) · [lsd](https://github.com/lsd-rs/lsd) · [btop](https://github.com/aristocratos/btop) · [atuin](https://atuin.sh/) (shell history) · [worktrunk](https://worktrunk.dev/) (git worktree manager) |
 | **macOS** | [Homebrew](https://brew.sh/) (Brewfile) · [AeroSpace](https://github.com/nikitabobko/AeroSpace) (tiling WM) · [Karabiner-Elements](https://karabiner-elements.pqrs.org/) · [Finicky](https://github.com/nickmilo/finicky) (browser routing) |
 | **Security** | age encryption for SSH keys · Bitwarden for secrets · permission hardening |
 
@@ -56,16 +56,28 @@ If you'd like to use this as a starting point for your own dotfiles:
 
 ## 🔧 Daily Workflow
 
+Common operations are wrapped as [mise tasks](https://mise.jdx.dev/tasks/) with short aliases:
+
 ```bash
-chezmoi edit ~/.zshrc     # edit source file (auto-commits on save)
-chezmoi diff              # preview pending changes
-chezmoi apply             # deploy to home directory
+mise run d                # preview pending changes (dotfiles:diff)
+mise run a                # deploy configs (dotfiles:apply)
+mise run v                # run 112 verification checks (dotfiles:verify)
+mise run s                # full sync: backup → pull → apply → verify (dotfiles:sync)
 ```
 
-> **Prefer editing via chezmoi** — but if you edited a managed file directly in `~/`:
+Git workflows with conventional commit enforcement:
+
+```bash
+mise run c                # guided conventional commit with Jira prefix (git:commit)
+mise run b                # create feature branch with naming convention (git:branch)
+mise run git:pr           # create PR/MR via gh or glab (auto-detects platform)
+mise run git:cleanup      # prune merged local branches
+```
+
+> **Raw chezmoi** still works for anything not covered by tasks:
 > ```bash
-> chezmoi verify           # check what's drifted
-> chezmoi re-add ~/.zshrc  # pull change back into source (or just: chezmoi re-add)
+> chezmoi edit ~/.zshrc     # edit source file
+> chezmoi re-add ~/.zshrc   # pull direct edits back into source
 > ```
 
 ## 📁 Structure
@@ -114,3 +126,22 @@ Configs adapt based on machine type (set during `chezmoi init`):
 - **Secrets** — pulled from Bitwarden at apply time via templates
 - **Permissions** — `run_after_` script enforces 600/700 on sensitive files
 - **Pre-commit** — gitleaks scans every commit for accidental secret exposure
+
+## 🎯 Task Runner Reference
+
+All tasks are file-based scripts in `~/.config/mise/tasks/`, deployed by chezmoi. Run `mise tasks` to list them.
+
+| Task | Alias | Description |
+|------|-------|-------------|
+| `dotfiles:apply` | `a` | Deploy configs with verbose output |
+| `dotfiles:diff` | `d` | Preview changes before applying |
+| `dotfiles:verify` | `v` | Run 112 verification checks |
+| `dotfiles:smoke-test` | — | Validate shell functionality |
+| `dotfiles:update` | `u` | Pull remote + apply in one step |
+| `dotfiles:sync` | `s` | Full sync: backup → pull → apply → verify |
+| `git:commit` | `c` | Guided conventional commit with Jira prefix (AI or manual) |
+| `git:branch` | `b` | Create feature branch with naming convention |
+| `git:cleanup` | — | Prune merged local branches (safe delete) |
+| `git:pr` | — | Create PR/MR via gh or glab (auto-detects platform) |
+
+Git tasks offer **hybrid AI/manual mode** — when `claude` CLI is available, AI generates commit messages from diffs and converts descriptions to kebab-case branch names. Falls back to interactive `fzf` prompts otherwise.
