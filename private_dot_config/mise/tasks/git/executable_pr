@@ -44,29 +44,82 @@ if ! git rev-parse @{u} &>/dev/null; then
   fi
 fi
 
-# Extract or prompt for ticket
+# Extract or prompt for ticket (optional)
+TICKET=""
 if [[ "$CURRENT" =~ feature/([A-Z]+-[0-9]+) ]]; then
   TICKET="${BASH_REMATCH[1]}"
   echo "Detected ticket: $TICKET"
 else
-  echo "Enter Jira ticket:"
+  echo "Enter Jira ticket (or Enter to skip):"
   read -r TICKET
+  if [[ -n "$TICKET" ]] && ! [[ "$TICKET" =~ ^[A-Z]+-[0-9]+$ ]]; then
+    echo "ERROR: Invalid format. Expected PROJECT-123 or empty" >&2
+    exit 1
+  fi
 fi
 
-# Get title
 PR_TYPE=$([[ "$PLATFORM" == "gitlab" ]] && echo "MR" || echo "PR")
-echo "Enter $PR_TYPE title (will be prefixed with $TICKET:):"
-read -r TITLE
-PR_TITLE="${TICKET}: ${TITLE}"
 
-# Get body
-echo "Enter description (Ctrl-D when done):"
-PR_BODY=$(cat)
+# Detect main branch for diff
+MAIN=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "main")
+
+# Choose mode: AI or manual
+MODE="manual"
+if command -v claude &>/dev/null; then
+  MODE=$(echo -e "ai\nmanual" | fzf --prompt="Mode: " --height=4)
+  [[ -n "$MODE" ]] || MODE="manual"
+fi
+
+if [[ "$MODE" == "ai" ]]; then
+  # AI-assisted: generate title and body from commits + diff
+  LOG=$(git log --oneline "${MAIN}..HEAD")
+  DIFF_STAT=$(git diff "${MAIN}...HEAD" --stat)
+
+  if [[ -n "$TICKET" ]]; then
+    TITLE_FORMAT="${TICKET}: <title>"
+  else
+    TITLE_FORMAT="<title>"
+  fi
+
+  AI_OUTPUT=$(printf "%s\n---\n%s" "$LOG" "$DIFF_STAT" | claude --print --model haiku -p \
+    "Generate a $PR_TYPE title and description from these commits and diff stats.
+Title format: ${TITLE_FORMAT}
+Output format (exactly):
+TITLE: <the title line>
+BODY:
+<markdown body with ## Summary (2-4 bullet points) and ## Test plan (checklist)>
+
+Rules: title under 70 chars, imperative tense, no trailing period.
+Output ONLY the formatted text, nothing else.")
+
+  PR_TITLE=$(echo "$AI_OUTPUT" | grep "^TITLE:" | sed 's/^TITLE: //')
+  PR_BODY=$(echo "$AI_OUTPUT" | sed '1,/^BODY:/d')
+
+  # Validate title exists, fall back if not
+  if [[ -z "$PR_TITLE" ]]; then
+    echo "WARNING: AI output didn't match expected format, falling back to manual" >&2
+    MODE="manual"
+  fi
+fi
+
+if [[ "$MODE" == "manual" ]]; then
+  echo "Enter $PR_TYPE title:"
+  read -r TITLE
+  if [[ -n "$TICKET" ]]; then
+    PR_TITLE="${TICKET}: ${TITLE}"
+  else
+    PR_TITLE="$TITLE"
+  fi
+
+  echo "Enter description (Ctrl-D when done):"
+  PR_BODY=$(cat)
+fi
 
 # Confirm
 echo ""
 echo "$PR_TYPE Title: $PR_TITLE"
-echo "Body: $PR_BODY"
+echo "Body:"
+echo "$PR_BODY"
 echo ""
 echo "Create $PR_TYPE? (Y/n):"
 read -r CONFIRM
