@@ -5,16 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-15)
 
 **Core value:** Cross-platform dotfiles that "just work" -- one repository that handles Mac vs Linux differences through templating, without requiring Nix expertise to maintain.
-**Current focus:** All milestones shipped (v1.0.0 → v2.1). Start next with `/gsd:new-milestone`.
+**Current focus:** v3.0 Client Migration — runbook for migrating client macOS from Dotbot to chezmoi.
 
 ## Current Position
 
-Phase: 25 of 25 (all complete)
-Plan: N/A
-Status: v2.1 shipped
-Last activity: 2026-02-15 — v2.1 Mise Task Runner milestone completed
-
-Progress: [█████████████████████████] 100% (25 of 25 phases complete, 5 milestones shipped)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-15 — Milestone v3.0 started
 
 ## Performance Metrics
 

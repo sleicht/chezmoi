@@ -70,7 +70,17 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 
 ### Active
 
-(No active requirements — start next milestone with `/gsd:new-milestone`)
+#### Current Milestone: v3.0 Client Migration
+
+**Goal:** Produce a step-by-step runbook for migrating the client macOS from the frozen dotfiles-zsh (Dotbot) repo to the chezmoi-managed stack, including local state capture, age key bootstrap, symlink-to-real-file transition, and post-migration verification.
+
+**Target features:**
+- Pre-migration audit (capture local tweaks: custom scripts, env vars, drifted configs)
+- Age key bootstrap chain (Bitwarden → age key → SSH key decryption)
+- Safe symlink removal and chezmoi apply with machine_type=client
+- Local tweak reintegration strategy
+- Post-migration verification and smoke test
+- Rollback procedure (re-run ./install from old repo if needed)
 
 ### Out of Scope
 
@@ -83,7 +93,7 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 
 ## Context
 
-**Current milestone:** All milestones shipped (v1.0.0 → v2.1)
+**Current milestone:** v3.0 Client Migration
 
 **Current state (post v2.1):**
 - chezmoi manages 135 files with cross-platform templates and OS-conditional configs
@@ -160,4 +170,4 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 4. **Neovim exception**: nvim config stays as symlink outside chezmoi management (intentional, documented in README).
 
 ---
-*Last updated: 2026-02-15 after v2.1 Mise Task Runner milestone shipped*
+*Last updated: 2026-02-15 after v3.0 Client Migration milestone started*
