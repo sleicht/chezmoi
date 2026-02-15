@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+#MISE description="Create feature branch with naming convention"
+#MISE alias="b"
+
+set -euo pipefail
+
+# Check current branch
+CURRENT=$(git rev-parse --abbrev-ref HEAD)
+if [[ "$CURRENT" != "main" ]] && [[ "$CURRENT" != "master" ]]; then
+  echo "WARNING: On '$CURRENT', not main/master. Continue? (y/N):"
+  read -r CONTINUE
+  [[ "$CONTINUE" =~ ^[Yy]$ ]] || { echo "Cancelled"; exit 0; }
+fi
+
+# Get ticket
+echo "Enter Jira ticket (e.g., MLE-999):"
+read -r TICKET
+if ! [[ "$TICKET" =~ ^[A-Z]+-[0-9]+$ ]]; then
+  echo "ERROR: Invalid format. Expected PROJECT-123" >&2
+  exit 1
+fi
+
+# Choose mode: AI or manual
+MODE="manual"
+if command -v claude &>/dev/null; then
+  MODE=$(echo -e "ai\nmanual" | fzf --prompt="Mode: " --height=4)
+  [[ -n "$MODE" ]] || MODE="manual"
+fi
+
+if [[ "$MODE" == "ai" ]]; then
+  # AI-assisted: suggest branch description from ticket
+  echo "Describe the work (free text for AI to convert to kebab-case):"
+  read -r WORK_DESC
+  DESC=$(echo "$WORK_DESC" | claude --print -p \
+    "Convert this work description into a kebab-case branch suffix (2-4 words, lowercase, hyphens).
+Output ONLY the kebab-case string, nothing else. Example: fix-auth-token")
+
+  # Validate AI output is kebab-case
+  if ! [[ "$DESC" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
+    echo "WARNING: AI output not valid kebab-case, falling back to manual" >&2
+    MODE="manual"
+  fi
+fi
+
+if [[ "$MODE" == "manual" ]]; then
+  echo "Enter description (kebab-case, e.g., 'fix-auth-token'):"
+  read -r DESC
+fi
+
+# Construct branch name
+BRANCH="feature/${TICKET}-${DESC}"
+
+# Validate doesn't exist
+if git rev-parse --verify "$BRANCH" &>/dev/null; then
+  echo "ERROR: Branch '$BRANCH' already exists" >&2
+  exit 1
+fi
+
+# Confirm
+echo ""
+echo "Branch: $BRANCH"
+echo "Create and switch? (Y/n):"
+read -r CONFIRM
+[[ "$CONFIRM" =~ ^[Nn]$ ]] && { echo "Cancelled"; exit 0; }
+
+# Create
+git checkout -b "$BRANCH"
+echo "✓ Created and switched to '$BRANCH'"
