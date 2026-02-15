@@ -13,11 +13,11 @@ if [[ "$CURRENT" != "main" ]] && [[ "$CURRENT" != "master" ]]; then
   [[ "$CONTINUE" =~ ^[Yy]$ ]] || { echo "Cancelled"; exit 0; }
 fi
 
-# Get ticket
-echo "Enter Jira ticket (e.g., MLE-999):"
+# Get ticket (optional — press Enter to skip for personal projects)
+echo "Enter Jira ticket (e.g., MLE-999, or Enter to skip):"
 read -r TICKET
-if ! [[ "$TICKET" =~ ^[A-Z]+-[0-9]+$ ]]; then
-  echo "ERROR: Invalid format. Expected PROJECT-123" >&2
+if [[ -n "$TICKET" ]] && ! [[ "$TICKET" =~ ^[A-Z]+-[0-9]+$ ]]; then
+  echo "ERROR: Invalid format. Expected PROJECT-123 or empty" >&2
   exit 1
 fi
 
@@ -49,7 +49,11 @@ if [[ "$MODE" == "manual" ]]; then
 fi
 
 # Construct branch name
-BRANCH="feature/${TICKET}-${DESC}"
+if [[ -n "$TICKET" ]]; then
+  BRANCH="feature/${TICKET}-${DESC}"
+else
+  BRANCH="feature/${DESC}"
+fi
 
 # Validate doesn't exist
 if git rev-parse --verify "$BRANCH" &>/dev/null; then
