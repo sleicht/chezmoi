@@ -91,20 +91,17 @@ An audit report saved to `~/migration-audit/` containing:
 
 1. List all files in common bin directories:
    ```bash
-   # ~/bin
-   if [ -d ~/bin ]; then
-     ls -la ~/bin/ > ~/migration-audit/custom-bins.txt
-   else
-     echo "~/bin does not exist" > ~/migration-audit/custom-bins.txt
-   fi
+   > ~/migration-audit/custom-bins.txt  # Clear/create file
 
-   # ~/.local/bin
-   if [ -d ~/.local/bin ]; then
-     echo -e "\n--- ~/.local/bin ---" >> ~/migration-audit/custom-bins.txt
-     ls -la ~/.local/bin/ >> ~/migration-audit/custom-bins.txt
-   else
-     echo "~/.local/bin does not exist" >> ~/migration-audit/custom-bins.txt
-   fi
+   for dir in ~/bin ~/.bin ~/.local/bin; do
+     echo "--- $dir ---" >> ~/migration-audit/custom-bins.txt
+     if [ -d "$dir" ]; then
+       ls -la "$dir"/ >> ~/migration-audit/custom-bins.txt
+     else
+       echo "(does not exist)" >> ~/migration-audit/custom-bins.txt
+     fi
+     echo "" >> ~/migration-audit/custom-bins.txt
+   done
    ```
 
 2. Identify scripts that are NOT in the dotfiles-zsh repository:
@@ -112,7 +109,7 @@ An audit report saved to `~/migration-audit/` containing:
    # Check ~/bin contents against dotfiles repo
    > ~/migration-audit/untracked-scripts.txt  # Clear/create file
 
-   for dir in ~/bin ~/.local/bin; do
+   for dir in ~/bin ~/.bin ~/.local/bin; do
      if [ -d "$dir" ]; then
        for f in "$dir"/*; do
          if [ -f "$f" ]; then
@@ -151,7 +148,7 @@ An audit report saved to `~/migration-audit/` containing:
 **Expected output:** List of scripts needing triage. Even if empty, this confirms nothing will be lost.
 
 **Troubleshooting:**
-- If you have other bin locations (e.g., `~/scripts`, `~/.bin`), add them to the loop
+- If you have other bin locations (e.g., `~/scripts`), add them to the loop
 - Symlinked scripts will appear in the listing but their targets should be checked separately
 
 **Output:** `~/migration-audit/untracked-scripts.txt` – files needing triage before migration
@@ -354,7 +351,7 @@ After completing all 4 procedures, you should have these audit files in `~/migra
 - `chezmoi-managed.txt` – (optional) chezmoi-managed files for comparison
 
 **Procedure 2 (Scripts):**
-- `custom-bins.txt` – listing of ~/bin and ~/.local/bin contents
+- `custom-bins.txt` – listing of ~/bin, ~/.bin, and ~/.local/bin contents
 - `untracked-scripts.txt` – scripts not in dotfiles-zsh repo
 - `chezmoi-bins.txt` – (optional) chezmoi-managed bin files for comparison
 
