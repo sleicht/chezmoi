@@ -146,3 +146,31 @@
 
 ---
 
+
+## v3.0 Client Migration (Shipped: 2026-02-16)
+
+**Delivered:** Complete step-by-step runbook for migrating the client macOS from frozen dotfiles-zsh (Dotbot) to the chezmoi-managed stack, covering local state capture, age key bootstrap, symlink-to-real-file transition, post-migration verification, and rollback safety net.
+
+**Phases completed:** 26-31 (6 plans total)
+
+**Key accomplishments:**
+- Pre-migration audit runbook capturing Dotbot symlinks, custom scripts, env vars, and config drift into structured ~/migration-audit/ directory
+- Bootstrap runbook for age key setup via Bitwarden, HTTPS-first repo clone, and chezmoi init with client machine_type
+- Migration runbook with symlink materialisation (cp -L with backup), chezmoi apply with dry-run strategy, and conflict resolution workflow
+- Reintegration runbook with triage framework for scripts (add/keep/discard), env var templates vs local overrides, and three-mode config merge
+- Verification runbook with 4 acceptance test procedures (shell, git, tools, smoke test) and aggregate health check command
+- Rollback runbook with three-severity decision framework and step-by-step Dotbot restoration procedures
+
+**Stats:**
+- 6 phases, 6 plans
+- 2 days from start to ship (2026-02-15 to 2026-02-16)
+- 43 commits, 158 files changed, +35,880 / -146 lines
+- 19/19 requirements satisfied (100%)
+- Deliverables: 6 runbooks, 2,301 lines, 19 procedures
+
+**Git range:** main branch (d93d462..HEAD)
+
+**What's next:** User executes runbooks on client Mac to perform the migration
+
+---
+
