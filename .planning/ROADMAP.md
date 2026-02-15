@@ -138,10 +138,10 @@ Plans:
   1. User can evaluate custom scripts and decide: add to chezmoi, keep local, or discard
   2. User can reintegrate machine-specific env vars via templates or local override files
   3. User can merge valuable config edits from drifted files into chezmoi source
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 29-01: TBD
+- [ ] 29-01-PLAN.md -- Reintegration runbook (3 procedures: script triage, env var reintegration, config merge)
 
 #### Phase 30: Verification
 **Goal**: Document procedures for confirming migration success
@@ -201,9 +201,9 @@ Plans:
 | 26. Pre-Migration Audit | v3.0 | 1/1 | Complete | 2026-02-15 |
 | 27. Bootstrap | v3.0 | 1/1 | Complete | 2026-02-15 |
 | 28. Migration | v3.0 | Complete    | 2026-02-15 | - |
-| 29. Reintegration | v3.0 | 0/? | Not started | - |
+| 29. Reintegration | v3.0 | 0/1 | Planned | - |
 | 30. Verification | v3.0 | 0/? | Not started | - |
 | 31. Rollback Documentation | v3.0 | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-02-15 -- Phase 28 planned (1 plan)*
+*Last updated: 2026-02-15 -- Phase 29 planned (1 plan)*
