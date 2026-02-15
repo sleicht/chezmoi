@@ -9,6 +9,11 @@
 {{-   $workEmail = promptString "Work email address" -}}
 {{- end -}}
 
+{{- $computerName := "MacBook" -}}
+{{- if eq .chezmoi.os "darwin" -}}
+{{-   $computerName = promptString "Computer name" "MacBook" -}}
+{{- end -}}
+
 {{- $osid := .chezmoi.os -}}
 {{- if hasKey .chezmoi "osRelease" -}}
 {{-   if hasKey .chezmoi.osRelease "id" -}}
@@ -40,5 +45,8 @@ data:
   personal_email: {{ $personalEmail | quote }}
 {{- if eq $machineType "client" }}
   work_email: {{ $workEmail | quote }}
+{{- end }}
+{{- if eq .chezmoi.os "darwin" }}
+  computer_name: {{ $computerName | quote }}
 {{- end }}
   osid: {{ $osid | quote }}
