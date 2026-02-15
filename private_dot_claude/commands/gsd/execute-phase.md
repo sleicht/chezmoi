@@ -22,8 +22,8 @@ Context budget: ~15% orchestrator, 100% fresh per subagent.
 </objective>
 
 <execution_context>
-@/Users/stephanlv_fanaka/.claude/get-shit-done/workflows/execute-phase.md
-@/Users/stephanlv_fanaka/.claude/get-shit-done/references/ui-brand.md
+@$HOME/.claude/get-shit-done/workflows/execute-phase.md
+@$HOME/.claude/get-shit-done/references/ui-brand.md
 </execution_context>
 
 <context>
@@ -37,6 +37,6 @@ Phase: $ARGUMENTS
 </context>
 
 <process>
-Execute the execute-phase workflow from @/Users/stephanlv_fanaka/.claude/get-shit-done/workflows/execute-phase.md end-to-end.
+Execute the execute-phase workflow from @$HOME/.claude/get-shit-done/workflows/execute-phase.md end-to-end.
 Preserve all workflow gates (wave execution, checkpoint handling, verification, state updates, routing).
 </process>

@@ -103,7 +103,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"/Users/stephanlv_fanaka/.claude/hooks/gsd-check-update.js\""
+            "command": "node \"$HOME/.claude/hooks/gsd-check-update.js\""
           }
         ]
       }
@@ -111,7 +111,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "node \"/Users/stephanlv_fanaka/.claude/hooks/gsd-statusline.js\""
+    "command": "node \"$HOME/.claude/hooks/gsd-statusline.js\""
   },
   "enabledPlugins": {
     "ast-grep@ast-grep-marketplace": true,

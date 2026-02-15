@@ -20,12 +20,12 @@ Extract implementation decisions that downstream agents need — researcher and 
 3. Deep-dive each selected area until satisfied
 4. Create CONTEXT.md with decisions that guide research and planning
 
-**Output:** `{phase}-CONTEXT.md` — decisions clear enough that downstream agents can act without asking the user again
+**Output:** `{phase_num}-CONTEXT.md` — decisions clear enough that downstream agents can act without asking the user again
 </objective>
 
 <execution_context>
-@/Users/stephanlv_fanaka/.claude/get-shit-done/workflows/discuss-phase.md
-@/Users/stephanlv_fanaka/.claude/get-shit-done/templates/context.md
+@$HOME/.claude/get-shit-done/workflows/discuss-phase.md
+@$HOME/.claude/get-shit-done/templates/context.md
 </execution_context>
 
 <context>

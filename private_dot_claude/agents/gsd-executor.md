@@ -19,7 +19,7 @@ Your job: Execute the plan completely, commit each task, create SUMMARY.md, upda
 Load execution context:
 
 ```bash
-INIT=$(node /Users/stephanlv_fanaka/.claude/get-shit-done/bin/gsd-tools.js init execute-phase "${PHASE}")
+INIT=$(node $HOME/.claude/get-shit-done/bin/gsd-tools.js init execute-phase "${PHASE}")
 ```
 
 Extract from init JSON: `executor_model`, `commit_docs`, `phase_dir`, `plans`, `incomplete_plans`.
@@ -161,7 +161,7 @@ No user permission needed for Rules 1-3.
 Before any `checkpoint:human-verify`, ensure verification environment is ready. If plan lacks server startup before checkpoint, ADD ONE (deviation Rule 3).
 
 For full automation-first patterns, server lifecycle, CLI handling:
-**See @/Users/stephanlv_fanaka/.claude/get-shit-done/references/checkpoints.md**
+**See @$HOME/.claude/get-shit-done/references/checkpoints.md**
 
 **Quick reference:** Users NEVER run CLI commands. Users ONLY visit URLs, click UI, evaluate visuals, provide secrets. Claude does all automation.
 
@@ -274,7 +274,7 @@ git commit -m "{type}({phase}-{plan}): {concise task description}
 <summary_creation>
 After all tasks complete, create `{phase}-{plan}-SUMMARY.md` at `.planning/phases/XX-name/`.
 
-**Use template:** @/Users/stephanlv_fanaka/.claude/get-shit-done/templates/summary.md
+**Use template:** @$HOME/.claude/get-shit-done/templates/summary.md
 
 **Frontmatter:** phase, plan, subsystem, tags, dependency graph (requires/provides/affects), tech-stack (added/patterns), key-files (created/modified), decisions, metrics (duration, completed date).
 
@@ -327,24 +327,24 @@ After SUMMARY.md, update STATE.md using gsd-tools:
 
 ```bash
 # Advance plan counter (handles edge cases automatically)
-node /Users/stephanlv_fanaka/.claude/get-shit-done/bin/gsd-tools.js state advance-plan
+node $HOME/.claude/get-shit-done/bin/gsd-tools.js state advance-plan
 
 # Recalculate progress bar from disk state
-node /Users/stephanlv_fanaka/.claude/get-shit-done/bin/gsd-tools.js state update-progress
+node $HOME/.claude/get-shit-done/bin/gsd-tools.js state update-progress
 
 # Record execution metrics
-node /Users/stephanlv_fanaka/.claude/get-shit-done/bin/gsd-tools.js state record-metric \
+node $HOME/.claude/get-shit-done/bin/gsd-tools.js state record-metric \
   --phase "${PHASE}" --plan "${PLAN}" --duration "${DURATION}" \
   --tasks "${TASK_COUNT}" --files "${FILE_COUNT}"
 
 # Add decisions (extract from SUMMARY.md key-decisions)
 for decision in "${DECISIONS[@]}"; do
-  node /Users/stephanlv_fanaka/.claude/get-shit-done/bin/gsd-tools.js state add-decision \
+  node $HOME/.claude/get-shit-done/bin/gsd-tools.js state add-decision \
     --phase "${PHASE}" --summary "${decision}"
 done
 
 # Update session info
-node /Users/stephanlv_fanaka/.claude/get-shit-done/bin/gsd-tools.js state record-session \
+node $HOME/.claude/get-shit-done/bin/gsd-tools.js state record-session \
   --stopped-at "Completed ${PHASE}-${PLAN}-PLAN.md"
 ```
 
@@ -359,13 +359,13 @@ node /Users/stephanlv_fanaka/.claude/get-shit-done/bin/gsd-tools.js state record
 
 **For blockers found during execution:**
 ```bash
-node /Users/stephanlv_fanaka/.claude/get-shit-done/bin/gsd-tools.js state add-blocker "Blocker description"
+node $HOME/.claude/get-shit-done/bin/gsd-tools.js state add-blocker "Blocker description"
 ```
 </state_updates>
 
 <final_commit>
 ```bash
-node /Users/stephanlv_fanaka/.claude/get-shit-done/bin/gsd-tools.js commit "docs({phase}-{plan}): complete [plan-name] plan" --files .planning/phases/XX-name/{phase}-{plan}-SUMMARY.md .planning/STATE.md
+node $HOME/.claude/get-shit-done/bin/gsd-tools.js commit "docs({phase}-{plan}): complete [plan-name] plan" --files .planning/phases/XX-name/{phase}-{plan}-SUMMARY.md .planning/STATE.md
 ```
 
 Separate from per-task commits — captures execution results only.
