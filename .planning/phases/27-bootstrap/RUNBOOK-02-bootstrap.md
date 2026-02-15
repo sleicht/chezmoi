@@ -7,7 +7,7 @@
 - Homebrew installed on client Mac (if not, install from https://brew.sh)
 - Access to Bitwarden CLI or web vault
 - Age private key moved to `dotfiles/shared` folder in Bitwarden (item name: `age-private-key`). If it is still in `dotfiles/personal`, move it via the web vault or CLI before proceeding.
-- Git access to the chezmoi source repository (dotfiles-zsh-chezmoi or equivalent repo on GitHub/GitLab)
+- Git access to the chezmoi source repository (`github.com/sleicht/chezmoi`)
 - Terminal access on the client Mac
 
 **Output:** A working chezmoi installation with age encryption and machine_type=client configuration
@@ -103,21 +103,17 @@ The file `~/.config/age/key-client.txt` exists with 600 permissions. The encrypt
    chezmoi --version
    ```
 
-2. Clone the dotfiles source repository to chezmoi's expected location:
+2. Clone the dotfiles source repository to chezmoi's expected location.
+
+   **Note:** SSH keys are encrypted in the repo (chicken-and-egg), so use HTTPS for the initial clone:
    ```bash
-   # Replace with your actual repo URL
-   git clone <your-repo-url> ~/.local/share/chezmoi
+   git clone https://github.com/sleicht/chezmoi.git ~/.local/share/chezmoi
    ```
 
-   **Note:** If git SSH is not yet configured on the client Mac (SSH keys are encrypted in the repo -- chicken-and-egg problem), use HTTPS:
-   ```bash
-   git clone https://<host>/<user>/dotfiles-zsh-chezmoi.git ~/.local/share/chezmoi
-   ```
-
-   After chezmoi applies and deploys SSH keys (Phase 28), you can switch the remote to SSH:
+   After chezmoi applies and deploys SSH keys (Phase 28), switch the remote to SSH:
    ```bash
    cd ~/.local/share/chezmoi
-   git remote set-url origin git@<host>:<user>/dotfiles-zsh-chezmoi.git
+   git remote set-url origin git@github.com:sleicht/chezmoi.git
    ```
 
 3. Verify the clone:
