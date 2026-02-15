@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-15)
 
 **Core value:** Cross-platform dotfiles that "just work" -- one repository that handles Mac vs Linux differences through templating, without requiring Nix expertise to maintain.
-**Current focus:** v3.0 Client Migration -- Phase 29 Reintegration
+**Current focus:** v3.0 Client Migration -- Phase 30 Verification
 
 ## Current Position
 
-Phase: 29 of 31 (Reintegration)
-Plan: 1 of 1 in current phase (Phase 29 complete)
+Phase: 30 of 31 (Verification)
+Plan: 1 of 1 in current phase (Phase 30 complete)
 Status: Ready for next phase
-Last activity: 2026-02-15 -- Completed 29-01-PLAN.md (Reintegration runbook)
+Last activity: 2026-02-15 -- Completed 30-01-PLAN.md (Verification runbook)
 
-Progress: [██████████████████████] 93% (29/31 phases completed)
+Progress: [███████████████████████] 96% (30/31 phases completed)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 61
-- Average duration: 7.07 min
-- Total execution time: 7.19 hours
+- Total plans completed: 62
+- Average duration: 7.00 min
+- Total execution time: 7.26 hours
 
 **By Milestone:**
 
@@ -32,17 +32,17 @@ Progress: [██████████████████████] 9
 | v1.2 | 6 | 7 | 0.82h | 7.0 min |
 | v2.0 | 4 | 8 | 0.48h | 3.6 min |
 | v2.1 | 3 | 4 | 0.14h | 2.1 min |
-| v3.0 | 4 | 4 | 1.30h | 19.5 min |
+| v3.0 | 5 | 5 | 1.37h | 16.4 min |
 
-**Overall:** 29 phases, 61 plans, 5 milestones in 22 days (2026-01-25 to 2026-02-15)
+**Overall:** 30 phases, 62 plans, 5 milestones in 22 days (2026-01-25 to 2026-02-15)
 
 **Recent executions:**
 | Phase | Duration | Tasks | Files |
 |-------|----------|-------|-------|
-| 26-01 | 4 min | 1 | 1 |
 | 27-01 | 33 min | 2 | 1 |
 | 28-01 | 35 min | 2 | 1 |
 | 29-01 | 6 min | 2 | 1 |
+| 30-01 | 4 min | 2 | 1 |
 
 ## Accumulated Context
 
@@ -72,8 +72,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-15 (Phase 29 execution)
-Stopped at: Completed 29-01-PLAN.md (Reintegration runbook)
+Last session: 2026-02-15 (Phase 30 execution)
+Stopped at: Completed 30-01-PLAN.md (Verification runbook)
 Resume file: None
 
-**Next action:** User follows RUNBOOK-04-reintegration.md on client Mac to reintegrate local customisations, then `/gsd:plan-phase 30` for Verification plan
+**Next action:** User follows RUNBOOK-05-verification.md on client Mac to verify migration success, then `/gsd:plan-phase 31` for Rollback Documentation plan
