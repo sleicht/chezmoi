@@ -1,0 +1,119 @@
+# Roadmap: Dotfiles Stack
+
+## Milestones
+
+- ✅ **v1.0.0 Dotfiles Stack Migration** -- Phases 1-6 (shipped 2026-02-08)
+- ✅ **v1.1 Complete Migration** -- Phases 7-12 (shipped 2026-02-12)
+- ✅ **v1.2 Legacy Cleanup** -- Phases 13-18 (shipped 2026-02-14)
+- ✅ **v2.0 Performance** -- Phases 19-22 (shipped 2026-02-14)
+- ✅ **v2.1 Mise Task Runner** -- Phases 23-25 (shipped 2026-02-15)
+
+## Phases
+
+<details>
+<summary>✅ v1.0.0 Dotfiles Stack Migration (Phases 1-6) -- SHIPPED 2026-02-08</summary>
+
+Complete migration from Nix/Dotbot/Zgenom/asdf to chezmoi/mise/Homebrew/Sheldon with cross-platform templating and Bitwarden secret management. See `.planning/milestones/v1.0.0-ROADMAP.md` for full details.
+
+**Stats:** 6 phases, 25 plans, 3.10 hours total execution time
+
+- [x] Phase 1: Nix Removal (4/4 plans) -- completed 2026-01-25
+- [x] Phase 2: Chezmoi Foundation (5/5 plans) -- completed 2026-01-28
+- [x] Phase 3: Runtime Management Migration (4/4 plans) -- completed 2026-01-30
+- [x] Phase 4: Homebrew Automation (4/4 plans) -- completed 2026-02-02
+- [x] Phase 5: Secret Management (4/4 plans) -- completed 2026-02-05
+- [x] Phase 6: Security & Verification (4/4 plans) -- completed 2026-02-08
+
+</details>
+
+<details>
+<summary>✅ v1.1 Complete Migration (Phases 7-12) -- SHIPPED 2026-02-12</summary>
+
+Migrated all remaining Dotbot-managed configs to chezmoi and retired Dotbot entirely. 69 config files migrated with 112 automated verification checks. See `.planning/milestones/v1.1-ROADMAP.md` for full details.
+
+**Stats:** 6 phases, 13 plans, 57 commits, 30/30 requirements satisfied
+
+- [x] Phase 7: Preparation (2/2 plans) -- completed 2026-02-08
+- [x] Phase 8: Basic Configs & CLI Tools (3/3 plans) -- completed 2026-02-11
+- [x] Phase 9: Terminal Emulators (2/2 plans) -- completed 2026-02-09
+- [x] Phase 10: Dev Tools with Secrets (2/2 plans) -- completed 2026-02-10
+- [x] Phase 11: Claude Code (2/2 plans) -- completed 2026-02-12
+- [x] Phase 12: Dotbot Retirement (2/2 plans) -- completed 2026-02-12
+
+</details>
+
+<details>
+<summary>✅ v1.2 Legacy Cleanup (Phases 13-18) -- SHIPPED 2026-02-14</summary>
+
+Removed all pre-chezmoi artifacts from the repository and fixed stale code in the chezmoi source. Net -16,609 lines removed. See `.planning/milestones/v1.2-ROADMAP.md` for full details.
+
+**Stats:** 6 phases, 7 plans, 40 commits, 19/21 requirements satisfied (2 rescinded)
+
+- [x] Phase 13: Remove Legacy Config Files (2/2 plans) -- completed 2026-02-13
+- [x] Phase 14: Migrate san-proxy to chezmoi (1/1 plan) -- completed 2026-02-14
+- [x] Phase 15: Fix PATH and Version Manager Code (1/1 plan) -- completed 2026-02-14
+- [x] Phase 16: Fix Python 2 and Shell Utilities (1/1 plan) -- completed 2026-02-14
+- [x] Phase 17: Clean Audit Scripts and Artifacts (1/1 plan) -- completed 2026-02-14
+- [x] Phase 18: Clean Tech Debt from Audit (1/1 plan) -- completed 2026-02-14
+
+</details>
+
+<details>
+<summary>✅ v2.0 Performance (Phases 19-22) -- SHIPPED 2026-02-14</summary>
+
+Achieved 139.8ms shell startup (55.6% faster than 314.6ms baseline, 53.4% better than 300ms target) through eval caching, sync/defer architecture, and startup monitoring. See `.planning/milestones/v2.0-ROADMAP.md` for full details.
+
+**Stats:** 4 phases, 8 plans, 27 commits, 22/23 requirements satisfied (1 acceptable)
+
+- [x] Phase 19: Baseline & Quick Wins (2/2 plans) -- completed 2026-02-14
+- [x] Phase 20: Eval Caching Layer (2/2 plans) -- completed 2026-02-14
+- [x] Phase 21: Sync/Defer Architecture Split (2/2 plans) -- completed 2026-02-14
+- [x] Phase 22: Monitoring & Hardening (2/2 plans) -- completed 2026-02-14
+
+</details>
+
+<details>
+<summary>✅ v2.1 Mise Task Runner (Phases 23-25) -- SHIPPED 2026-02-15</summary>
+
+Implemented mise task runner for dotfiles operations and git workflows with 10 user-friendly commands, hybrid AI/manual mode for git operations, and short aliases. See `.planning/milestones/v2.1-ROADMAP.md` for full details.
+
+**Stats:** 3 phases, 4 plans, 15 commits, 15/15 requirements satisfied
+
+- [x] Phase 23: Task Infrastructure (1/1 plan) -- completed 2026-02-14
+- [x] Phase 24: Dotfiles Operations (1/1 plan) -- completed 2026-02-14
+- [x] Phase 25: Git Workflow Tasks (2/2 plans) -- completed 2026-02-15
+
+</details>
+
+## Progress
+
+| Phase | Milestone | Plans Complete | Status | Completed |
+|-------|-----------|----------------|--------|-----------|
+| 1. Nix Removal | v1.0.0 | 4/4 | Complete | 2026-01-25 |
+| 2. Chezmoi Foundation | v1.0.0 | 5/5 | Complete | 2026-01-28 |
+| 3. Runtime Management | v1.0.0 | 4/4 | Complete | 2026-01-30 |
+| 4. Homebrew Automation | v1.0.0 | 4/4 | Complete | 2026-02-02 |
+| 5. Secret Management | v1.0.0 | 4/4 | Complete | 2026-02-05 |
+| 6. Security & Verification | v1.0.0 | 4/4 | Complete | 2026-02-08 |
+| 7. Preparation | v1.1 | 2/2 | Complete | 2026-02-08 |
+| 8. Basic Configs & CLI | v1.1 | 3/3 | Complete | 2026-02-11 |
+| 9. Terminal Emulators | v1.1 | 2/2 | Complete | 2026-02-09 |
+| 10. Dev Tools with Secrets | v1.1 | 2/2 | Complete | 2026-02-10 |
+| 11. Claude Code | v1.1 | 2/2 | Complete | 2026-02-12 |
+| 12. Dotbot Retirement | v1.1 | 2/2 | Complete | 2026-02-12 |
+| 13. Legacy Config Files | v1.2 | 2/2 | Complete | 2026-02-13 |
+| 14. san-proxy Migration | v1.2 | 1/1 | Complete | 2026-02-14 |
+| 15. PATH/Version Manager Fix | v1.2 | 1/1 | Complete | 2026-02-14 |
+| 16. Python 2/Shell Utilities | v1.2 | 1/1 | Complete | 2026-02-14 |
+| 17. Audit Scripts Cleanup | v1.2 | 1/1 | Complete | 2026-02-14 |
+| 18. Tech Debt Cleanup | v1.2 | 1/1 | Complete | 2026-02-14 |
+| 19. Baseline & Quick Wins | v2.0 | 2/2 | Complete | 2026-02-14 |
+| 20. Eval Caching Layer | v2.0 | 2/2 | Complete | 2026-02-14 |
+| 21. Sync/Defer Architecture | v2.0 | 2/2 | Complete | 2026-02-14 |
+| 22. Monitoring & Hardening | v2.0 | 2/2 | Complete | 2026-02-14 |
+| 23. Task Infrastructure | v2.1 | 1/1 | Complete | 2026-02-14 |
+| 24. Dotfiles Operations | v2.1 | 1/1 | Complete | 2026-02-14 |
+| 25. Git Workflow Tasks | v2.1 | 2/2 | Complete | 2026-02-15 |
+
+---
+*Last updated: 2026-02-15 -- v2.1 Mise Task Runner shipped*
