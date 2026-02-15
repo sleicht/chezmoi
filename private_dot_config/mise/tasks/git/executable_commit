@@ -34,7 +34,7 @@ if [[ "$MODE" == "ai" ]]; then
   else
     AI_FORMAT="<type>[optional scope]: <description>"
   fi
-  COMMIT_MSG=$(echo "$DIFF" | claude --print -p \
+  COMMIT_MSG=$(echo "$DIFF" | claude --print --model haiku -p \
     "Generate a single-line conventional commit message for this diff.
 Format: ${AI_FORMAT}
 Rules: imperative present tense, no capital first letter, no trailing period.

@@ -32,7 +32,7 @@ if [[ "$MODE" == "ai" ]]; then
   # AI-assisted: suggest branch description from ticket
   echo "Describe the work (free text for AI to convert to kebab-case):"
   read -r WORK_DESC
-  DESC=$(echo "$WORK_DESC" | claude --print -p \
+  DESC=$(echo "$WORK_DESC" | claude --print --model haiku -p \
     "Convert this work description into a kebab-case branch suffix (2-4 words, lowercase, hyphens).
 Output ONLY the kebab-case string, nothing else. Example: fix-auth-token")
 
