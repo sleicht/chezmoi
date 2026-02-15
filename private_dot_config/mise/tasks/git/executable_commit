@@ -11,11 +11,11 @@ if git diff --cached --quiet; then
   exit 1
 fi
 
-# Get Jira ticket
-echo "Enter Jira ticket (e.g., MLE-999):"
+# Get Jira ticket (optional — press Enter to skip for personal projects)
+echo "Enter Jira ticket (e.g., MLE-999, or Enter to skip):"
 read -r TICKET
-if ! [[ "$TICKET" =~ ^[A-Z]+-[0-9]+$ ]]; then
-  echo "ERROR: Invalid format. Expected PROJECT-123" >&2
+if [[ -n "$TICKET" ]] && ! [[ "$TICKET" =~ ^[A-Z]+-[0-9]+$ ]]; then
+  echo "ERROR: Invalid format. Expected PROJECT-123 or empty" >&2
   exit 1
 fi
 
@@ -29,15 +29,20 @@ fi
 if [[ "$MODE" == "ai" ]]; then
   # AI-assisted: generate message from staged diff
   DIFF=$(git diff --cached)
+  if [[ -n "$TICKET" ]]; then
+    AI_FORMAT="${TICKET}: <type>[optional scope]: <description>"
+  else
+    AI_FORMAT="<type>[optional scope]: <description>"
+  fi
   COMMIT_MSG=$(echo "$DIFF" | claude --print -p \
     "Generate a single-line conventional commit message for this diff.
-Format: ${TICKET}: <type>[optional scope]: <description>
+Format: ${AI_FORMAT}
 Rules: imperative present tense, no capital first letter, no trailing period.
 Types: feat, fix, chore, docs, style, refactor, test, perf, ci, build, revert.
 Output ONLY the commit message line, nothing else.")
 
-  # Validate AI output starts with ticket
-  if ! [[ "$COMMIT_MSG" == "${TICKET}:"* ]]; then
+  # Validate AI output starts with ticket (if provided)
+  if [[ -n "$TICKET" ]] && ! [[ "$COMMIT_MSG" == "${TICKET}:"* ]]; then
     echo "WARNING: AI output didn't match expected format, falling back to manual" >&2
     MODE="manual"
   fi
@@ -60,7 +65,11 @@ if [[ "$MODE" == "manual" ]]; then
   read -r BREAKING
   BREAKING_MARKER=$([[ "$BREAKING" =~ ^[Yy]$ ]] && echo "!" || echo "")
 
-  COMMIT_MSG="${TICKET}: ${TYPE}${SCOPE_PART}${BREAKING_MARKER}: ${DESC}"
+  if [[ -n "$TICKET" ]]; then
+    COMMIT_MSG="${TICKET}: ${TYPE}${SCOPE_PART}${BREAKING_MARKER}: ${DESC}"
+  else
+    COMMIT_MSG="${TYPE}${SCOPE_PART}${BREAKING_MARKER}: ${DESC}"
+  fi
 fi
 
 # Confirm (both paths converge here)
