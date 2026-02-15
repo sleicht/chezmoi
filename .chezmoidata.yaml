@@ -88,6 +88,7 @@ packages:
       - "sheldon"
       - "ssh-copy-id"
       - "tmux"
+      - "topgrade"
       - "tree"
       - "trivy"
       - "uv"

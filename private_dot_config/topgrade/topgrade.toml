@@ -1,0 +1,12 @@
+[misc]
+# Steps to skip during updates
+# "shell" covers oh-my-zsh/oh-my-bash — not needed since we use sheldon (separate step)
+disable = ["shell"]
+cleanup = true
+
+[brew]
+greedy_cask = true
+autoremove = true
+
+[chezmoi]
+exclude_encrypted = true
