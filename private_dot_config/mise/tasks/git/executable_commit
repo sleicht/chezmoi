@@ -1,7 +1,73 @@
 #!/usr/bin/env bash
 #MISE description="Create conventional commit with Jira prefix"
+#MISE alias="c"
 
 set -euo pipefail
 
-echo "Placeholder: Phase 25 will implement conventional commit workflow with Jira prefix"
-echo "This task proves cross-namespace capability (git:commit alongside dotfiles:*)"
+# Validate staged changes exist
+if git diff --cached --quiet; then
+  echo "ERROR: No staged changes. Run 'git add <files>' first" >&2
+  exit 1
+fi
+
+# Get Jira ticket
+echo "Enter Jira ticket (e.g., MLE-999):"
+read -r TICKET
+if ! [[ "$TICKET" =~ ^[A-Z]+-[0-9]+$ ]]; then
+  echo "ERROR: Invalid format. Expected PROJECT-123" >&2
+  exit 1
+fi
+
+# Choose mode: AI or manual
+MODE="manual"
+if command -v claude &>/dev/null; then
+  MODE=$(echo -e "ai\nmanual" | fzf --prompt="Mode: " --height=4)
+  [[ -n "$MODE" ]] || MODE="manual"
+fi
+
+if [[ "$MODE" == "ai" ]]; then
+  # AI-assisted: generate message from staged diff
+  DIFF=$(git diff --cached)
+  COMMIT_MSG=$(echo "$DIFF" | claude --print -p \
+    "Generate a single-line conventional commit message for this diff.
+Format: ${TICKET}: <type>[optional scope]: <description>
+Rules: imperative present tense, no capital first letter, no trailing period.
+Types: feat, fix, chore, docs, style, refactor, test, perf, ci, build, revert.
+Output ONLY the commit message line, nothing else.")
+
+  # Validate AI output starts with ticket
+  if ! [[ "$COMMIT_MSG" == "${TICKET}:"* ]]; then
+    echo "WARNING: AI output didn't match expected format, falling back to manual" >&2
+    MODE="manual"
+  fi
+fi
+
+if [[ "$MODE" == "manual" ]]; then
+  # Manual: fzf type selection + prompts
+  TYPE=$(echo -e "feat\nfix\nchore\ndocs\nstyle\nrefactor\ntest\nperf\nci\nbuild\nrevert" | \
+    fzf --prompt="Select type: " --height=12)
+  [[ -n "$TYPE" ]] || { echo "ERROR: No type selected" >&2; exit 1; }
+
+  echo "Enter scope (optional, press Enter to skip):"
+  read -r SCOPE
+  SCOPE_PART=$([[ -n "$SCOPE" ]] && echo "($SCOPE)" || echo "")
+
+  echo "Enter description (imperative, no capital, no period):"
+  read -r DESC
+
+  echo "Breaking change? (y/N):"
+  read -r BREAKING
+  BREAKING_MARKER=$([[ "$BREAKING" =~ ^[Yy]$ ]] && echo "!" || echo "")
+
+  COMMIT_MSG="${TICKET}: ${TYPE}${SCOPE_PART}${BREAKING_MARKER}: ${DESC}"
+fi
+
+# Confirm (both paths converge here)
+echo ""
+echo "Commit message: $COMMIT_MSG"
+echo "Proceed? (Y/n):"
+read -r CONFIRM
+[[ "$CONFIRM" =~ ^[Nn]$ ]] && { echo "Cancelled"; exit 0; }
+
+git commit -m "$COMMIT_MSG"
+echo "✓ Commit created"
