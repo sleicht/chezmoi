@@ -6,6 +6,7 @@
 - Phase 26 audit complete (`~/migration-audit/` populated)
 - Homebrew installed on client Mac (if not, install from https://brew.sh)
 - Access to Bitwarden CLI or web vault
+- Age private key moved to `dotfiles/shared` folder in Bitwarden (item name: `age-private-key`). If it is still in `dotfiles/personal`, move it via the web vault or CLI before proceeding.
 - Git access to the chezmoi source repository (dotfiles-zsh-chezmoi or equivalent repo on GitHub/GitLab)
 - Terminal access on the client Mac
 
@@ -33,13 +34,17 @@ This is the critical bootstrap chain: the age key decrypts SSH keys and other se
    - The user needs the private key that matches this public key to decrypt secrets
 
 3. Retrieve the age private key. There are two options:
-   - **Option A: From Bitwarden** (preferred if already stored there):
+   - **Option A: From Bitwarden** (preferred):
      ```bash
      # Log in to Bitwarden CLI
      export BW_SESSION=$(bw login --raw)  # or bw unlock --raw if already logged in
 
-     # Retrieve the age key from Bitwarden (adjust item name to match your vault)
-     bw get notes "age-key-personal" > /tmp/age-key.txt
+     # Retrieve the age key from dotfiles/shared folder
+     bw get notes "age-private-key" --folderid $(bw get folder "dotfiles/shared" | jq -r '.id') > /tmp/age-key.txt
+     ```
+     Or simply search by name if the item name is unique:
+     ```bash
+     bw get notes "age-private-key" > /tmp/age-key.txt
      ```
    - **Option B: Copy from personal Mac** (simpler):
      ```bash
@@ -47,13 +52,6 @@ This is the critical bootstrap chain: the age key decrypts SSH keys and other se
      cat ~/.config/age/key-personal.txt
      # Copy the output and paste on client Mac (see step 4)
      ```
-
-   **Note:** If the private key is NOT yet in Bitwarden, now is the time to store it. On the personal Mac:
-   ```bash
-   # Store the age private key in Bitwarden for cross-machine access
-   # Use bw CLI or the web vault to create a Secure Note named "age-key-dotfiles"
-   # containing the full contents of ~/.config/age/key-personal.txt
-   ```
 
 4. Create the age key directory and install the private key on the client Mac:
    ```bash
