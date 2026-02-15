@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Source: Git branch cleanup best practices
+#MISE description="Prune merged local branches"
+#MISE dir="{{cwd}}"
+
+set -euo pipefail
+
+echo "Cleaning merged branches..."
+echo ""
+
+# Update remote tracking
+echo "[1/3] Updating remote tracking..."
+git fetch --prune --all
+echo "✓ Remote tracking updated"
+echo ""
+
+# Find merged branches
+echo "[2/3] Finding merged branches..."
+MAIN=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "main")
+MERGED=$(git branch --merged "$MAIN" | \
+  grep -vE "^\*|^\s*${MAIN}$|^\s*main$|^\s*master$|^\s*develop$" | \
+  sed 's/^\s*//' || echo "")
+
+if [[ -z "$MERGED" ]]; then
+  echo "No merged branches to clean"
+  exit 0
+fi
+
+echo "Merged branches:"
+echo "$MERGED" | sed 's/^/  - /'
+echo ""
+
+# Confirm
+echo "Delete these? (y/N):"
+read -r CONFIRM
+[[ "$CONFIRM" =~ ^[Yy]$ ]] || { echo "Cancelled"; exit 0; }
+
+# Delete
+echo "[3/3] Deleting..."
+echo "$MERGED" | while read -r branch; do
+  git branch -d "$branch" && echo "  ✓ Deleted $branch"
+done
+
+echo ""
+echo "✓ Cleanup complete"
