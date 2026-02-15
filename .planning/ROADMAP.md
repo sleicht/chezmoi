@@ -112,10 +112,10 @@ Plans:
   1. User can generate an age encryption key and securely store its public key in Bitwarden
   2. User can clone the chezmoi source repo to the expected location on client Mac
   3. User can run chezmoi init with correct machine_type, email, and encryption settings
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 27-01: TBD
+- [ ] 27-01-PLAN.md -- Bootstrap runbook (3 procedures: age key setup, repo clone, chezmoi init)
 
 #### Phase 28: Migration
 **Goal**: Document procedures for safe Dotbot removal and chezmoi deployment
