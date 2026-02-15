@@ -135,6 +135,27 @@ Configs adapt based on machine type (set during `chezmoi init`):
 - **Permissions** — `run_after_` script enforces 600/700 on sensitive files
 - **Pre-commit** — gitleaks scans every commit for accidental secret exposure
 
+### Age Encryption Bootstrap
+
+The age private key is the root of the secret chain — it must be placed manually before `chezmoi apply` can decrypt anything.
+
+```
+Bitwarden (dotfiles/shared/age-private-key)
+  → manual copy to ~/.config/age/key-{machine_type}.txt
+    → chezmoi reads identity from .chezmoi.yaml.tmpl
+      → decrypts encrypted_*.age files (SSH keys, config)
+        → SSH access unlocked
+```
+
+| What | Where |
+|------|-------|
+| **Private key (on disk)** | `~/.config/age/key-{machine_type}.txt` (600 perms) |
+| **Private key (backup)** | Bitwarden item `age-private-key` in `dotfiles/shared` folder |
+| **Public key (recipient)** | Hardcoded in `.chezmoi.yaml.tmpl` |
+| **Encrypted files** | `private_dot_ssh/encrypted_*.age` (5 files) |
+
+> **Note:** Chezmoi does **not** fetch the age key from Bitwarden automatically. It is a manual one-time setup per machine. See the [bootstrap runbook](.planning/phases/27-bootstrap/RUNBOOK-02-bootstrap.md) for step-by-step instructions.
+
 ## 🎯 Task Runner Reference
 
 All tasks are file-based scripts in `~/.config/mise/tasks/`, deployed by chezmoi. Run `mise tasks` to list them.
