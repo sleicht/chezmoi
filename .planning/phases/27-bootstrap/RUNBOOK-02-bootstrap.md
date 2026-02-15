@@ -1,0 +1,314 @@
+# Bootstrap Runbook
+
+**Purpose:** Set up chezmoi infrastructure on the client Mac -- age encryption, source repo, and initial configuration
+
+**Prerequisites:**
+- Phase 26 audit complete (`~/migration-audit/` populated)
+- Homebrew installed on client Mac (if not, install from https://brew.sh)
+- Access to Bitwarden CLI or web vault
+- Git access to the chezmoi source repository (dotfiles-zsh-chezmoi or equivalent repo on GitHub/GitLab)
+- Terminal access on the client Mac
+
+**Output:** A working chezmoi installation with age encryption and machine_type=client configuration
+
+---
+
+## Procedure 1: Set Up Age Encryption Key (BOOT-01)
+
+**Objective:** Install the age encryption key needed to decrypt SSH keys and other secrets in the chezmoi source repository.
+
+This is the critical bootstrap chain: the age key decrypts SSH keys and other secrets stored in the chezmoi source.
+
+### Steps
+
+1. Install age on the client Mac:
+   ```bash
+   brew install age
+   ```
+
+2. Understand the key architecture:
+   - The chezmoi repo uses a **single age key pair** for encrypting secrets
+   - The private key is stored at `~/.config/age/key-{machine_type}.txt` (per-machine filename, same key material)
+   - The public key (recipient) is hardcoded in `.chezmoi.yaml.tmpl`: `age1hl7puvh5w5d49qgygxpj7q7zmc9gqyutqufk2p9x55mfm7ul742qg9vjn8`
+   - The user needs the private key that matches this public key to decrypt secrets
+
+3. Retrieve the age private key. There are two options:
+   - **Option A: From Bitwarden** (preferred if already stored there):
+     ```bash
+     # Log in to Bitwarden CLI
+     export BW_SESSION=$(bw login --raw)  # or bw unlock --raw if already logged in
+
+     # Retrieve the age key from Bitwarden (adjust item name to match your vault)
+     bw get notes "age-key-personal" > /tmp/age-key.txt
+     ```
+   - **Option B: Copy from personal Mac** (simpler):
+     ```bash
+     # On personal Mac:
+     cat ~/.config/age/key-personal.txt
+     # Copy the output and paste on client Mac (see step 4)
+     ```
+
+   **Note:** If the private key is NOT yet in Bitwarden, now is the time to store it. On the personal Mac:
+   ```bash
+   # Store the age private key in Bitwarden for cross-machine access
+   # Use bw CLI or the web vault to create a Secure Note named "age-key-dotfiles"
+   # containing the full contents of ~/.config/age/key-personal.txt
+   ```
+
+4. Create the age key directory and install the private key on the client Mac:
+   ```bash
+   mkdir -p ~/.config/age
+   chmod 700 ~/.config/age
+   ```
+   Then write the key file (paste the private key content retrieved in step 3):
+   ```bash
+   # Paste the private key into this file
+   # It should start with "# created:" and "AGE-SECRET-KEY-..."
+   cat > ~/.config/age/key-client.txt << 'EOF'
+   # created: <timestamp>
+   # public key: age1hl7puvh5w5d49qgygxpj7q7zmc9gqyutqufk2p9x55mfm7ul742qg9vjn8
+   AGE-SECRET-KEY-<your-secret-key-here>
+   EOF
+
+   chmod 600 ~/.config/age/key-client.txt
+   ```
+
+5. Verify the key works:
+   ```bash
+   # Quick test: encrypt and decrypt a test string
+   echo "test" | age -r age1hl7puvh5w5d49qgygxpj7q7zmc9gqyutqufk2p9x55mfm7ul742qg9vjn8 | age -d -i ~/.config/age/key-client.txt
+   # Expected output: "test"
+   ```
+
+6. Clean up temporary files:
+   ```bash
+   rm -f /tmp/age-key.txt
+   ```
+
+### Expected Output
+
+The file `~/.config/age/key-client.txt` exists with 600 permissions. The encrypt/decrypt test prints "test".
+
+### Troubleshooting
+
+- If `age -d` fails with "no identity matched any of the recipients": the private key does not match the public key in the repo. Verify you copied the correct key.
+- If the key is lost entirely: you must regenerate a key pair on the personal Mac, re-encrypt all `encrypted_*.age` files in the chezmoi source, update the `recipient` in `.chezmoi.yaml.tmpl`, and push. Then repeat this procedure with the new key.
+- If Bitwarden CLI is not installed: `brew install bitwarden-cli`, or just copy the key directly from your personal Mac.
+
+### Output
+
+`~/.config/age/key-client.txt` with correct permissions, verified with encrypt/decrypt round-trip.
+
+---
+
+## Procedure 2: Clone the Chezmoi Source Repository (BOOT-02)
+
+**Objective:** Clone the dotfiles source repository to chezmoi's expected location on the client Mac.
+
+### Steps
+
+1. Install chezmoi on the client Mac:
+   ```bash
+   brew install chezmoi
+   ```
+   Verify installation:
+   ```bash
+   chezmoi --version
+   ```
+
+2. Clone the dotfiles source repository to chezmoi's expected location:
+   ```bash
+   # Replace with your actual repo URL
+   git clone <your-repo-url> ~/.local/share/chezmoi
+   ```
+
+   **Note:** If git SSH is not yet configured on the client Mac (SSH keys are encrypted in the repo -- chicken-and-egg problem), use HTTPS:
+   ```bash
+   git clone https://<host>/<user>/dotfiles-zsh-chezmoi.git ~/.local/share/chezmoi
+   ```
+
+   After chezmoi applies and deploys SSH keys (Phase 28), you can switch the remote to SSH:
+   ```bash
+   cd ~/.local/share/chezmoi
+   git remote set-url origin git@<host>:<user>/dotfiles-zsh-chezmoi.git
+   ```
+
+3. Verify the clone:
+   ```bash
+   ls ~/.local/share/chezmoi/.chezmoi.yaml.tmpl
+   ls ~/.local/share/chezmoi/.chezmoidata.yaml
+   ls ~/.local/share/chezmoi/private_dot_ssh/encrypted_private_id_rsa.age
+   ```
+   All three files should exist.
+
+### Expected Output
+
+The chezmoi source directory is populated at `~/.local/share/chezmoi/`.
+
+### Troubleshooting
+
+- If `~/.local/share/chezmoi` already exists (from a previous attempt): remove it first (`rm -rf ~/.local/share/chezmoi`) or move it aside
+- If behind a corporate proxy: configure git proxy settings before cloning (`git config --global http.proxy http://proxy:port`)
+- If SSH auth fails: use HTTPS clone first, switch to SSH after chezmoi deploys keys
+
+### Output
+
+Chezmoi source repo at `~/.local/share/chezmoi/` with all files present.
+
+---
+
+## Procedure 3: Run chezmoi init (BOOT-03)
+
+**Objective:** Initialise chezmoi with client-specific configuration and verify age decryption works.
+
+### Steps
+
+1. Ensure Bitwarden CLI is installed and unlocked (chezmoi templates reference Bitwarden for secrets):
+   ```bash
+   brew install bitwarden-cli  # if not already installed
+   export BW_SESSION=$(bw unlock --raw)
+   ```
+
+   If Bitwarden is not yet set up on the client Mac, the installed `~/.local/bin/bw` won't exist yet. Use the Homebrew version for now:
+   ```bash
+   # Temporarily use Homebrew bw (chezmoi config expects ~/.local/bin/bw)
+   # Option A: Create a temporary symlink
+   mkdir -p ~/.local/bin
+   ln -sf $(which bw) ~/.local/bin/bw
+
+   # Option B: Or just set BW_SESSION and chezmoi will find it
+   ```
+
+2. Run chezmoi init (this processes `.chezmoi.yaml.tmpl` and prompts for configuration):
+   ```bash
+   chezmoi init
+   ```
+
+   You will be prompted for:
+   - **Machine type (client/personal/server):** Enter `client`
+   - **Personal email address:** Enter your personal email
+   - **Work email address:** Enter your work email (only prompted because machine_type=client)
+   - **Computer name:** Enter the client Mac's hostname
+
+   This creates `~/.config/chezmoi/chezmoi.yaml` with your configuration.
+
+3. Verify the generated configuration:
+   ```bash
+   cat ~/.config/chezmoi/chezmoi.yaml
+   ```
+
+   Expected contents:
+   ```yaml
+   edit:
+     apply: false
+   git:
+     autoCommit: true
+     autoPush: false
+   diff:
+     pager: "less"
+   encryption: "age"
+   age:
+     identity: "/Users/<you>/.config/age/key-client.txt"
+     recipient: "age1hl7puvh5w5d49qgygxpj7q7zmc9gqyutqufk2p9x55mfm7ul742qg9vjn8"
+   bitwarden:
+     command: "/Users/<you>/.local/bin/bw"
+   data:
+     machine_type: "client"
+     personal_email: "<your-personal-email>"
+     work_email: "<your-work-email>"
+     computer_name: "<hostname>"
+     osid: "darwin"
+   ```
+
+   Check specifically:
+   - `encryption: "age"` is set
+   - `age.identity` points to `key-client.txt` (not `key-personal.txt`)
+   - `machine_type` is `"client"`
+   - `work_email` is present (only set for client machines)
+
+4. Test that age decryption works through chezmoi:
+   ```bash
+   # Try to view an encrypted file -- should decrypt successfully
+   chezmoi cat ~/.ssh/config
+   ```
+   If this prints the SSH config content, age encryption is working correctly.
+
+5. Preview what chezmoi would deploy (DO NOT apply yet -- that is Phase 28):
+   ```bash
+   chezmoi diff | head -50
+   ```
+   This should show a large diff of files chezmoi would create/modify. Review the first few entries to confirm templates are rendering with client-specific values.
+
+### Expected Output
+
+`~/.config/chezmoi/chezmoi.yaml` exists with correct machine_type=client and age encryption settings. `chezmoi cat` successfully decrypts files.
+
+### Troubleshooting
+
+- If `chezmoi init` fails with "age: decryption failed": the age key at `key-client.txt` does not match the recipient. Go back to Procedure 1.
+- If `chezmoi init` fails with "bitwarden: command not found": either install bw or create the symlink in step 1. If you don't need Bitwarden secrets immediately, you can also temporarily comment out the bitwarden section in `.chezmoi.yaml.tmpl` (not recommended).
+- If prompts don't appear: chezmoi may have found an existing `chezmoi.yaml` from a previous run. Delete `~/.config/chezmoi/chezmoi.yaml` and rerun.
+- If `chezmoi cat` fails on encrypted files but `chezmoi init` succeeded: verify the age key file path and permissions (`ls -la ~/.config/age/key-client.txt` should show `-rw-------`).
+
+### Output
+
+`~/.config/chezmoi/chezmoi.yaml` with client configuration. Age decryption verified. Ready for Phase 28 (Migration).
+
+---
+
+## Summary
+
+After completing all 3 procedures, you should have:
+- `~/.config/age/key-client.txt` -- age encryption private key (600 permissions)
+- `~/.local/share/chezmoi/` -- cloned chezmoi source repository
+- `~/.config/chezmoi/chezmoi.yaml` -- generated chezmoi config with machine_type=client
+
+### Verification Command
+
+Run this command to verify all bootstrap requirements are met:
+
+```bash
+echo "=== Bootstrap Verification ==="
+
+# Age key
+if [ -f ~/.config/age/key-client.txt ]; then
+  perms=$(stat -f "%Lp" ~/.config/age/key-client.txt 2>/dev/null || stat -c "%a" ~/.config/age/key-client.txt 2>/dev/null)
+  echo "✓ Age key exists (permissions: $perms)"
+else
+  echo "✗ MISSING: ~/.config/age/key-client.txt"
+fi
+
+# Chezmoi source
+if [ -f ~/.local/share/chezmoi/.chezmoi.yaml.tmpl ]; then
+  echo "✓ Chezmoi source repo cloned"
+else
+  echo "✗ MISSING: ~/.local/share/chezmoi/"
+fi
+
+# Chezmoi config
+if [ -f ~/.config/chezmoi/chezmoi.yaml ]; then
+  machine_type=$(grep 'machine_type' ~/.config/chezmoi/chezmoi.yaml | awk '{print $2}' | tr -d '"')
+  echo "✓ Chezmoi config exists (machine_type: $machine_type)"
+else
+  echo "✗ MISSING: ~/.config/chezmoi/chezmoi.yaml"
+fi
+
+# Age decryption test
+if chezmoi cat ~/.ssh/config >/dev/null 2>&1; then
+  echo "✓ Age decryption working"
+else
+  echo "✗ Age decryption failed"
+fi
+```
+
+---
+
+## Next Steps
+
+- **Do NOT run `chezmoi apply` yet** -- Phase 28 covers safe Dotbot symlink removal first
+- If using HTTPS clone, switch to SSH after Phase 28 deploys SSH keys
+- Proceed to **Phase 28: Migration** to safely remove Dotbot symlinks and run `chezmoi apply`
+
+---
+
+*Bootstrap runbook created: 2026-02-15*
