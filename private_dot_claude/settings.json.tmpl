@@ -1,5 +1,9 @@
 {
-  "env": {},
+  "env": {
+{{- if eq .machine_type "personal" }}
+    "BRAVE_SEARCH_API_KEY": "{{ (bitwardenFields "item" "dotfiles/personal/claude-settings").brave_search_api_key.value }}"
+{{- end }}
+  },
   "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
