@@ -152,10 +152,10 @@ Plans:
   2. User can verify git workflows: commits work, mise tasks function, hooks trigger
   3. User can verify tool availability: mise runtimes respond, Homebrew packages exist, keys decrypt
   4. User can run the 13-check smoke test script and all checks pass
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 30-01: TBD
+- [ ] 30-01-PLAN.md -- Verification runbook (4 procedures: shell functionality, git workflows, tool availability, smoke test)
 
 #### Phase 31: Rollback Documentation
 **Goal**: Document safety net procedures for reverting to old Dotbot setup
@@ -202,8 +202,8 @@ Plans:
 | 27. Bootstrap | v3.0 | 1/1 | Complete | 2026-02-15 |
 | 28. Migration | v3.0 | Complete    | 2026-02-15 | - |
 | 29. Reintegration | v3.0 | Complete    | 2026-02-15 | - |
-| 30. Verification | v3.0 | 0/? | Not started | - |
+| 30. Verification | v3.0 | 0/1 | Not started | - |
 | 31. Rollback Documentation | v3.0 | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-02-15 -- Phase 29 planned (1 plan)*
+*Last updated: 2026-02-15 -- Phase 30 planned (1 plan)*
