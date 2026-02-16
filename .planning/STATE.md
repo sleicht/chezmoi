@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** Cross-platform dotfiles that "just work" -- one repository that handles Mac vs Linux differences through templating, without requiring Nix expertise to maintain.
-**Current focus:** v4.0 Shell UX Polish -- wire existing shell tools together for a polished UX
+**Current focus:** Phase 32 - fzf Enhancement
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-02-16 — Milestone v4.0 started
+Phase: 32 of 33 (fzf Enhancement)
+Plan: 0 of ? in current phase
+Status: Ready to plan
+Last activity: 2026-02-16 -- v4.0 Shell UX Polish roadmap created
 
-Progress: [░░░░░░░░░░░░░░░░░░░░░░░░] 0%
+Progress: [███████████████░░] 93.9% (31/33 phases complete)
 
 ## Performance Metrics
 
@@ -41,6 +41,11 @@ Progress: [░░░░░░░░░░░░░░░░░░░░░░░
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
+Recent decisions affecting current work:
+
+- v2.0: Sync/defer Sheldon architecture -- two plugin groups (immediate sync + zsh-defer)
+- v2.0: EPOCHREALTIME startup monitoring with 300ms threshold
+- v2.0: evalcache for tool init calls (cache static eval outputs, skip dynamic like mise)
 
 ### Pending Todos
 
@@ -52,8 +57,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-16 (v4.0 milestone started)
-Stopped at: Defining requirements
+Last session: 2026-02-16
+Stopped at: v4.0 Shell UX Polish roadmap created, ready to plan Phase 32
 Resume file: None
 
-**Next action:** Complete requirements and roadmap for v4.0
+**Next action:** Plan Phase 32 with `/gsd:plan-phase 32`

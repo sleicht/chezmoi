@@ -53,27 +53,29 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FZFT-01 | — | Pending |
-| FZFT-02 | — | Pending |
-| FZFT-03 | — | Pending |
-| FZFT-04 | — | Pending |
-| FZFT-05 | — | Pending |
-| FZFT-06 | — | Pending |
-| FZFW-01 | — | Pending |
-| FZFW-02 | — | Pending |
-| PROJ-01 | — | Pending |
-| PROJ-02 | — | Pending |
-| PROJ-03 | — | Pending |
-| PROJ-04 | — | Pending |
-| PROJ-05 | — | Pending |
-| INTG-01 | — | Pending |
-| INTG-02 | — | Pending |
+| FZFT-01 | Phase 32 | Pending |
+| FZFT-02 | Phase 32 | Pending |
+| FZFT-03 | Phase 32 | Pending |
+| FZFT-04 | Phase 32 | Pending |
+| FZFT-05 | Phase 32 | Pending |
+| FZFT-06 | Phase 32 | Pending |
+| FZFW-01 | Phase 32 | Pending |
+| FZFW-02 | Phase 32 | Pending |
+| PROJ-01 | Phase 33 | Pending |
+| PROJ-02 | Phase 33 | Pending |
+| PROJ-03 | Phase 33 | Pending |
+| PROJ-04 | Phase 33 | Pending |
+| PROJ-05 | Phase 33 | Pending |
+| INTG-01 | Phase 32 | Pending |
+| INTG-02 | Phase 32, 33 | Pending |
 
 **Coverage:**
 - v4.0 requirements: 15 total
-- Mapped to phases: 0
-- Unmapped: 15
+- Mapped to phases: 15
+- Unmapped: 0
+- Phase 32 covers: 10 requirements (FZFT-01 through FZFT-06, FZFW-01, FZFW-02, INTG-01, INTG-02)
+- Phase 33 covers: 6 requirements (PROJ-01 through PROJ-05, INTG-02)
 
 ---
 *Requirements defined: 2026-02-16*
-*Last updated: 2026-02-16 after initial definition*
+*Last updated: 2026-02-16 after roadmap creation (100% coverage validated)*

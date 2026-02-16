@@ -8,6 +8,7 @@
 - ✅ **v2.0 Performance** -- Phases 19-22 (shipped 2026-02-14)
 - ✅ **v2.1 Mise Task Runner** -- Phases 23-25 (shipped 2026-02-15)
 - ✅ **v3.0 Client Migration** -- Phases 26-31 (shipped 2026-02-16)
+- 🚧 **v4.0 Shell UX Polish** -- Phases 32-33 (in progress)
 
 ## Phases
 
@@ -102,6 +103,48 @@ Complete step-by-step runbook for migrating client macOS from frozen dotfiles-zs
 
 </details>
 
+### 🚧 v4.0 Shell UX Polish (In Progress)
+
+**Milestone Goal:** Wire existing shell tools together for polished UX -- configure fzf-tab with rich previews, enhance fzf widget previews, and build project picker for rapid navigation.
+
+- [ ] **Phase 32: fzf Enhancement** - Configure fzf-tab completion previews and enhance fzf widget previews
+- [ ] **Phase 33: Project Picker** - Build fzf-based project discovery and navigation with editor integration
+
+## Phase Details
+
+### Phase 32: fzf Enhancement
+**Goal**: Users experience rich, context-aware previews in completions and fzf widgets
+**Depends on**: Phase 31
+**Requirements**: FZFT-01, FZFT-02, FZFT-03, FZFT-04, FZFT-05, FZFT-06, FZFW-01, FZFW-02, INTG-01, INTG-02
+**Success Criteria** (what must be TRUE):
+  1. User sees bat-highlighted file previews when tab-completing file paths
+  2. User sees eza tree previews when tab-completing directories
+  3. User sees process info, env var values, git diff, and git log in relevant completion contexts
+  4. Ctrl+T file picker shows bat syntax highlighting in preview pane
+  5. Alt+C directory picker shows eza tree view in preview pane
+  6. Carapace completions render correctly in fzf-tab menus
+  7. Shell startup time remains under 150ms (no regression from 139.8ms baseline)
+**Plans**: TBD
+
+Plans:
+- [ ] 32-01: TBD
+
+### Phase 33: Project Picker
+**Goal**: Users can rapidly discover and navigate to projects with optional editor integration
+**Depends on**: Phase 32
+**Requirements**: PROJ-01, PROJ-02, PROJ-03, PROJ-04, PROJ-05, INTG-02
+**Success Criteria** (what must be TRUE):
+  1. User can invoke project picker via key binding or shell command
+  2. Project picker scans configurable parent directories and finds all git repositories
+  3. User can cd to selected project from picker
+  4. User can optionally open selected project in IntelliJ IDEA or Sublime Text
+  5. Project list displays context (branch name, last modified time, path)
+  6. Shell startup time remains under 150ms (no regression)
+**Plans**: TBD
+
+Plans:
+- [ ] 33-01: TBD
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -137,6 +180,8 @@ Complete step-by-step runbook for migrating client macOS from frozen dotfiles-zs
 | 29. Reintegration | v3.0 | 1/1 | Complete | 2026-02-15 |
 | 30. Verification | v3.0 | 1/1 | Complete | 2026-02-15 |
 | 31. Rollback Documentation | v3.0 | 1/1 | Complete | 2026-02-16 |
+| 32. fzf Enhancement | v4.0 | 0/? | Not started | - |
+| 33. Project Picker | v4.0 | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-02-16 -- v3.0 Client Migration shipped*
+*Last updated: 2026-02-16 -- v4.0 Shell UX Polish started*
