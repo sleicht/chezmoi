@@ -68,7 +68,7 @@ bin/**
 # -----------------------------------------------------------------------------
 Brewfile
 Brewfile_Client
- Brewfile_Personal
+Brewfile_Personal
 
 # -----------------------------------------------------------------------------
 # 4. System Configuration Scripts (Run manually, not deployed)
@@ -183,16 +183,10 @@ Library/**
 .claude/statsig/**
 .claude/telemetry
 .claude/telemetry/**
-.claude/hooks
-.claude/hooks/**
 .claude/ide
 .claude/ide/**
 .claude/local
 .claude/local/**
-
-# GSD framework (managed outside dotfiles)
-.claude/get-shit-done
-.claude/get-shit-done/**
 
 # Projects directory (project-specific state)
 .claude/projects
