@@ -71,6 +71,8 @@ zstyle ':fzf-tab:complete:git-(log|show|reset|revert|cherry-pick):*' fzf-preview
 
 # Git diff preview for add/stage completions
 zstyle ':fzf-tab:complete:git-(add|stage|diff|restore):*' fzf-preview 'git diff --color=always -- $word 2>/dev/null | head -100'
+zstyle ':fzf-tab:complete:git:*' fzf-preview 'git diff HEAD --color=always -- ${word%% } 2>/dev/null | head -100'
+zstyle ':fzf-tab:complete:git:*' fzf-flags --preview-window='bottom,60%,border-rounded' --height=80%
 
 # Preview window defaults for fzf-tab
 zstyle ':fzf-tab:*' fzf-pad 4
