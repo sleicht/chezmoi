@@ -47,6 +47,8 @@ CLAUDE.md
 .idea/**
 .planning
 .planning/**
+docs
+docs/**
 logs
 logs/**
 nvim
