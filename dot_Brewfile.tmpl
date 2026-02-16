@@ -16,8 +16,8 @@ brew {{ . | quote }}
 brew {{ . | quote }}
 {{ end -}}
 {{ else -}}
-{{/* Personal/fanaka machine - use fanaka package list */}}
-{{ range .packages.darwin.fanaka_brews -}}
+{{/* Personal/personal machine - use personal package list */}}
+{{ range .packages.darwin.personal_brews -}}
 brew {{ . | quote }}
 {{ end -}}
 {{ end }}
@@ -31,8 +31,8 @@ cask {{ . | quote }}
 cask {{ . | quote }}
 {{ end -}}
 {{ else -}}
-{{/* Personal/fanaka machine - use fanaka package list */}}
-{{ range .packages.darwin.fanaka_casks -}}
+{{/* Personal/personal machine - use personal package list */}}
+{{ range .packages.darwin.personal_casks -}}
 cask {{ . | quote }}
 {{ end -}}
 {{ end }}
@@ -46,8 +46,8 @@ mas {{ $name | quote }}, id: {{ $id }}
 {{ end }}
 # Mac App Store (machine-specific)
 {{ if ne .machine_type "client" -}}
-{{/* Personal/fanaka machine - use fanaka MAS list */}}
-{{ range $name, $id := .packages.darwin.fanaka_mas -}}
+{{/* Personal/personal machine - use personal MAS list */}}
+{{ range $name, $id := .packages.darwin.personal_mas -}}
 mas {{ $name | quote }}, id: {{ $id }}
 {{ end -}}
 {{ end -}}

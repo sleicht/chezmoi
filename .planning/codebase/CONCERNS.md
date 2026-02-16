@@ -155,13 +155,13 @@
 **Files:** `.chezmoidata.yaml` (lines 5-250)
 
 **Why fragile:**
-- 100+ packages across common, client, and fanaka lists
+- 100+ packages across common, client, and personal lists
 - No grouping by purpose (dev tools, design apps, utilities)
 - Duplicates possible but undetected (e.g., appears both in common_brews and client_brews)
 - Package removal requires knowing which machine list it's on
 
 **Safe modification:**
-- Before adding: check if already in common/fanaka/client lists via grep
+- Before adding: check if already in common/personal/client lists via grep
 - Test on same machine type before applying elsewhere
 - Use `chezmoi diff` to verify Brewfile changes before apply
 - Test coverage: zero test files for Brewfile generation
@@ -265,7 +265,7 @@
 
 **Fix approach:**
 - Add YAML schema validation for `.chezmoidata.yaml`
-- Add bats-core test suite (already installed in fanaka_brews) with tests for:
+- Add bats-core test suite (already installed in personal_brews) with tests for:
   - Template rendering outputs valid files
   - Brewfile contains no duplicates
   - Permissions script correctly reads/writes on both macOS stat formats

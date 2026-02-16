@@ -5,7 +5,7 @@
 ## Directory Layout
 
 ```
-/Users/stephanlv_fanaka/.local/share/chezmoi/
+$HOME/.local/share/chezmoi/
 ├── .chezmoi.yaml.tmpl             # Master configuration template (init prompts)
 ├── .chezmoidata.yaml              # Shared static data (packages, tool versions)
 ├── .chezmoiignore                 # Deployment rules (what gets deployed to $HOME)
@@ -37,7 +37,7 @@
 - Purpose: Single source of truth for all static data (~6300 lines)
 - Contains: Homebrew package lists (taps, brews, casks, fonts, MAS apps) organized by machine type
 - Contains: Bitwarden folder names, tool versions (mise), plugin definitions
-- Machine type organization: `darwin.common_*` (all), `darwin.client_*` (work), `darwin.fanaka_*` (personal)
+- Machine type organization: `darwin.common_*` (all), `darwin.client_*` (work), `darwin.personal_*` (personal)
 - Consumed by: All templates via `.data` context variable
 
 **`.chezmoiignore`:**
@@ -117,24 +117,24 @@
   - `run_after_*`: Execute after every apply
 
 **`run_once_before_install-homebrew.sh.tmpl`:**
-- Location: `/Users/stephanlv_fanaka/.local/share/chezmoi/run_once_before_install-homebrew.sh.tmpl`
+- Location: `$Home.local/share/chezmoi/run_once_before_install-homebrew.sh.tmpl`
 - Triggers: First apply on macOS
 - Responsibility: Bootstrap Homebrew (checks architecture, sets PATH)
 
 **`run_onchange_after_01-install-packages.sh.tmpl`:**
-- Location: `/Users/stephanlv_fanaka/.local/share/chezmoi/run_onchange_after_01-install-packages.sh.tmpl`
+- Location: `$Home.local/share/chezmoi/run_onchange_after_01-install-packages.sh.tmpl`
 - Triggers: When `.chezmoidata.yaml` changes (hash embedded in script)
 - Responsibility: Run `brew bundle --global --verbose` for package installation
 
 **`run_onchange_after_02-cleanup-packages.sh.tmpl`:**
-- Location: `/Users/stephanlv_fanaka/.local/share/chezmoi/run_onchange_after_02-cleanup-packages.sh.tmpl`
+- Location: `$Home.local/share/chezmoi/run_onchange_after_02-cleanup-packages.sh.tmpl`
 - Responsibility: Remove unlisted Homebrew packages (brew bundle cleanup)
 
 **`run_onchange_after_03-clear-evalcache.sh.tmpl`:**
 - Responsibility: Clear Sheldon evalcache to force plugin regeneration
 
 **`run_after_10-verify-permissions.sh.tmpl`:**
-- Location: `/Users/stephanlv_fanaka/.local/share/chezmoi/run_after_10-verify-permissions.sh.tmpl`
+- Location: `$Home.local/share/chezmoi/run_after_10-verify-permissions.sh.tmpl`
 - Triggers: After every apply
 - Responsibility: Verify and fix permissions on sensitive files (SSH keys, GPG, age, AWS, git)
 - Logs fixes to `~/.local/state/chezmoi/permission-fixes.log`
@@ -215,7 +215,7 @@
 - Update data source: Add to appropriate list in `.chezmoidata.yaml`:
   - All machines: `packages.darwin.common_brews` or `common_casks`
   - Work machines: `packages.darwin.client_brews` or `client_casks`
-  - Personal machines: `packages.darwin.fanaka_brews` or `fanaka_casks`
+  - Personal machines: `packages.darwin.personal_brews` or `personal_casks`
 - Automatic deployment: Next `chezmoi apply` will include new packages
 
 **New Lifecycle Script:**

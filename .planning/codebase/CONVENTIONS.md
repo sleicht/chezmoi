@@ -203,7 +203,7 @@ Only create feature branches when needed:
 Package lists organised by scope:
 - `darwin.common_*`: Packages needed on all macOS machines
 - `darwin.client_*`: Work machine only packages
-- `darwin.fanaka_*`: Personal machine only packages
+- `darwin.personal_*`: Personal machine only packages
 
 Data references in templates: `{{ .packages.darwin.common_brews }}`
 

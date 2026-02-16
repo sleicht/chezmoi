@@ -68,7 +68,7 @@ bin/**
 # -----------------------------------------------------------------------------
 Brewfile
 Brewfile_Client
-Brewfile_Fanaka
+ Brewfile_Personal
 
 # -----------------------------------------------------------------------------
 # 4. System Configuration Scripts (Run manually, not deployed)

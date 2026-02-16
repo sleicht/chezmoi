@@ -80,6 +80,7 @@ packages:
       - "pkg-config"
       - "podman"
       - "pv"
+      - "qqqa"
       - "rename"
       - "ripgrep"
       - "rlwrap"
@@ -127,7 +128,6 @@ packages:
       - "slack"
       - "sublime-text"
       - "uhk-agent"
-      - "visualvm"
       - "wezterm"
 
     # Client-specific brews
@@ -139,7 +139,7 @@ packages:
       - "intelli-shell"
       - "opencode"
       - "pinentry-mac"
-      - "qqqa"
+      - "visualvm"
       # rbenv removed - mise manages ruby
       # rust removed - mise manages rust via stable channel
       # volta removed - mise replaces volta for node management
@@ -174,20 +174,19 @@ packages:
       - "wooshy"
       - "yubico-authenticator"
 
-    # Fanaka-specific brews
-    fanaka_brews:
+    # Personal-specific brews
+    personal_brews:
       - "bats-core"
       - "chezmoi"
       - "exercism"
       - "firebase-cli"
       - "neurosnap/tap/zmx"
-      - "qqqa"
       # rbenv removed - mise manages ruby
       # rust removed - mise manages rust via stable channel
       - "tailscale"
 
-    # Fanaka-specific casks
-    fanaka_casks:
+    # Personal-specific casks
+    personal_casks:
       - "adobe-digital-editions"
       - "affinity-designer"
       - "affinity-photo"
@@ -249,12 +248,10 @@ packages:
 
     # Common MAS apps
     common_mas:
-      Racompass: 1538380685
       Xcode: 497799835
 
-    # Fanaka MAS apps
-    fanaka_mas:
-      "Ampado PRO": 1423295407
+    # Personal MAS apps
+    personal_mas:
       "iFinance 5": 1500241909
       "kChat": 6443845553
       "LilyView": 529490330
@@ -262,6 +259,10 @@ packages:
       "Numbers": 409203825
       "Phiewer PRO": 1270923434
       "Tailscale": 1475387142
+
+    # Client MAS apps
+    client_mas:
+      Racompass: 1538380685
 
 # Bitwarden naming convention for dotfile secrets
 bitwarden:

@@ -122,7 +122,7 @@ Configs adapt based on machine type (set during `chezmoi init`):
 
 | | `personal` | `client` (work) |
 |--|------------|------------------|
-| **Packages** | `fanaka_*` + `common_*` | `client_*` + `common_*` |
+| **Packages** | `personal_*` + `common_*` | `client_*` + `common_*` |
 | **Git email** | personal | work |
 | **Age key** | `key-personal.txt` | `key-client.txt` |
 | **Extra tools** | personal apps | work-specific apps |

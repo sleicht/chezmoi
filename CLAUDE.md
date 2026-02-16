@@ -55,7 +55,7 @@ Templates use Go template syntax with these key variables:
 The Brewfile, git config, and run scripts conditionally include content based on `.machine_type`. When editing `.chezmoidata.yaml`, package lists are scoped:
 - `darwin.common_*` — all machines
 - `darwin.client_*` — work machines only
-- `darwin.fanaka_*` — personal machines only
+- `darwin.personal_*` — personal machines only
 
 ### Encryption
 

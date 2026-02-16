@@ -152,7 +152,7 @@
 
 **Data-Driven Configuration:**
 - Purpose: Manage large configuration lists (100+ packages) without hardcoding
-- Examples: `darwin.common_brews`, `darwin.client_casks`, `darwin.fanaka_mas`
+- Examples: `darwin.common_brews`, `darwin.client_casks`, `darwin.personal_mas`
 - Pattern: `.chezmoidata.yaml` serves as single source of truth; templates reference it
 
 **Lifecycle Script with Conditional Execution:**
@@ -188,17 +188,17 @@
 - Responsibilities: Load Sheldon plugins, source ZSH modules, set history options
 
 **run_once_before_install-homebrew.sh.tmpl:**
-- Location: `/Users/stephanlv_fanaka/.local/share/chezmoi/run_once_before_install-homebrew.sh.tmpl`
+- Location: `/Users/stephanlv_personal/.local/share/chezmoi/run_once_before_install-homebrew.sh.tmpl`
 - Triggers: First apply on macOS
 - Responsibilities: Bootstrap Homebrew if not installed
 
 **run_onchange_after_01-install-packages.sh.tmpl:**
-- Location: `/Users/stephanlv_fanaka/.local/share/chezmoi/run_onchange_after_01-install-packages.sh.tmpl`
+- Location: `/Users/stephanlv_personal/.local/share/chezmoi/run_onchange_after_01-install-packages.sh.tmpl`
 - Triggers: When `.chezmoidata.yaml` hash changes
 - Responsibilities: Run `brew bundle --global` to sync packages
 
 **run_after_10-verify-permissions.sh.tmpl:**
-- Location: `/Users/stephanlv_fanaka/.local/share/chezmoi/run_after_10-verify-permissions.sh.tmpl`
+- Location: `/Users/stephanlv_personal/.local/share/chezmoi/run_after_10-verify-permissions.sh.tmpl`
 - Triggers: After every apply
 - Responsibilities: Verify and fix permissions on sensitive files (600 for keys, 700 for dirs)
 

@@ -132,7 +132,7 @@ Permission verification complete - 1 file(s) fixed (see ~/.local/state/chezmoi/p
 
 Log format:
 ```
-[2026-02-15T14:23:45Z] Fixed: /Users/stephanlv_fanaka/.ssh/id_rsa (644 -> 600)
+[2026-02-15T14:23:45Z] Fixed: $HOME/.ssh/id_rsa (644 -> 600)
 ```
 
 ### 3. Drift Detection (chezmoi verify)
