@@ -57,8 +57,8 @@ zstyle ':fzf-tab:complete:z:*' fzf-preview 'eza --tree --level=2 --icons --color
 zstyle ':fzf-tab:complete:ls:*' fzf-preview 'eza --tree --level=2 --icons --color=always -- ${(Q)realpath} 2>/dev/null || bat --color=always --theme=Dracula --number --line-range :100 -- ${(Q)realpath} 2>/dev/null'
 
 # Process preview for kill (FZFT-03: show process info)
-zstyle ':fzf-tab:complete:kill:argument-rest' fzf-preview 'ps -p ${word} -o pid,ppid,user,%cpu,%mem,start,time,command 2>/dev/null || ps -p $(pgrep -x ${word} | head -1) -o pid,ppid,user,%cpu,%mem,start,time,command 2>/dev/null'
-zstyle ':fzf-tab:complete:kill:argument-rest' fzf-flags --preview-window='bottom,40%,border-rounded,wrap'
+zstyle ':fzf-tab:complete:kill:*' fzf-preview '[[ $word =~ ^[0-9]+$ ]] && ps -p $word -o pid,ppid,user,%cpu,%mem,start,time,command 2>/dev/null || ps -p ${desc##*-- } -o pid,ppid,user,%cpu,%mem,start,time,command 2>/dev/null'
+zstyle ':fzf-tab:complete:kill:*' fzf-flags --preview-window='bottom,40%,border-rounded,wrap'
 
 # Environment variable preview (FZFT-04: show env var values)
 zstyle ':fzf-tab:complete:(-command-|-parameter-|-brace-parameter-|export|unset|expand):*' fzf-preview 'echo ${(P)word} | head -c 200'
