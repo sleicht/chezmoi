@@ -68,19 +68,18 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 - ✓ Conventional commit enforcement with Jira ticket prefix validation -- v2.1
 - ✓ Remote-aware PR/MR creation (auto-detects GitHub vs GitLab) -- v2.1
 
+#### v3.0 -- shipped 2026-02-16
+
+- ✓ Pre-migration audit capturing Dotbot symlinks, custom scripts, env vars, and config drift -- v3.0
+- ✓ Age key bootstrap chain (Bitwarden → age key → SSH key decryption) with HTTPS-first clone -- v3.0
+- ✓ Safe symlink materialisation (cp -L with backup) and chezmoi apply with machine_type=client -- v3.0
+- ✓ Local tweak reintegration with triage framework (add to chezmoi / keep local / discard) -- v3.0
+- ✓ Post-migration verification with 4 acceptance procedures and smoke test integration -- v3.0
+- ✓ Rollback procedure with three-severity decision framework and Dotbot restoration -- v3.0
+
 ### Active
 
-#### Current Milestone: v3.0 Client Migration
-
-**Goal:** Produce a step-by-step runbook for migrating the client macOS from the frozen dotfiles-zsh (Dotbot) repo to the chezmoi-managed stack, including local state capture, age key bootstrap, symlink-to-real-file transition, and post-migration verification.
-
-**Target features:**
-- Pre-migration audit (capture local tweaks: custom scripts, env vars, drifted configs)
-- Age key bootstrap chain (Bitwarden → age key → SSH key decryption)
-- Safe symlink removal and chezmoi apply with machine_type=client
-- Local tweak reintegration strategy
-- Post-migration verification and smoke test
-- Rollback procedure (re-run ./install from old repo if needed)
+(None -- next milestone TBD)
 
 ### Out of Scope
 
@@ -93,9 +92,7 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 
 ## Context
 
-**Current milestone:** v3.0 Client Migration
-
-**Current state (post v2.1):**
+**Current state (post v3.0):**
 - chezmoi manages 135 files with cross-platform templates and OS-conditional configs
 - 171+ Homebrew packages consolidated in .chezmoidata.yaml with automated installation
 - mise manages 7 runtime versions (node, python, go, rust, java, ruby, terraform)
@@ -115,6 +112,8 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 - Mise task runner: 10 file-based tasks (6 dotfiles + 4 git) deployed via chezmoi
 - Hybrid AI/manual git workflows: claude CLI for AI generation, fzf for manual fallback
 - Task aliases for quick access: a (apply), v (verify), d (diff), u (update), s (sync), c (commit), b (branch)
+- Client migration runbook: 6 runbooks (2,301 lines, 19 procedures) covering audit → bootstrap → migration → reintegration → verification → rollback
+- Runbooks deployed to docs/ directory and excluded from chezmoi deploy via .chezmoiignore
 
 **Architecture:**
 - chezmoi source: ~/.local/share/chezmoi (templates, data, run scripts)
@@ -161,6 +160,11 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 | Explicit mise run calls for task composition | Avoid mise depends field due to timing issues | ✓ Good -- deterministic sequential execution in sync workflow |
 | Hybrid AI/manual mode for git workflows | AI speed when available, manual reliability as fallback | ✓ Good -- both paths converge to same preview/confirmation UX |
 | Remote-aware PR creation (gh/glab dispatch) | Parse origin URL for platform, auto-dispatch to correct CLI | ✓ Good -- works in both GitHub and GitLab environments |
+| Runbook-based migration (not automation) | Human-readable procedures, user controls each step | ✓ Good -- 6 runbooks, 19 procedures, user can skip/reorder |
+| Audit output in ~/migration-audit/ | Keep sensitive audit data outside git repo | ✓ Good -- avoids accidental commits of env vars and paths |
+| HTTPS-first clone for bootstrap | SSH keys encrypted in repo (chicken-and-egg) | ✓ Good -- switch to SSH after key deployment |
+| Symlink materialisation (cp -L + backup) | Safe Dotbot removal with recovery option | ✓ Good -- preserves originals before chezmoi apply |
+| Three-severity rollback decision framework | Debug Forward / Consider Rollback / Rollback Immediately | ✓ Good -- prevents premature rollback for fixable issues |
 
 ## Known Limitations
 
@@ -170,4 +174,4 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 4. **Neovim exception**: nvim config stays as symlink outside chezmoi management (intentional, documented in README).
 
 ---
-*Last updated: 2026-02-15 after v3.0 Client Migration milestone started*
+*Last updated: 2026-02-16 after v3.0 Client Migration milestone shipped*
