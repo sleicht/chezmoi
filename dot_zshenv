@@ -36,7 +36,7 @@ _fzf_complete_realpath () {
   fi
 
   if [ -d "$realpath" ]; then
-    tree -a -I '.DS_Store|.localized' -C "$realpath" | head -100
+    eza --tree --level=2 --icons --color=always -a --ignore-glob='.DS_Store|.localized' "$realpath" | head -100
   elif [ -f "$realpath" ]; then
     mime="$(file -Lbs --mime-type "$realpath")"
     category="${mime%%/*}"
