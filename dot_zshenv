@@ -41,9 +41,9 @@ _fzf_complete_realpath () {
     mime="$(file -Lbs --mime-type "$realpath")"
     category="${mime%%/*}"
     if [ "$category" = 'image' ]; then
-      # I guessed `60` to be fine for my exact terminal size
-      local default_width=$(( "$FZF_PREVIEW_COLUMNS" < 60 ? 60 : "$FZF_PREVIEW_COLUMNS" ))
-      catimg -r2 -w "$default_width" "$realpath"
+      # Scale to half preview width so image fits the short bottom pane
+      local img_width=$(( "${FZF_PREVIEW_COLUMNS:-80}" / 2 ))
+      catimg -r2 -w "$img_width" "$realpath"
     elif [[ "$mime" =~ 'binary' ]]; then
       hexyl --length 5KiB \
         --border none \
