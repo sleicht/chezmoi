@@ -103,7 +103,7 @@ Complete step-by-step runbook for migrating client macOS from frozen dotfiles-zs
 
 </details>
 
-### 🚧 v4.0 Shell UX Polish (In Progress)
+### v4.0 Shell UX Polish (In Progress)
 
 **Milestone Goal:** Wire existing shell tools together for polished UX -- configure fzf-tab with rich previews, enhance fzf widget previews, and build project picker for rapid navigation.
 
@@ -124,10 +124,11 @@ Complete step-by-step runbook for migrating client macOS from frozen dotfiles-zs
   5. Alt+C directory picker shows eza tree view in preview pane
   6. Carapace completions render correctly in fzf-tab menus
   7. Shell startup time remains under 150ms (no regression from 139.8ms baseline)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 32-01: TBD
+- [ ] 32-01-PLAN.md -- fzf Dracula theme and widget previews (Ctrl+T, Alt+C)
+- [ ] 32-02-PLAN.md -- fzf-tab context-aware completion previews and carapace integration
 
 ### Phase 33: Project Picker
 **Goal**: Users can rapidly discover and navigate to projects with optional editor integration
@@ -180,8 +181,8 @@ Plans:
 | 29. Reintegration | v3.0 | 1/1 | Complete | 2026-02-15 |
 | 30. Verification | v3.0 | 1/1 | Complete | 2026-02-15 |
 | 31. Rollback Documentation | v3.0 | 1/1 | Complete | 2026-02-16 |
-| 32. fzf Enhancement | v4.0 | 0/? | Not started | - |
+| 32. fzf Enhancement | v4.0 | 0/2 | Planning | - |
 | 33. Project Picker | v4.0 | 0/? | Not started | - |
 
 ---
-*Last updated: 2026-02-16 -- v4.0 Shell UX Polish started*
+*Last updated: 2026-02-16 -- Phase 32 planned (2 plans)*
