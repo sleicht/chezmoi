@@ -12,7 +12,7 @@ export FZF_DEFAULT_COMMAND='fd --hidden --strip-cwd-prefix --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND='fd --type=d --hidden --strip-cwd-prefix --exclude .git'
 export FZF_CTRL_T_OPTS="--preview '_fzf_complete_realpath {}'"
-export FZF_ALT_C_OPTS="--preview '_fzf_complete_realpath {}'"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --icons --color=always {}'"
 
 # fzf-git configuration:
 export FZF_GIT_COLOR='never'
@@ -24,6 +24,9 @@ export FZF_GIT_PREVIEW_COLOR='always'
 # To add wrap lines add:
 # --preview-window=wrap
 export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS
+--color=fg:#f8f8f2,bg:#282a36,hl:#bd93f9,fg+:#f8f8f2,bg+:#44475a,hl+:#bd93f9,info:#ffb86c,prompt:#50fa7b,pointer:#ff79c6,marker:#ff79c6,spinner:#ffb86c,header:#6272a4
+--border=rounded
+--preview-window=bottom,40%,border-rounded
 --layout=reverse-list
 --bind 'ctrl-a:toggle'
 --bind 'ctrl-h:change-preview-window(hidden|)'
