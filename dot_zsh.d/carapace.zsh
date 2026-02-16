@@ -7,4 +7,8 @@ if (( $+commands[carapace] )); then
   zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
   # shellcheck disable=SC1090
   _evalcache carapace _carapace
+
+  # Ensure fzf-tab shows carapace group descriptions
+  zstyle ':fzf-tab:*' show-group full
+  zstyle ':fzf-tab:*' group-colors $'\033[33m' $'\033[35m' $'\033[32m' $'\033[36m' $'\033[31m' $'\033[34m'
 fi
