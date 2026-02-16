@@ -32,6 +32,7 @@ packages:
       - "bitwarden-cli"
       - "bottom"
       - "broot"
+      - "catimg"
       - "coreutils"
       - "curl"
       - "docker"
