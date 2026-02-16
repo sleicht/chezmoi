@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** Cross-platform dotfiles that "just work" -- one repository that handles Mac vs Linux differences through templating, without requiring Nix expertise to maintain.
-**Current focus:** v3.0 shipped -- planning next milestone
+**Current focus:** v4.0 Shell UX Polish -- wire existing shell tools together for a polished UX
 
 ## Current Position
 
-Phase: 31 of 31 (all milestones complete)
-Plan: N/A
-Status: Between milestones (v3.0 shipped, next TBD)
-Last activity: 2026-02-16 -- v3.0 Client Migration milestone archived
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-02-16 — Milestone v4.0 started
 
-Progress: [████████████████████████] 100% (31/31 phases completed across 6 milestones)
+Progress: [░░░░░░░░░░░░░░░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
@@ -41,7 +41,6 @@ Progress: [███████████████████████
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
-All v3.0 decisions archived -- see .planning/milestones/v3.0-ROADMAP.md for details.
 
 ### Pending Todos
 
@@ -53,8 +52,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-16 (v3.0 milestone archived)
-Stopped at: Milestone completion workflow
+Last session: 2026-02-16 (v4.0 milestone started)
+Stopped at: Defining requirements
 Resume file: None
 
-**Next action:** `/gsd:new-milestone` to start next milestone, or user executes v3.0 runbooks on client Mac.
+**Next action:** Complete requirements and roadmap for v4.0

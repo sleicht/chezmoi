@@ -79,7 +79,12 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 
 ### Active
 
-(None -- next milestone TBD)
+#### v4.0 -- Shell UX Polish
+
+- Configure fzf-tab with previews, styling, and context-aware behaviour
+- Add rich fzf previews: bat for files (Ctrl+T), eza/tree for directories (Alt+C)
+- Build fzf-based project picker: discover projects from parent dirs, cd + open in editor
+- Ensure fzf-tab + carapace integration renders completions well in fzf menus
 
 ### Out of Scope
 
@@ -174,4 +179,4 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 4. **Neovim exception**: nvim config stays as symlink outside chezmoi management (intentional, documented in README).
 
 ---
-*Last updated: 2026-02-16 after v3.0 Client Migration milestone shipped*
+*Last updated: 2026-02-16 after v4.0 Shell UX Polish milestone started*
