@@ -58,7 +58,7 @@ None.
 ## Session Continuity
 
 Last session: 2026-02-16
-Stopped at: v4.0 Shell UX Polish roadmap created, ready to plan Phase 32
-Resume file: None
+Stopped at: Phase 32 context gathered
+Resume file: .planning/phases/32-fzf-enhancement/32-CONTEXT.md
 
 **Next action:** Plan Phase 32 with `/gsd:plan-phase 32`
