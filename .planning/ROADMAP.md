@@ -107,7 +107,7 @@ Complete step-by-step runbook for migrating client macOS from frozen dotfiles-zs
 
 **Milestone Goal:** Wire existing shell tools together for polished UX -- configure fzf-tab with rich previews, enhance fzf widget previews, and build project picker for rapid navigation.
 
-- [ ] **Phase 32: fzf Enhancement** - Configure fzf-tab completion previews and enhance fzf widget previews
+- [x] **Phase 32: fzf Enhancement** - Configure fzf-tab completion previews and enhance fzf widget previews (completed 2026-02-16)
 - [ ] **Phase 33: Project Picker** - Build fzf-based project discovery and navigation with editor integration
 
 ## Phase Details
@@ -181,7 +181,7 @@ Plans:
 | 29. Reintegration | v3.0 | 1/1 | Complete | 2026-02-15 |
 | 30. Verification | v3.0 | 1/1 | Complete | 2026-02-15 |
 | 31. Rollback Documentation | v3.0 | 1/1 | Complete | 2026-02-16 |
-| 32. fzf Enhancement | v4.0 | 0/2 | Planning | - |
+| 32. fzf Enhancement | v4.0 | Complete    | 2026-02-16 | - |
 | 33. Project Picker | v4.0 | 0/? | Not started | - |
 
 ---
