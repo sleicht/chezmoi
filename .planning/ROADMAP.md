@@ -141,10 +141,10 @@ Plans:
   4. User can optionally open selected project in IntelliJ IDEA or Sublime Text
   5. Project list displays context (branch name, last modified time, path)
   6. Shell startup time remains under 150ms (no regression)
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 33-01: TBD
+- [ ] 33-01-PLAN.md -- fzf project picker with scanning, frecency sorting, editor integration, and mise task
 
 ## Progress
 
@@ -182,7 +182,7 @@ Plans:
 | 30. Verification | v3.0 | 1/1 | Complete | 2026-02-15 |
 | 31. Rollback Documentation | v3.0 | 1/1 | Complete | 2026-02-16 |
 | 32. fzf Enhancement | v4.0 | Complete    | 2026-02-16 | - |
-| 33. Project Picker | v4.0 | 0/? | Not started | - |
+| 33. Project Picker | v4.0 | 0/1 | Not started | - |
 
 ---
-*Last updated: 2026-02-16 -- Phase 32 planned (2 plans)*
+*Last updated: 2026-02-17 -- Phase 33 planned (1 plan)*
