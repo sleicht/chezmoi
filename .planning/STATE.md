@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-02-16)
 
 **Core value:** Cross-platform dotfiles that "just work" -- one repository that handles Mac vs Linux differences through templating, without requiring Nix expertise to maintain.
-**Current focus:** Phase 32 - fzf Enhancement
+**Current focus:** Phase 33 - Project Picker
 
 ## Current Position
 
-Phase: 32 of 33 (fzf Enhancement)
-Plan: 2 of 2 in current phase
-Status: Phase complete
-Last activity: 2026-02-16 -- Completed plan 32-02 (fzf-tab context-aware previews)
+Phase: 33 of 33 (Project Picker)
+Plan: 1 of 1 in current phase
+Status: Awaiting human verification (Task 3 checkpoint)
+Last activity: 2026-02-17 -- Completed plans 33-01 tasks 1-2; awaiting Task 3 human-verify checkpoint
 
-Progress: [███████████████░░] 93.9% (31/33 phases complete)
+Progress: [████████████████░] 97.0% (32/33 phases complete — Phase 33 in progress)
 
 ## Performance Metrics
 
@@ -43,6 +43,12 @@ Progress: [███████████████░░] 93.9% (31/33 pha
 | P01  | 1 min    | 2     | 2     |
 | P02  | 1 min    | 2     | 2     |
 
+**Phase 33 (v4.0 Project Picker):**
+
+| Plan | Duration | Tasks | Files |
+|------|----------|-------|-------|
+| P01  | 2 min    | 2/3   | 3     |
+
 ## Accumulated Context
 
 ### Decisions
@@ -54,6 +60,9 @@ Recent decisions affecting current work:
 - v2.0: EPOCHREALTIME startup monitoring with 300ms threshold
 - v2.0: evalcache for tool init calls (cache static eval outputs, skip dynamic like mise)
 - [Phase 32]: Git branch completion preview: git log --oneline --graph (compact branch visualisation per user choice)
+- [Phase 33]: pp() uses xargs -P8 with inline zsh -c worker strings (ZSH has no export -f; functions cannot cross subshell boundary)
+- [Phase 33]: _PP_CACHE cleared after every fzf exit; Ctrl+R refresh propagates to next pp invocation
+- [Phase 33]: Editor fallback always Sublime Text; no indicator label shown in list when neither IDE detected
 
 ### Pending Todos
 
@@ -65,8 +74,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-16
-Stopped at: Completed 32-02-PLAN.md
-Resume file: .planning/phases/32-fzf-enhancement/32-02-SUMMARY.md
+Last session: 2026-02-17
+Stopped at: Task 3 checkpoint (human-verify) in 33-01-PLAN.md
+Resume file: .planning/phases/33-project-picker/33-01-SUMMARY.md
 
-**Next action:** Advance to Phase 33 with `/gsd:phase-context 33`
+**Next action:** After `chezmoi apply` + `exec zsh -l` verification, resume 33-01-PLAN.md Task 3
