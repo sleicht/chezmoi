@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#MISE description="Open interactive project picker (use 'pp' in your shell)"
+echo "The project picker must run as a shell function to change your directory."
+echo ""
+echo "Usage: type 'pp' directly in your shell."
+echo ""
+echo "Keys:"
+echo "  Enter   -> cd to project"
+echo "  Ctrl+E  -> open in editor"
+echo "  Ctrl+O  -> cd + open editor"
+echo "  Ctrl+R  -> refresh project list"

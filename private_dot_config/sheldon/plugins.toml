@@ -67,5 +67,5 @@ apply = ["source"]
 
 [plugins.dotfiles-defer]
 local = "~/.zsh.d"
-use = ["external-defer.zsh", "completions-defer.zsh", "atuin.zsh", "carapace.zsh", "intelli-shell.zsh", "ssh-defer.zsh", "lens-completion.zsh", "wt.zsh"]
+use = ["external-defer.zsh", "completions-defer.zsh", "atuin.zsh", "carapace.zsh", "intelli-shell.zsh", "ssh-defer.zsh", "lens-completion.zsh", "wt.zsh", "projects.zsh"]
 apply = ["defer"]
