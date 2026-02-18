@@ -189,24 +189,23 @@ _pj_build_cache() {
   local -a zoxide_paths=()
   local -a zoxide_ordered=()
   while IFS= read -r line; do
-    local score path
-    score=$(echo "$line" | awk '{print $1}')
-    path=$(echo "$line" | awk '{$1=""; print substr($0,2)}')
-    # Check if path is under a PP_DIR and has .git or project marker
+    local score repo_path
+    read -r score repo_path <<< "$line"
+    # Check if repo_path is under a PJ_DIR and has .git or project marker
     local in_scope=0
     for ppdir in "${PJ_DIRS[@]}"; do
-      [[ "$path" == "$ppdir"/* ]] && in_scope=1 && break
+      [[ "$repo_path" == "$ppdir"/* ]] && in_scope=1 && break
     done
     (( in_scope )) || continue
-    if [[ -d "$path/.git" ]] || \
-       [[ -f "$path/package.json" ]] || \
-       [[ -f "$path/go.mod" ]] || \
-       [[ -f "$path/Cargo.toml" ]] || \
-       [[ -f "$path/pom.xml" ]] || \
-       [[ -f "$path/Makefile" ]] || \
-       [[ -f "$path/build.gradle" ]] || \
-       [[ -f "$path/pyproject.toml" ]]; then
-      zoxide_paths+=("$path")
+    if [[ -d "$repo_path/.git" ]] || \
+       [[ -f "$repo_path/package.json" ]] || \
+       [[ -f "$repo_path/go.mod" ]] || \
+       [[ -f "$repo_path/Cargo.toml" ]] || \
+       [[ -f "$repo_path/pom.xml" ]] || \
+       [[ -f "$repo_path/Makefile" ]] || \
+       [[ -f "$repo_path/build.gradle" ]] || \
+       [[ -f "$repo_path/pyproject.toml" ]]; then
+      zoxide_paths+=("$repo_path")
     fi
   done < <(zoxide query --list --score 2>/dev/null)
 
@@ -261,7 +260,7 @@ pj() {
   # Lazy cache build
   [[ ${#_PJ_CACHE[@]} -eq 0 ]] && _pj_build_cache
 
-  local result key path
+  local result key selected
 
   result=$(printf '%s\n' "${_PJ_CACHE[@]}" | fzf \
     --expect=ctrl-e,ctrl-o \
@@ -310,25 +309,26 @@ pj() {
     --layout=reverse-list \
     2>/dev/null)
 
-  # Always clear cache after fzf exits so Ctrl+R effects persist to next `pj` call
-  _PJ_CACHE=()
+  # Cache persists for the session. Ctrl+R refreshes fzf's list in-place.
+  # To force a full cache rebuild, run: _PJ_CACHE=()
 
   [[ -z "$result" ]] && return 0
 
   key=$(head -1 <<< "$result")
-  path=$(tail -1 <<< "$result" | awk -F'|' '{print $NF}')
+  selected=$(tail -1 <<< "$result")
+  selected="${selected##*|}"
 
-  [[ -z "$path" ]] && return 0
+  [[ -z "$selected" ]] && return 0
 
   case "$key" in
     ctrl-e)
-      _pj_open_editor "$path"
+      _pj_open_editor "$selected"
       ;;
     ctrl-o)
-      cd "$path" && _pj_open_editor "$path"
+      cd "$selected" && _pj_open_editor "$selected"
       ;;
     *)
-      cd "$path"
+      cd "$selected"
       ;;
   esac
 }
