@@ -1,22 +1,22 @@
 # Managed by chezmoi - edit in ~/.local/share/chezmoi/dot_zsh.d/
 #!/usr/bin/env zsh
 
-# `projects.zsh` provides the `pp` interactive project picker.
+# `projects.zsh` provides the `pj` interactive project picker.
 
 
 # === Configuration ===
 
-PP_DIRS=("$HOME/Projects" "$HOME/git")
-PP_DEPTH=${PP_DEPTH:-2}
-PP_EXCLUDES=(node_modules .cache vendor target build dist __pycache__)
+PJ_DIRS=("$HOME/Projects" "$HOME/git")
+PJ_DEPTH=${PJ_DEPTH:-2}
+PJ_EXCLUDES=(node_modules .cache vendor target build dist __pycache__)
 
-# Session-persistent cache (populated lazily on first `pp` invocation)
-typeset -ga _PP_CACHE
+# Session-persistent cache (populated lazily on first `pj` invocation)
+typeset -ga _PJ_CACHE
 
 
 # === Helpers ===
 
-_pp_relative_time() {
+_pj_relative_time() {
   local ts=$1
   local now delta
   now=$(date +%s)
@@ -32,7 +32,7 @@ _pp_relative_time() {
   fi
 }
 
-_pp_detect_editor() {
+_pj_detect_editor() {
   local repo=$1
   local has_idea has_sublime
   [[ -d "$repo/.idea" ]] && has_idea=1
@@ -55,7 +55,7 @@ _pp_detect_editor() {
   fi
 }
 
-_pp_open_editor() {
+_pj_open_editor() {
   local repo=$1
   local has_idea has_sublime
   [[ -d "$repo/.idea" ]] && has_idea=1
@@ -81,26 +81,26 @@ _pp_open_editor() {
 
 # === Scan & format ===
 
-_pp_scan() {
+_pj_scan() {
   local -a exclude_args=()
-  for ex in "${PP_EXCLUDES[@]}"; do
+  for ex in "${PJ_EXCLUDES[@]}"; do
     exclude_args+=(-E "$ex")
   done
 
   # Find git repos
   local git_repos
   git_repos=$(fd --hidden --no-ignore --type d \
-    --max-depth "$(( PP_DEPTH * 2 ))" \
+    --max-depth "$(( PJ_DEPTH * 2 ))" \
     "${exclude_args[@]}" \
-    "^\.git$" "${PP_DIRS[@]}" 2>/dev/null | sed 's|/\.git/?$||')
+    "^\.git$" "${PJ_DIRS[@]}" 2>/dev/null | sed 's|/\.git/?$||')
 
   # Find non-git project marker directories
   local marker_repos
   marker_repos=$(fd --hidden --no-ignore \
-    --max-depth "$(( PP_DEPTH * 2 ))" \
+    --max-depth "$(( PJ_DEPTH * 2 ))" \
     "${exclude_args[@]}" \
     "(^package\.json$|^go\.mod$|^Cargo\.toml$|^pom\.xml$|^Makefile$|^build\.gradle$|^pyproject\.toml$)" \
-    "${PP_DIRS[@]}" 2>/dev/null | xargs -I{} dirname {} 2>/dev/null | sort -u)
+    "${PJ_DIRS[@]}" 2>/dev/null | xargs -I{} dirname {} 2>/dev/null | sort -u)
 
   # Merge: exclude marker dirs that already have .git
   local all_repos
@@ -182,10 +182,10 @@ _pp_scan() {
 
 # === Cache ===
 
-_pp_build_cache() {
-  _PP_CACHE=()
+_pj_build_cache() {
+  _PJ_CACHE=()
 
-  # Step 1: zoxide-tracked repos filtered to PP_DIRS
+  # Step 1: zoxide-tracked repos filtered to PJ_DIRS
   local -a zoxide_paths=()
   local -a zoxide_ordered=()
   while IFS= read -r line; do
@@ -194,7 +194,7 @@ _pp_build_cache() {
     path=$(echo "$line" | awk '{$1=""; print substr($0,2)}')
     # Check if path is under a PP_DIR and has .git or project marker
     local in_scope=0
-    for ppdir in "${PP_DIRS[@]}"; do
+    for ppdir in "${PJ_DIRS[@]}"; do
       [[ "$path" == "$ppdir"/* ]] && in_scope=1 && break
     done
     (( in_scope )) || continue
@@ -214,7 +214,7 @@ _pp_build_cache() {
   local -a all_lines=()
   while IFS= read -r line; do
     [[ -n "$line" ]] && all_lines+=("$line")
-  done < <(_pp_scan)
+  done < <(_pj_scan)
 
   # Step 3: build lookup map from path -> display line
   local -A path_to_line=()
@@ -227,7 +227,7 @@ _pp_build_cache() {
   local -A seen=()
   for zpath in "${zoxide_paths[@]}"; do
     if [[ -n "${path_to_line[$zpath]}" && -z "${seen[$zpath]}" ]]; then
-      _PP_CACHE+=("${path_to_line[$zpath]}")
+      _PJ_CACHE+=("${path_to_line[$zpath]}")
       seen[$zpath]=1
     fi
   done
@@ -250,20 +250,20 @@ _pp_build_cache() {
   done < <(printf '%s\n' "${remaining[@]}" | sort -t'|' -k1 -rn)
 
   for entry in "${sorted_remaining[@]}"; do
-    _PP_CACHE+=("$entry")
+    _PJ_CACHE+=("$entry")
   done
 }
 
 
 # === Main picker ===
 
-pp() {
+pj() {
   # Lazy cache build
-  [[ ${#_PP_CACHE[@]} -eq 0 ]] && _pp_build_cache
+  [[ ${#_PJ_CACHE[@]} -eq 0 ]] && _pj_build_cache
 
   local result key path
 
-  result=$(printf '%s\n' "${_PP_CACHE[@]}" | fzf \
+  result=$(printf '%s\n' "${_PJ_CACHE[@]}" | fzf \
     --expect=ctrl-e,ctrl-o \
     --ansi \
     --delimiter='|' \
@@ -274,7 +274,7 @@ pp() {
     --bind='ctrl-r:reload(
       fd --hidden --no-ignore --type d
         -E node_modules -E .cache -E vendor -E target -E build -E dist -E __pycache__
-        "^\.git$" '"${PP_DIRS[*]}"' 2>/dev/null |
+        "^\.git$" '"${PJ_DIRS[*]}"' 2>/dev/null |
       sed "s|/\.git/?$||" |
       xargs -I{} -P8 zsh -c '"'"'
         repo="$1"; [[ -z "$repo" ]] && exit 0
@@ -310,8 +310,8 @@ pp() {
     --layout=reverse-list \
     2>/dev/null)
 
-  # Always clear cache after fzf exits so Ctrl+R effects persist to next `pp` call
-  _PP_CACHE=()
+  # Always clear cache after fzf exits so Ctrl+R effects persist to next `pj` call
+  _PJ_CACHE=()
 
   [[ -z "$result" ]] && return 0
 
@@ -322,10 +322,10 @@ pp() {
 
   case "$key" in
     ctrl-e)
-      _pp_open_editor "$path"
+      _pj_open_editor "$path"
       ;;
     ctrl-o)
-      cd "$path" && _pp_open_editor "$path"
+      cd "$path" && _pj_open_editor "$path"
       ;;
     *)
       cd "$path"
