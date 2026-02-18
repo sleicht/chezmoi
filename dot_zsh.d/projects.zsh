@@ -262,59 +262,32 @@ pj() {
 
   local result key selected
 
-  result=$(printf '%s\n' "${_PJ_CACHE[@]}" | fzf \
-    --expect=ctrl-e,ctrl-o \
-    --ansi \
-    --delimiter='|' \
-    --with-nth=1 \
-    --preview='git -C {-1} log --oneline --graph --color=always -15 2>/dev/null' \
-    --preview-window=bottom,40%,border-rounded \
-    --header='Enter: cd  |  Ctrl+E: editor  |  Ctrl+O: cd+editor  |  Ctrl+R: refresh' \
-    --bind='ctrl-r:reload(
-      fd --hidden --no-ignore --type d
-        -E node_modules -E .cache -E vendor -E target -E build -E dist -E __pycache__
-        "^\.git$" '"${PJ_DIRS[*]}"' 2>/dev/null |
-      sed "s|/\.git/?$||" |
-      xargs -I{} -P8 zsh -c '"'"'
-        repo="$1"; [[ -z "$repo" ]] && exit 0
-        home_stripped="${repo#$HOME/}"
-        parent=$(dirname "$home_stripped"); name=$(basename "$home_stripped")
-        [[ "$parent" == "." ]] && proj_label="$name" || proj_label="$parent/$name"
-        branch=$(git -C "$repo" branch --show-current 2>/dev/null)
-        [[ -z "$branch" ]] && branch="(detached)"
-        dirty=$(git -C "$repo" status --porcelain -uno 2>/dev/null | head -1)
-        [[ -n "$dirty" ]] && branch="${branch}*"
-        tilde_path="~/${repo#$HOME/}"
-        mtime=$(stat -f "%m" "$repo" 2>/dev/null || echo 0)
-        now=$(date +%s); delta=$(( now - mtime ))
-        if (( delta < 3600 )); then rel_time="$(( delta / 60 ))m ago"
-        elif (( delta < 86400 )); then rel_time="$(( delta / 3600 ))h ago"
-        elif (( delta < 604800 )); then rel_time="$(( delta / 86400 ))d ago"
-        else rel_time="$(( delta / 604800 ))w ago"; fi
-        has_idea=0; has_sublime=0
-        [[ -d "$repo/.idea" ]] && has_idea=1
-        fd -e sublime-project --max-depth 1 . "$repo" --quiet 2>/dev/null && has_sublime=1
-        if (( has_idea && has_sublime )); then
-          idea_mtime=$(stat -f "%m" "$repo/.idea" 2>/dev/null || echo 0)
-          sf=$(fd -e sublime-project --max-depth 1 . "$repo" 2>/dev/null | head -1)
-          sm=$(stat -f "%m" "$sf" 2>/dev/null || echo 0)
-          (( idea_mtime >= sm )) && editor_label="[IJ]" || editor_label="[SL]"
-        elif (( has_idea )); then editor_label="[IJ]"
-        elif (( has_sublime )); then editor_label="[SL]"
-        else editor_label=""; fi
-        display=$(printf "%-35s  %-22s  %-45s  %-8s  %s" "$proj_label" "$branch" "$tilde_path" "$rel_time" "$editor_label")
-        printf "%s|%s\n" "$display" "$repo"
-      '"'"' -- {}
-    )' \
-    --layout=reverse-list \
-    2>/dev/null)
+  while true; do
+    result=$(printf '%s\n' "${_PJ_CACHE[@]}" | fzf \
+      --expect=ctrl-e,ctrl-o,ctrl-r \
+      --ansi \
+      --delimiter='|' \
+      --with-nth=1 \
+      --preview='git -C {-1} log --oneline --graph --color=always -15 2>/dev/null' \
+      --preview-window=bottom,40%,border-rounded \
+      --header='Enter: cd  |  Ctrl+E: editor  |  Ctrl+O: cd+editor  |  Ctrl+R: refresh' \
+      --layout=reverse-list \
+      2>/dev/null)
 
-  # Cache persists for the session. Ctrl+R refreshes fzf's list in-place.
-  # To force a full cache rebuild, run: _PJ_CACHE=()
+    key=$(head -1 <<< "$result")
+
+    # Ctrl+R: rebuild cache and re-open picker
+    if [[ "$key" == "ctrl-r" ]]; then
+      _PJ_CACHE=()
+      _pj_build_cache
+      continue
+    fi
+
+    break
+  done
 
   [[ -z "$result" ]] && return 0
 
-  key=$(head -1 <<< "$result")
   selected=$(tail -1 <<< "$result")
   selected="${selected##*|}"
 
