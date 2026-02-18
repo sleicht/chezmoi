@@ -11,8 +11,8 @@ See: .planning/PROJECT.md (updated 2026-02-16)
 
 Phase: 33 of 33 (Project Picker)
 Plan: 1 of 1 in current phase
-Status: Awaiting human verification (Task 3 checkpoint)
-Last activity: 2026-02-17 -- Completed plans 33-01 tasks 1-2; awaiting Task 3 human-verify checkpoint
+Status: Human verification complete — proceeding to phase verification
+Last activity: 2026-02-18 -- All 3 tasks complete; bugs fixed during verification (pp->pj rename, path variable, zoxide parsing, sheldon cache, ctrl+r)
 
 Progress: [████████████████░] 97.0% (32/33 phases complete — Phase 33 in progress)
 
@@ -47,7 +47,7 @@ Progress: [████████████████░] 97.0% (32/33 pha
 
 | Plan | Duration | Tasks | Files |
 |------|----------|-------|-------|
-| P01  | 2 min    | 2/3   | 3     |
+| P01  | 2 min    | 3/3   | 4     |
 
 ## Accumulated Context
 
@@ -60,8 +60,9 @@ Recent decisions affecting current work:
 - v2.0: EPOCHREALTIME startup monitoring with 300ms threshold
 - v2.0: evalcache for tool init calls (cache static eval outputs, skip dynamic like mise)
 - [Phase 32]: Git branch completion preview: git log --oneline --graph (compact branch visualisation per user choice)
-- [Phase 33]: pp() uses xargs -P8 with inline zsh -c worker strings (ZSH has no export -f; functions cannot cross subshell boundary)
-- [Phase 33]: _PP_CACHE cleared after every fzf exit; Ctrl+R refresh propagates to next pp invocation
+- [Phase 33]: pj() uses xargs -P8 with inline zsh -c worker strings (ZSH has no export -f; functions cannot cross subshell boundary)
+- [Phase 33]: Session-persistent cache; Ctrl+R rebuilds via --expect loop (not fzf reload)
+- [Phase 33]: Never use 'path' as ZSH variable name — tied to PATH, wipes it when localised
 - [Phase 33]: Editor fallback always Sublime Text; no indicator label shown in list when neither IDE detected
 
 ### Pending Todos
@@ -74,8 +75,8 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-02-17
-Stopped at: Task 3 checkpoint (human-verify) in 33-01-PLAN.md
+Last session: 2026-02-18
+Stopped at: Phase verification step
 Resume file: .planning/phases/33-project-picker/33-01-SUMMARY.md
 
-**Next action:** After `chezmoi apply` + `exec zsh -l` verification, resume 33-01-PLAN.md Task 3
+**Next action:** Run phase goal verifier, then mark phase complete
