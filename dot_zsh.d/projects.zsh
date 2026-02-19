@@ -9,8 +9,10 @@
 PJ_DIRS=("$HOME/Projects" "$HOME/git")
 PJ_DEPTH=${PJ_DEPTH:-2}
 PJ_EXCLUDES=(node_modules .cache vendor target build dist __pycache__)
+PJ_CACHE_TTL=${PJ_CACHE_TTL:-3600}  # seconds before disk cache expires (default: 1h)
+PJ_CACHE_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/pj/cache"
 
-# Session-persistent cache (populated lazily on first `pj` invocation)
+# In-memory cache (loaded from disk or built on first `pj` invocation)
 typeset -ga _PJ_CACHE
 
 
@@ -87,12 +89,16 @@ _pj_scan() {
     exclude_args+=(-E "$ex")
   done
 
-  # Find git repos
+  # Find git repos — strip .git suffix, then prune nested repos (submodules etc.)
+  # Sort ensures parents come before children; awk skips any path under an already-accepted parent
   local git_repos
   git_repos=$(fd --hidden --no-ignore --type d \
     --max-depth "$(( PJ_DEPTH * 2 ))" \
     "${exclude_args[@]}" \
-    "^\.git$" "${PJ_DIRS[@]}" 2>/dev/null | sed 's|/\.git/?$||')
+    "^\.git$" "${PJ_DIRS[@]}" 2>/dev/null \
+    | sed -E 's|/\.git/?$||' \
+    | sort \
+    | awk 'NR==1{p=$0"/";print;next} substr($0"/",1,length(p))!=p{p=$0"/";print}')
 
   # Find non-git project marker directories
   local marker_repos
@@ -251,14 +257,36 @@ _pj_build_cache() {
   for entry in "${sorted_remaining[@]}"; do
     _PJ_CACHE+=("$entry")
   done
+
+  # Persist to disk
+  mkdir -p "${PJ_CACHE_FILE:h}"
+  printf '%s\n' "${_PJ_CACHE[@]}" > "$PJ_CACHE_FILE"
+}
+
+_pj_load_cache() {
+  # Try disk cache first (within TTL)
+  if [[ -f "$PJ_CACHE_FILE" ]]; then
+    local cache_mtime now
+    cache_mtime=$(stat -f '%m' "$PJ_CACHE_FILE" 2>/dev/null || echo 0)
+    now=$(date +%s)
+    if (( now - cache_mtime < PJ_CACHE_TTL )); then
+      _PJ_CACHE=()
+      while IFS= read -r line; do
+        [[ -n "$line" ]] && _PJ_CACHE+=("$line")
+      done < "$PJ_CACHE_FILE"
+      return 0
+    fi
+  fi
+  # Disk cache missing or stale — full rebuild
+  _pj_build_cache
 }
 
 
 # === Main picker ===
 
 pj() {
-  # Lazy cache build
-  [[ ${#_PJ_CACHE[@]} -eq 0 ]] && _pj_build_cache
+  # Lazy cache: memory → disk → full rebuild
+  [[ ${#_PJ_CACHE[@]} -eq 0 ]] && _pj_load_cache
 
   local result key selected
 
