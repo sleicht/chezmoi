@@ -24,7 +24,6 @@ packages:
       - "ack"
       - "age"
       - "archey4"
-      - "argocd"
       - "atuin"
       - "bash"
       - "bat"
@@ -57,7 +56,6 @@ packages:
       - "htop"
       - "httpie"
       - "imagemagick"
-      - "jfrog-cli"
       - "jq"
       - "just"
       - "lazydocker"
@@ -99,7 +97,6 @@ packages:
       - "vet-run"
       - "wget"
       - "woff2"
-      - "worktrunk"
       - "yabai"
       - "zoxide"
       - "zsh"
@@ -132,14 +129,17 @@ packages:
 
     # Client-specific brews
     client_brews:
+      - "argocd"
       - "autoconf"
       - "btop"
       - "derailed/k9s/k9s"
       - "dive"
       - "intelli-shell"
+      - "jfrog-cli"
       - "opencode"
       - "pinentry-mac"
       - "visualvm"
+      - "worktrunk"
       # rbenv removed - mise manages ruby
       # rust removed - mise manages rust via stable channel
       # volta removed - mise replaces volta for node management
