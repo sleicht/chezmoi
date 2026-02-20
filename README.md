@@ -17,7 +17,7 @@ Personal dotfiles for macOS, managed with [chezmoi](https://www.chezmoi.io/) and
 
 | Category | Tools |
 |----------|-------|
-| **Shell** | ZSH · `.profile` (POSIX base env) · [Sheldon](https://sheldon.cli.rs/) (plugin manager, cached source) · [Oh My Posh](https://ohmyposh.dev/) (prompt) · [zsh-defer](https://github.com/romkatv/zsh-defer) (lazy loading) · [evalcache](https://github.com/mroth/evalcache) (cached eval inits) |
+| **Shell** | ZSH · `.profile` (POSIX base env) · [Sheldon](https://sheldon.cli.rs/) (plugin manager, cached source) · [Oh My Posh](https://ohmyposh.dev/) (prompt) · [zsh-defer](https://github.com/romkatv/zsh-defer) (lazy loading) · [evalcache](https://github.com/mroth/evalcache) (cached eval inits) · `pj` (fzf project picker) |
 | **Terminal** | [Ghostty](https://ghostty.org/) · [Kitty](https://sw.kovidgoyal.net/kitty/) · [WezTerm](https://wezfurlong.org/wezterm/) |
 | **Editor** | EditorConfig · [aider](https://aider.chat/) (AI pair programming) |
 | **Git** | [Lazygit](https://github.com/jesseduffield/lazygit) · [Gitleaks](https://gitleaks.io/) (secret scanning) · global config + hooks |
@@ -74,6 +74,14 @@ mise run git:pr           # create PR/MR via gh or glab (auto-detects platform)
 mise run git:cleanup      # prune merged local branches
 ```
 
+Navigate projects with the fzf-based project picker:
+
+```bash
+pj                        # fzf picker: Enter=cd, Ctrl+E=editor, Ctrl+O=cd+editor, Ctrl+R=refresh
+```
+
+Discovers git repos under `~/Projects` and `~/git`, sorted by [zoxide](https://github.com/ajeetdsouza/zoxide) frecency. Shows branch, dirty status, relative time, and detected editor (IntelliJ/Sublime). Persistent disk cache with 1-hour TTL.
+
 Update everything (Homebrew, mise, chezmoi, sheldon, etc.) in one go with [topgrade](https://github.com/topgrade-rs/topgrade):
 
 ```bash
@@ -98,12 +106,13 @@ topgrade -n               # dry-run — preview what would be updated
 ├── dot_zshrc.tmpl                     # → ~/.zshrc (sources .profile, cached Sheldon)
 ├── dot_zlogin                         # → ~/.zlogin (background zcompile)
 ├── dot_zsh.d/                         # → ~/.zsh.d/ (modular ZSH config, sync/defer split)
+│   ├── projects.zsh                   #   pj() project picker (deferred via Sheldon)
 ├── dot_Brewfile.tmpl                  # → ~/.Brewfile (machine-aware packages)
 ├── private_dot_config/                # → ~/.config/
 │   ├── sheldon/plugins.toml           #   plugin manager (sync + defer groups)
 │   ├── ghostty/config                 #   terminal config
 │   ├── mise/config.toml.tmpl          #   runtime versions
-│   ├── mise/tasks/                    #   mise task scripts (dotfiles, git)
+│   ├── mise/tasks/                    #   mise task scripts (dotfiles, git, projects)
 │   ├── topgrade/topgrade.toml         #   all-in-one updater config
 │   ├── worktrunk/config.toml          #   git worktree manager config
 │   └── ...                            #   + 10 more tools
@@ -172,5 +181,6 @@ All tasks are file-based scripts in `~/.config/mise/tasks/`, deployed by chezmoi
 | `git:branch` | `b` | Create feature branch with naming convention |
 | `git:cleanup` | — | Prune merged local branches (safe delete) |
 | `git:pr` | — | Create PR/MR via gh or glab (auto-detects platform) |
+| `projects:pj` | — | Project picker usage instructions (run `pj` in shell) |
 
 Git tasks offer **hybrid AI/manual mode** — when `claude` CLI is available, AI generates commit messages from diffs and converts descriptions to kebab-case branch names. Falls back to interactive `fzf` prompts otherwise.
