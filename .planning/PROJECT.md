@@ -77,14 +77,16 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 - ✓ Post-migration verification with 4 acceptance procedures and smoke test integration -- v3.0
 - ✓ Rollback procedure with three-severity decision framework and Dotbot restoration -- v3.0
 
+#### v4.0 -- shipped 2026-02-20
+
+- ✓ Configure fzf-tab with previews, styling, and context-aware behaviour -- v4.0
+- ✓ Add rich fzf previews: bat for files (Ctrl+T), eza/tree for directories (Alt+C) -- v4.0
+- ✓ Build fzf-based project picker: discover projects from parent dirs, cd + open in editor -- v4.0
+- ✓ Ensure fzf-tab + carapace integration renders completions well in fzf menus -- v4.0
+
 ### Active
 
-#### v4.0 -- Shell UX Polish
-
-- Configure fzf-tab with previews, styling, and context-aware behaviour
-- Add rich fzf previews: bat for files (Ctrl+T), eza/tree for directories (Alt+C)
-- Build fzf-based project picker: discover projects from parent dirs, cd + open in editor
-- Ensure fzf-tab + carapace integration renders completions well in fzf menus
+(No active milestone -- run `/gsd:new-milestone` to start next)
 
 ### Out of Scope
 
@@ -97,8 +99,8 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 
 ## Context
 
-**Current state (post v3.0):**
-- chezmoi manages 135 files with cross-platform templates and OS-conditional configs
+**Current state (post v4.0):**
+- chezmoi manages 135+ files with cross-platform templates and OS-conditional configs
 - 171+ Homebrew packages consolidated in .chezmoidata.yaml with automated installation
 - mise manages 7 runtime versions (node, python, go, rust, java, ruby, terraform)
 - Bitwarden provides secrets to chezmoi templates (git config email/name)
@@ -108,17 +110,19 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 - Plugin-based verification framework: 112 automated checks across Phases 8-12
 - Dotbot fully retired -- no submodules, no install script, no steps/ directory
 - All legacy artifacts removed -- repository reflects chezmoi-only reality
-- Repository is clean: no orphaned files, no stale code, no dead references
-- Shell startup optimised: 139.8ms total (evalcache, sync/defer architecture, startup monitoring)
+- Shell startup optimised: 79ms total (evalcache, sync/defer architecture, startup monitoring)
 - Two-tier Sheldon loading: dotfiles-sync (immediate) + dotfiles-defer (zsh-defer) plugin groups
 - Startup self-monitoring with 300ms threshold warning
 - Automatic evalcache invalidation via chezmoi run_onchange_ hook on tool version changes
 - 13-check smoke test script for ongoing validation
-- Mise task runner: 10 file-based tasks (6 dotfiles + 4 git) deployed via chezmoi
+- Mise task runner: 10+ file-based tasks (6 dotfiles + 4 git + project picker) deployed via chezmoi
 - Hybrid AI/manual git workflows: claude CLI for AI generation, fzf for manual fallback
 - Task aliases for quick access: a (apply), v (verify), d (diff), u (update), s (sync), c (commit), b (branch)
 - Client migration runbook: 6 runbooks (2,301 lines, 19 procedures) covering audit → bootstrap → migration → reintegration → verification → rollback
-- Runbooks deployed to docs/ directory and excluded from chezmoi deploy via .chezmoiignore
+- fzf configured with Dracula theme, rounded borders, and context-aware completion previews (files, directories, processes, env vars, git branches, git commits)
+- Ctrl+T/Alt+C widget previews with bat syntax highlighting and eza tree views
+- Carapace completions integrated with fzf-tab menus including group labels
+- `pj` project picker: parallel scanning, session-persistent cache, zoxide frecency sorting, multi-action dispatch (cd/IntelliJ/Sublime/Finder)
 
 **Architecture:**
 - chezmoi source: ~/.local/share/chezmoi (templates, data, run scripts)
@@ -170,13 +174,19 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 | HTTPS-first clone for bootstrap | SSH keys encrypted in repo (chicken-and-egg) | ✓ Good -- switch to SSH after key deployment |
 | Symlink materialisation (cp -L + backup) | Safe Dotbot removal with recovery option | ✓ Good -- preserves originals before chezmoi apply |
 | Three-severity rollback decision framework | Debug Forward / Consider Rollback / Rollback Immediately | ✓ Good -- prevents premature rollback for fixable issues |
+| Dracula theme for fzf with rounded borders | Consistent visual identity across all fzf surfaces | ✓ Good -- unified look in completions, widgets, and project picker |
+| zstyle-based fzf-tab preview configuration | Per-context previews via completion tag matching | ✓ Good -- bat for files, eza for dirs, git log for branches, process info for kill |
+| Git branch preview: git log --oneline --graph | Compact branch visualisation (user preference over full diff) | ✓ Good -- fast, readable, shows branch topology |
+| xargs -P8 with inline zsh -c workers for pj | ZSH has no export -f; functions cannot cross subshell boundary | ✓ Good -- parallel scanning works, but duplicates helper logic |
+| Session-persistent cache for pj | Avoid rescanning on every invocation; Ctrl+R to rebuild | ✓ Good -- fast repeat invocations, manual refresh when needed |
+| Never use 'path' as ZSH variable name | Tied to PATH array; localising it wipes PATH | ✓ Good -- painful lesson, documented for future reference |
 
 ## Known Limitations
 
-1. **Shell startup time**: 139.8ms total, ~70ms to first prompt (optimised in v2.0 from 870ms baseline).
+1. **Shell startup time**: 79ms total (further improved from 139.8ms in v2.0; original 870ms baseline).
 2. **Phantom/firebase-cli broken**: Shebangs point to removed Homebrew node. Work via mise node when called directly.
 3. **chezmoi diff performance**: ~13s with .claude/ tracked (491MB directory). Selective sync correct; upstream chezmoi limitation.
 4. **Neovim exception**: nvim config stays as symlink outside chezmoi management (intentional, documented in README).
 
 ---
-*Last updated: 2026-02-16 after v4.0 Shell UX Polish milestone started*
+*Last updated: 2026-02-20 after v4.0 Shell UX Polish milestone shipped*

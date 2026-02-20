@@ -174,3 +174,33 @@
 
 ---
 
+
+## v4.0 Shell UX Polish (Shipped: 2026-02-20)
+
+**Delivered:** Wired existing shell tools together for polished UX — Dracula-themed fzf with rich context-aware previews for completions and widgets, carapace integration, and an fzf-based project picker with parallel scanning, caching, and editor integration.
+
+**Phases completed:** 32-33 (3 plans total)
+
+**Key accomplishments:**
+- Configured fzf with Dracula colour scheme, rounded borders, and rich widget previews using bat (files) and eza tree (directories) for Ctrl+T and Alt+C
+- Added context-aware fzf-tab completion previews for files, directories, processes, env vars, git branches, and git commits with fallback chaining
+- Integrated carapace completions with fzf-tab menus including group labels and correct rendering
+- Built `pj` project picker with parallel xargs scanning, session-persistent cache, zoxide frecency sorting, and multi-action dispatch (cd/IntelliJ/Sublime/Finder)
+- Maintained 79ms shell startup (no regression from deferred loading architecture)
+
+**Stats:**
+- 2 phases, 3 plans
+- 5 days from start to ship (2026-02-16 to 2026-02-20)
+- 35 commits, 52 files changed, +2,690 / -108 lines
+- 15/15 requirements satisfied (100%)
+
+**Git range:** feature/v4.0-shell-ux-polish branch
+
+**Tech debt accepted:**
+- Dead code: `_pj_relative_time()` and `_pj_detect_editor()` defined but never called (ZSH function-export limitation forces inline duplication)
+- Process gap: Plan 32-01 has no VERIFICATION.md (verified through cross-reference only)
+
+**What's next:** Next milestone TBD
+
+---
+
