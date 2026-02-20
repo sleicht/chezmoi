@@ -180,6 +180,7 @@ packages:
       - "chezmoi"
       - "exercism"
       - "firebase-cli"
+      - "hledger"
       - "neurosnap/tap/zmx"
       # rbenv removed - mise manages ruby
       # rust removed - mise manages rust via stable channel
