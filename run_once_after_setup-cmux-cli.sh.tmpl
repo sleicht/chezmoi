@@ -1,0 +1,19 @@
+#!/bin/bash
+# Sets up the cmux CLI symlink after the app is installed.
+# Runs once per machine.
+
+set -e
+{{ if ne .chezmoi.os "darwin" -}}
+exit 0
+{{ end -}}
+
+CMUX_BIN="/Applications/cmux.app/Contents/Resources/bin/cmux"
+SYMLINK="/usr/local/bin/cmux"
+
+if [ ! -f "$CMUX_BIN" ]; then
+  echo "cmux app not found at $CMUX_BIN — skipping CLI symlink"
+  exit 0
+fi
+
+sudo ln -sf "$CMUX_BIN" "$SYMLINK"
+echo "cmux CLI linked at $SYMLINK"
