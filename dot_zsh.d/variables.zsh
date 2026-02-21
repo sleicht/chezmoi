@@ -27,6 +27,9 @@ export BAT_THEME="Dracula"
 GPG_TTY="$(tty)"
 export GPG_TTY
 
+# === hledger ===
+export LEDGER_FILE="$HOME/Projects/accounting/main.journal"
+
 # === Node REPL ===
 export NODE_REPL_HISTORY="$HOME/.node_history"
 export NODE_REPL_HISTORY_SIZE='32768'
