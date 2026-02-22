@@ -9,18 +9,30 @@ A chezmoi dotfiles repository. Source files here deploy to `~/` via `chezmoi app
 ## Commands
 
 ```bash
+# Daily workflow (via mise shortcuts)
+mise run d                # preview pending changes (dotfiles:diff)
+mise run a                # deploy configs (dotfiles:apply)
+mise run v                # run verification checks (dotfiles:verify)
+mise run s                # full sync: backup → pull → apply → verify
+mise run c                # guided conventional commit with Jira prefix
+mise run b                # create feature branch
+mise run git:pr           # create PR/MR (auto-detects gh/glab)
+topgrade                  # update all tools (Homebrew, mise, chezmoi, sheldon)
+topgrade -n               # dry-run preview
+
+# Raw chezmoi (for advanced use)
 chezmoi diff              # preview pending changes
 chezmoi apply             # deploy to home directory
 chezmoi apply --dry-run   # simulate apply without writing
 chezmoi doctor            # diagnose problems
 chezmoi verify            # check for drift from source
-```
 
-Pre-commit hooks (gitleaks secret scanning, YAML validation, whitespace fixes):
-```bash
+# Pre-commit hooks
 pre-commit install --hook-type pre-commit --hook-type pre-push
 pre-commit run --all-files   # run all checks manually
 ```
+
+> **Note:** Commands that expand chezmoi templates (`chezmoi diff`, `chezmoi apply`, `mise run d`, `mise run a`, `mise run s`) require the Bitwarden vault to be unlocked. Claude Code cannot access the vault, so these commands must be run manually in a terminal.
 
 ## Architecture
 
@@ -63,7 +75,17 @@ Sensitive files use age encryption. The identity key lives outside chezmoi at `~
 
 ### Shell Configuration
 
-ZSH config is modular: `dot_zshrc` loads Sheldon (plugin manager with deferred loading via `zsh-defer`), which sources `dot_zsh.d/*.zsh` modules. Plugin definitions live in `private_dot_config/sheldon/plugins.toml`.
+ZSH config is modular: `dot_zshrc` loads Sheldon (plugin manager with deferred loading via `zsh-defer`), which sources `dot_zsh.d/*.zsh` modules. Plugin definitions live in `private_dot_config/sheldon/plugins.toml`. Mise tasks are file-based scripts in `private_dot_config/mise/tasks/` deployed by chezmoi.
+
+### Project Picker
+
+```bash
+pj                        # fzf-based project picker
+```
+
+- Discovers git repos under `~/Projects` and `~/git`
+- Sorted by zoxide frecency
+- Shows branch, dirty status, relative time
 
 ### Run Scripts
 
