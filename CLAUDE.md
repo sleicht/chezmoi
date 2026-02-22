@@ -1,6 +1,7 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI coding agents working with this repository.
+The filename stays `CLAUDE.md` for tool compatibility, and `AGENTS.md` points here.
 
 ## What This Is
 
@@ -32,7 +33,7 @@ pre-commit install --hook-type pre-commit --hook-type pre-push
 pre-commit run --all-files   # run all checks manually
 ```
 
-> **Note:** Commands that expand chezmoi templates (`chezmoi diff`, `chezmoi apply`, `mise run d`, `mise run a`, `mise run s`) require the Bitwarden vault to be unlocked. Claude Code cannot access the vault, so these commands must be run manually in a terminal.
+> **Note:** Commands that expand chezmoi templates (`chezmoi diff`, `chezmoi apply`, `mise run d`, `mise run a`, `mise run s`) require the Bitwarden vault to be unlocked. Automated agents typically cannot unlock or access your vault session, so run these commands manually in a terminal.
 
 ## Architecture
 
