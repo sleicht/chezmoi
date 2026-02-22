@@ -34,6 +34,7 @@ export LEDGER_FILE="$HOME/Projects/accounting/main.journal"
 export NODE_REPL_HISTORY="$HOME/.node_history"
 export NODE_REPL_HISTORY_SIZE='32768'
 export NODE_REPL_MODE='sloppy'
+export NODE_NO_WARNINGS=1
 
 # === Erlang ===
 export ERL_AFLAGS='-kernel shell_history enabled'
