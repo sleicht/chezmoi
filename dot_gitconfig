@@ -212,3 +212,5 @@
 [phantom]
 	editor = idea
 	ai = claude --ide
+	worktreesDirectory = ../
+    directoryNameSeparator = _
