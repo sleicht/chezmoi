@@ -185,7 +185,7 @@ done < ~/migration-audit/rollback-file-list.txt
 #### Step 4: Restore Dotbot symlinks
 
 ```bash
-cd ~/dotfiles-zsh  # Or wherever the frozen Dotbot repo lives
+cd ~/git/stuff/dotfiles-zsh  # Or wherever the frozen Dotbot repo lives
 
 # Option A: If Dotbot's install script still works
 ./install  # Dotbot reads install.conf.yaml and recreates symlinks
@@ -226,7 +226,7 @@ alias | head -5
 git config user.email
 ```
 
-**Note:** If the shell has errors, the Dotbot config may need the old plugin manager (zgenom) reinstalled. Check `~/dotfiles-zsh/README.md` for the original setup instructions.
+**Note:** If the shell has errors, the Dotbot config may need the old plugin manager (zgenom) reinstalled. Check `~/git/stuff/dotfiles-zsh/README.md` for the original setup instructions.
 
 #### Step 7: Handle chezmoi-specific files that Dotbot doesn't manage
 

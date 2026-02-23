@@ -18,7 +18,7 @@
 
 **Objective:** Convert Dotbot symlinks into real files so chezmoi can safely overwrite them.
 
-**Context:** Dotbot creates symlinks pointing into the `dotfiles-zsh` repository (e.g., `~/.zshrc -> ~/dotfiles-zsh/zsh/.zshrc`). chezmoi expects to write real files to these locations. If a symlink exists at a chezmoi target, chezmoi will either error or overwrite the symlink (which would modify the old repo's working tree). To avoid this, you must first "materialise" each symlink -- follow the symlink, copy the real content to a regular file at the same path, then remove the symlink.
+**Context:** Dotbot creates symlinks pointing into the `dotfiles-zsh` repository (e.g., `~/.zshrc -> ~/git/stuff/dotfiles-zsh/zsh/.zshrc`). chezmoi expects to write real files to these locations. If a symlink exists at a chezmoi target, chezmoi will either error or overwrite the symlink (which would modify the old repo's working tree). To avoid this, you must first "materialise" each symlink -- follow the symlink, copy the real content to a regular file at the same path, then remove the symlink.
 
 ### Steps
 
@@ -73,11 +73,11 @@
      # Back up the current content
      backup_path="$BACKUP_DIR${link_path#$HOME}"
      mkdir -p "$(dirname "$backup_path")"
-     cp -L "$link_path" "$backup_path"
+     cp -rL "$link_path" "$backup_path"
 
-     # Replace symlink with real file
-     rm "$link_path"
-     cp "$backup_path" "$link_path"
+     # Replace symlink with real file/directory
+     rm -rf "$link_path"
+     cp -r "$backup_path" "$link_path"
 
      echo "OK: $link_path (materialised)"
    done < "$SYMLINK_FILE"
@@ -90,7 +90,7 @@
    - Reads each symlink from the audit file
    - Verifies the symlink target exists (skips broken symlinks)
    - Backs up the symlink target content to the backup directory
-   - Replaces the symlink with a real copy of the file (`cp -L` follows symlinks)
+   - Replaces the symlink with a real copy of the file or directory (`cp -rL` follows symlinks recursively)
 
 4. Make the script executable and run it:
    ```bash

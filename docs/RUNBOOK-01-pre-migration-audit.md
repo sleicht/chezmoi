@@ -33,8 +33,8 @@ An audit report saved to `~/migration-audit/` containing:
 2. Locate the Dotbot configuration file and review the symlink mappings:
    ```bash
    # Verify the actual path to your dotfiles repo
-   # Common locations: ~/dotfiles-zsh, ~/.dotfiles, ~/dotfiles
-   cat ~/dotfiles-zsh/install.conf.yaml
+   # Common locations: ~/git/stuff/dotfiles-zsh, ~/git/stuff/dotfiles-zsh, ~/dotfiles
+   cat ~/git/stuff/dotfiles-zsh/install.conf.yaml
    ```
 
    **Expected output:** YAML configuration showing the `link:` section with source→target mappings.
@@ -45,7 +45,7 @@ An audit report saved to `~/migration-audit/` containing:
    find ~ -maxdepth 3 -type l -exec sh -c 'target=$(readlink -f "$1" 2>/dev/null); echo "$target" | grep -qi dotfiles && echo "$1 -> $target"' _ {} \; 2>/dev/null | sort > ~/migration-audit/dotbot-symlinks.txt
    ```
 
-   **Expected output:** Lines like `~/.zshrc -> ~/dotfiles-zsh/zshrc`
+   **Expected output:** Lines like `~/.zshrc -> ~/git/stuff/dotfiles-zsh/zshrc`
 
 4. Check for symlinks in common configuration directories:
    ```bash
@@ -77,7 +77,7 @@ An audit report saved to `~/migration-audit/` containing:
 **Troubleshooting:**
 - If `find` is slow, reduce `-maxdepth` or target specific directories
 - If `readlink -f` fails on macOS, ensure you're using GNU coreutils or use `greadlink -f` (install via `brew install coreutils`)
-- If the dotfiles repo path differs from `~/dotfiles-zsh`, adjust all commands accordingly
+- If the dotfiles repo path differs from `~/git/stuff/dotfiles-zsh`, adjust all commands accordingly
 
 **Output:** `~/migration-audit/dotbot-symlinks.txt` – one symlink per line with format `symlink -> target`
 
@@ -91,7 +91,7 @@ An audit report saved to `~/migration-audit/` containing:
 
 1. List all files in common bin directories:
    ```bash
-   > ~/migration-audit/custom-bins.txt  # Clear/create file
+   : > ~/migration-audit/custom-bins.txt  # Clear/create file
 
    for dir in ~/bin ~/.bin ~/.local/bin; do
      echo "--- $dir ---" >> ~/migration-audit/custom-bins.txt
@@ -107,7 +107,7 @@ An audit report saved to `~/migration-audit/` containing:
 2. Identify scripts that are NOT in the dotfiles-zsh repository:
    ```bash
    # Check ~/bin contents against dotfiles repo
-   > ~/migration-audit/untracked-scripts.txt  # Clear/create file
+   : > ~/migration-audit/untracked-scripts.txt  # Clear/create file
 
    for dir in ~/bin ~/.bin ~/.local/bin; do
      if [ -d "$dir" ]; then
@@ -115,9 +115,9 @@ An audit report saved to `~/migration-audit/` containing:
          if [ -f "$f" ]; then
            name=$(basename "$f")
            # Check common locations in dotfiles-zsh
-           if [ ! -e ~/dotfiles-zsh/bin/"$name" ] && \
-              [ ! -e ~/dotfiles-zsh/scripts/"$name" ] && \
-              [ ! -e ~/dotfiles-zsh/.local/bin/"$name" ]; then
+           if [ ! -e ~/git/stuff/dotfiles-zsh/bin/"$name" ] && \
+              [ ! -e ~/git/stuff/dotfiles-zsh/scripts/"$name" ] && \
+              [ ! -e ~/git/stuff/dotfiles-zsh/.local/bin/"$name" ]; then
              echo "CUSTOM (not in dotfiles-zsh): $f" >> ~/migration-audit/untracked-scripts.txt
            fi
          fi
@@ -175,7 +175,7 @@ An audit report saved to `~/migration-audit/` containing:
      ~/.zshenv \
      ~/.profile \
      ~/.zsh.d/ \
-     ~/dotfiles-zsh/ \
+     ~/git/stuff/dotfiles-zsh/ \
      2>/dev/null | sort -u > ~/migration-audit/client-exports.txt
    ```
 
@@ -248,7 +248,7 @@ An audit report saved to `~/migration-audit/` containing:
 
 1. Check git status in the dotfiles-zsh repository:
    ```bash
-   cd ~/dotfiles-zsh  # or your actual repo path
+   cd ~/git/stuff/dotfiles-zsh  # or your actual repo path
 
    # Capture git status
    git status > ~/migration-audit/dotfiles-drift-status.txt
@@ -270,7 +270,7 @@ An audit report saved to `~/migration-audit/` containing:
 3. Identify files that exist as regular files instead of symlinks:
    ```bash
    # These are files that should be Dotbot symlinks but have been replaced with copies
-   > ~/migration-audit/non-symlink-overrides.txt
+   : > ~/migration-audit/non-symlink-overrides.txt
 
    # Check common dotfiles
    for target in ~/.gitconfig ~/.zshrc ~/.zshenv ~/.profile ~/.vimrc ~/.tmux.conf; do
@@ -291,7 +291,7 @@ An audit report saved to `~/migration-audit/` containing:
 
 4. Check for untracked files in the repository:
    ```bash
-   cd ~/dotfiles-zsh
+   cd ~/git/stuff/dotfiles-zsh
    git ls-files --others --exclude-standard > ~/migration-audit/dotfiles-untracked.txt
    ```
 
@@ -299,7 +299,7 @@ An audit report saved to `~/migration-audit/` containing:
    ```bash
    # View drift summary
    echo "=== Modified files in repository ==="
-   cd ~/dotfiles-zsh
+   cd ~/git/stuff/dotfiles-zsh
    git status --short
 
    echo -e "\n=== Diff statistics ==="
@@ -322,16 +322,16 @@ An audit report saved to `~/migration-audit/` containing:
    echo "Review each modified file and mark action:" >> ~/migration-audit/drift-triage.md
    echo "" >> ~/migration-audit/drift-triage.md
 
-   cd ~/dotfiles-zsh
-   git status --short | while read status file; do
-     echo "- [ ] \`$file\` ($status) – Action: [keep/discard/review]" >> ~/migration-audit/drift-triage.md
+   cd ~/git/stuff/dotfiles-zsh
+   git status --short | while read st file; do
+     echo "- [ ] \`$file\` ($st) – Action: [keep/discard/review]" >> ~/migration-audit/drift-triage.md
    done
    ```
 
 **Troubleshooting:**
 - If the repository is in a detached HEAD state or has no git history, adjust the git commands accordingly
 - If you've made commits locally, also run `git log origin/main..HEAD` to see unpushed commits
-- If the repo is dirty and you're unsure about changes, create a backup: `tar czf ~/dotfiles-backup-$(date +%Y%m%d).tar.gz ~/dotfiles-zsh`
+- If the repo is dirty and you're unsure about changes, create a backup: `tar czf ~/dotfiles-backup-$(date +%Y%m%d).tar.gz ~/git/stuff/dotfiles-zsh`
 
 **Output:**
 - `dotfiles-drift-status.txt` – git status and diff statistics
