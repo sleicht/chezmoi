@@ -119,7 +119,6 @@ packages:
       - "gcloud-cli"
       - "ghostty"
       - "git-credential-manager"
-      - "gpg-suite-no-mail"
       - "istat-menus"
       - "jetbrains-toolbox"
       - "jordanbaird-ice"
@@ -141,7 +140,6 @@ packages:
       - "jfrog-cli"
       - "opencode"
       - "pinentry-mac"
-      - "visualvm"
       - "worktrunk"
       # rbenv removed - mise manages ruby
       # rust removed - mise manages rust via stable channel
@@ -206,6 +204,7 @@ packages:
       - "dropbox"
       - "fantastical"
       - "gitbutler"
+      - "gpg-suite-no-mail"
       - "google-chrome"
       - "google-drive"
       - "google-earth-pro"
