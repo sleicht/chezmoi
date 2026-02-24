@@ -5,7 +5,11 @@
 [user]
   name = {{ (rbw "git-config" "--folder" "dotfiles/shared").data.username }} # gitleaks:allow
 {{- if eq .machine_type "client" }}
-  email = {{ (rbwFields "git-config" "--folder" "dotfiles/shared").work_email.value }} # gitleaks:allow
+  email = {{ (rbwFields "git-config" "--folder" "dotfiles/shared").client_email.value }} # gitleaks:allow
 {{- else }}
-  email = {{ (rbwFields "git-config" "--folder" "dotfiles/shared").personal_email.value }} # gitleaks:allow
+  email = {{ (rbwFields "git-config" "--folder" "dotfiles/shared").work_email.value }} # gitleaks:allow
+{{- end }}
+
+{{- if eq .machine_type "client" }}
+{{ (rbw "git-config-includes" "--folder" "dotfiles/client").notes }}
 {{- end }}
