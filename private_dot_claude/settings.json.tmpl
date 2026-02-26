@@ -59,14 +59,6 @@
           }
         ],
         "matcher" : "*"
-      },
-      {
-        "hooks" : [
-          {
-            "command" : "node \"\/Users\/stephanlv_fanaka\/.claude\/hooks\/gsd-context-monitor.js\"",
-            "type" : "command"
-          }
-        ]
       }
     ],
     "PreCompact" : [
@@ -111,14 +103,6 @@
       }
     ],
     "SessionStart" : [
-      {
-        "hooks" : [
-          {
-            "command" : "node \"$HOME\/.claude\/hooks\/gsd-check-update.js\"",
-            "type" : "command"
-          }
-        ]
-      },
       {
         "hooks" : [
           {
@@ -255,8 +239,5 @@
       "Bash(rm -rf \/opt\/:*)"
     ]
   },
-  "statusLine" : {
-    "command" : "node \"$HOME\/.claude\/hooks\/gsd-statusline.js\"",
-    "type" : "command"
-  }
+  "statusLine" : {}
 }
