@@ -239,5 +239,8 @@
       "Bash(rm -rf \/opt\/:*)"
     ]
   },
-  "statusLine" : {}
+  "statusLine" : {
+    "command" : "branch=$(git symbolic-ref --short HEAD 2>\/dev\/null) && printf '%s %s' \"$branch\" \"${PWD\/#$HOME\/~}\" || printf '%s' \"${PWD\/#$HOME\/~}\"",
+    "type" : "command"
+}
 }
