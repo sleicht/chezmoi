@@ -9,7 +9,7 @@
 PJ_DIRS=("$HOME/Projects" "$HOME/git")
 PJ_DEPTH=${PJ_DEPTH:-2}
 PJ_EXCLUDES=(node_modules .cache vendor target build dist __pycache__)
-PJ_CACHE_TTL=${PJ_CACHE_TTL:-3600}  # seconds before disk cache expires (default: 1h)
+PJ_CACHE_TTL=${PJ_CACHE_TTL:-604800}  # seconds before disk cache expires (default: 1 week)
 PJ_CACHE_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/pj/cache"
 
 # In-memory cache (loaded from disk or built on first `pj` invocation)
