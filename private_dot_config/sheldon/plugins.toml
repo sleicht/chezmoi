@@ -36,14 +36,6 @@ apply = ["defer"]
 github = "zsh-users/zsh-autosuggestions"
 apply = ["defer"]
 
-[plugins.zsh-sdkman-p]
-github = "ptavares/zsh-sdkman"
-apply = ["defer"]
-
-[plugins.zsh-sdkman-m]
-github = "matthieusb/zsh-sdkman"
-apply = ["defer"]
-
 [plugins.zsh-abbr]
 local = "/opt/homebrew/share/zsh-abbr"
 use = ["zsh-abbr.zsh"]
@@ -67,5 +59,5 @@ apply = ["source"]
 
 [plugins.dotfiles-defer]
 local = "~/.zsh.d"
-use = ["external-defer.zsh", "completions-defer.zsh", "atuin.zsh", "carapace.zsh", "intelli-shell.zsh", "ssh-defer.zsh", "lens-completion.zsh", "wt.zsh", "projects.zsh"]
+use = ["external-defer.zsh", "sdkmanrc-shim.zsh", "completions-defer.zsh", "atuin.zsh", "carapace.zsh", "intelli-shell.zsh", "ssh-defer.zsh", "lens-completion.zsh", "wt.zsh", "projects.zsh"]
 apply = ["defer"]
