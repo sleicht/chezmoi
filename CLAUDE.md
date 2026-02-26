@@ -92,6 +92,20 @@ pj                        # fzf-based project picker
 
 Seven lifecycle scripts execute during `chezmoi apply` in order: Homebrew bootstrap → package install → cleanup → permission verification. All are templated (`.tmpl`) and OS-conditional.
 
+## Troubleshooting
+
+### Prompt looks broken after tool upgrades
+
+The ZSH prompt uses `_evalcache` to cache the `oh-my-posh init` output for fast startup. If oh-my-posh is upgraded (e.g. via `brew upgrade` or `topgrade`), the cached init script can become stale and produce a garbled prompt.
+
+**Automatic fix:** `dot_zsh.d/prompt.zsh` includes an mtime check that invalidates the cache when the binary is newer. If this still fails, manually clear the cache:
+
+```bash
+rm -rf ~/.zsh-evalcache
+```
+
+Then open a new shell. The same issue can occur for any other tool using `_evalcache`.
+
 ## Key Conventions
 
 - **autoCommit is on** — chezmoi auto-commits source changes on `chezmoi edit`/`chezmoi add`, but does NOT auto-push
