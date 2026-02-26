@@ -34,7 +34,9 @@
         },
         {
           "options": {
-            "style": "folder"
+            "style": "agnoster_short",
+            "max_depth": 2,
+            "max_width": 30
           },
           "template": " {{ .Path }} ",
           "foreground": "#f8f8f2",

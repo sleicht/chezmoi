@@ -106,6 +106,16 @@ rm -rf ~/.zsh-evalcache
 
 Then open a new shell. The same issue can occur for any other tool using `_evalcache`.
 
+### Prompt not updating after theme config changes
+
+Oh-my-posh (v29+) bakes the theme config into a cached init script at `~/.cache/oh-my-posh/`. The evalcache then caches *that* init script. When you change the theme JSON (`oh-my-posh.omp.json`), **both caches** must be cleared:
+
+```bash
+rm -rf ~/.zsh-evalcache ~/.cache/oh-my-posh
+```
+
+Then open a new shell. Simply running `chezmoi apply` and `exec zsh` is not enough — the stale caches will keep serving the old config.
+
 ## Key Conventions
 
 - **autoCommit is on** — chezmoi auto-commits source changes on `chezmoi edit`/`chezmoi add`, but does NOT auto-push
