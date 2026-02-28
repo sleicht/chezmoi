@@ -147,16 +147,26 @@
   "permissions" : {
     "allow" : [
       "Bash(awk:*)",
+      "Bash(cat:*)",
       "Bash(date:*)",
       "Bash(echo:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git status:*)",
+      "Bash(git tag:*)",
+      "Bash(grep:*)",
+      "Bash(head:*)",
+      "Bash(just compile:*)",
+      "Bash(just unit:*)",
       "Bash(ls:*)",
       "Bash(mkdir:*)",
       "Bash(sed:*)",
       "Bash(sort:*)",
+      "Bash(tail:*)",
       "Bash(tr:*)",
-      "Bash(wc:*)",
-      "Bash(just compile:*)",
-      "Bash(just unit:*)"
+      "Bash(wc:*)"
     ],
     "defaultMode" : "plan",
     "deny" : [
@@ -242,5 +252,5 @@
   "statusLine" : {
     "command" : "branch=$(git symbolic-ref --short HEAD 2>\/dev\/null) && printf '%s %s' \"$branch\" \"${PWD\/#$HOME\/~}\" || printf '%s' \"${PWD\/#$HOME\/~}\"",
     "type" : "command"
-}
+  }
 }
