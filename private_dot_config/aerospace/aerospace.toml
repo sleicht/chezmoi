@@ -45,20 +45,20 @@ cmd-alt-h = [] # Disable "hide others"
 #    'tell application "Ghostty" to activate' -e
 #    'tell application "System Events" to keystroke "n" using {command down}'
 #'''
-alt-enter = '''exec-and-forget osascript -e '
-    tell application "Ghostty"
-        activate
-    end tell
-    tell application "System Events"
-        keystroke "n" using {command down}
-    end tell'
-'''
-ctrl-g = '''exec-and-forget osascript -e '
-    tell application "Zen"
-        make new document at end of documents
-        activate
-    end tell'
-'''
+#alt-enter = '''exec-and-forget osascript -e '
+#    tell application "Ghostty"
+#        activate
+#    end tell
+#    tell application "System Events"
+#        keystroke "n" using {command down}
+#    end tell'
+#'''
+#ctrl-g = '''exec-and-forget osascript -e '
+#    tell application "Zen"
+#        make new document at end of documents
+#        activate
+#    end tell'
+#'''
 
 # i3 wraps focus by default
 alt-j =         'focus --boundaries-action wrap-around-the-workspace left'
