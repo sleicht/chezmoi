@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A complete ZSH dotfiles management system powered by chezmoi, providing cross-platform templating (macOS/Linux), machine-specific configuration (client/personal), automated Homebrew package management, mise runtime version management (7 runtimes), Bitwarden-backed secret templating with age encryption, gitleaks leak prevention, a plugin-based verification framework with 112 automated checks, and a mise-powered task runner with 10 user-friendly commands for dotfiles operations and git workflows. All configs (135 files) are managed by chezmoi with all legacy tooling (Nix, Dotbot, asdf) fully removed.
+A complete ZSH dotfiles management system powered by chezmoi, providing cross-platform templating (macOS/Linux), machine-specific configuration (client/personal), automated Homebrew package management, mise runtime version management (7 runtimes), rbw-backed secret templating with age encryption, gitleaks leak prevention, a plugin-based verification framework with 112 automated checks, and a mise-powered task runner with 10 user-friendly commands for dotfiles operations and git workflows. All configs (135 files) are managed by chezmoi with all legacy tooling (Nix, Dotbot, asdf) fully removed.
 
 ## Core Value
 
@@ -84,6 +84,16 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 - ✓ Build fzf-based project picker: discover projects from parent dirs, cd + open in editor -- v4.0
 - ✓ Ensure fzf-tab + carapace integration renders completions well in fzf menus -- v4.0
 
+#### v4.1 -- shipped 2026-02-28
+
+- ✓ Migrate chezmoi secret templates from bitwarden-cli (bw) to rbw (bitwarden → rbw, bitwardenFields → rbwFields) -- v4.1
+- ✓ Remove bitwarden.command config block from .chezmoi.yaml.tmpl (rbw uses agent daemon) -- v4.1
+- ✓ Delete bw shebang wrapper script (run_once_before_setup-bw-wrapper.sh.tmpl) -- v4.1
+- ✓ Remove bw-unlock shell function and BW_SESSION check from mise apply task -- v4.1
+- ✓ Update gitleaks allowlist for rbw/rbwFields template expressions -- v4.1
+- ✓ Update client migration runbooks for rbw workflow -- v4.1
+- ✓ Replace bitwarden-cli with rbw in Homebrew package list -- v4.1
+
 ### Active
 
 (No active milestone -- run `/gsd:new-milestone` to start next)
@@ -103,7 +113,7 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 - chezmoi manages 135+ files with cross-platform templates and OS-conditional configs
 - 171+ Homebrew packages consolidated in .chezmoidata.yaml with automated installation
 - mise manages 7 runtime versions (node, python, go, rust, java, ruby, terraform)
-- Bitwarden provides secrets to chezmoi templates (git config email/name)
+- rbw (Rust Bitwarden client) provides secrets to chezmoi templates via agent daemon (git config email/name, API keys)
 - 4 SSH keys encrypted with age in chezmoi source
 - Global gitleaks hooks deployed to all git repos
 - Permission verification runs on every chezmoi apply
@@ -127,7 +137,7 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 **Architecture:**
 - chezmoi source: ~/.local/share/chezmoi (templates, data, run scripts)
 - Package data: .chezmoidata.yaml (single source of truth for all packages)
-- Config template: .chezmoi.yaml.tmpl (machine identity, encryption, Bitwarden)
+- Config template: .chezmoi.yaml.tmpl (machine identity, encryption)
 - Shell config: modular zsh.d/*.zsh files managed by chezmoi
 - Plugin management: Sheldon (.config/sheldon/plugins.toml)
 - Verification: scripts/verify-configs.sh with scripts/verify-checks/*.sh plugins
@@ -140,8 +150,8 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 
 - **Cross-platform**: Must work on macOS (Homebrew) and Linux (apt/Homebrew)
 - **Backwards compatible**: Existing shell functionality must not break
-- **No secrets in git**: chezmoi age encryption and Bitwarden integration handle sensitive configs
-- **Bitwarden session required**: BW_SESSION env var needed for chezmoi apply with secret templates
+- **No secrets in git**: chezmoi age encryption and rbw integration handle sensitive configs
+- **rbw agent required**: rbw agent must be running and unlocked for chezmoi apply with secret templates
 
 ## Key Decisions
 
@@ -153,6 +163,7 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 | Keep Sheldon for ZSH plugins | Already in use, fast, simple | ✓ Good -- no changes needed, works with chezmoi-managed config |
 | Age encryption for SSH keys | Per-machine isolation, Bitwarden as bootstrap | ✓ Good -- 4 keys encrypted, bootstrap chain working |
 | Bitwarden for secrets | Free, CLI available, vault already in use | ✓ Good -- git config templated from vault |
+| rbw over bitwarden-cli | Agent daemon model (no BW_SESSION), native chezmoi integration, simpler UX | ✓ Good -- no session management, no shebang wrapper needed, cleaner templates |
 | Global gitleaks hooks | Prevent secret leaks across all repos | ✓ Good -- warn on commit, block on push |
 | Manual cp -L for chezmoi add | chezmoi add --follow limitation with directories | ✓ Good -- reliable workaround used across all v1.1 phases (8-11) |
 | Plugin-based verification | Extensible check framework per phase | ✓ Good -- 112 checks, 5 phase check files, auto-discovered by runner |
@@ -189,4 +200,4 @@ A complete ZSH dotfiles management system powered by chezmoi, providing cross-pl
 4. **Neovim exception**: nvim config stays as symlink outside chezmoi management (intentional, documented in README).
 
 ---
-*Last updated: 2026-02-20 after v4.0 Shell UX Polish milestone shipped*
+*Last updated: 2026-02-28 after v4.1 rbw Migration milestone shipped*

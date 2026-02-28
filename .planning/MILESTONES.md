@@ -204,3 +204,27 @@
 
 ---
 
+
+## v4.1 rbw Migration (Shipped: 2026-02-28)
+
+**Delivered:** Migrated secret templating from bitwarden-cli (bw) to rbw across all chezmoi templates, shell helpers, mise tasks, and client migration runbooks. Done out-of-band (single commit, no GSD phases).
+
+**Key accomplishments:**
+- Replaced all chezmoi template functions: `bitwarden` → `rbw`, `bitwardenFields` → `rbwFields` (git config, Claude settings)
+- Removed `bitwarden.command` config block from `.chezmoi.yaml.tmpl` (rbw uses agent daemon, no path needed)
+- Deleted `run_once_before_setup-bw-wrapper.sh.tmpl` (bw shebang wrapper no longer needed)
+- Removed `bw-unlock` shell function and `BW_SESSION` check from mise apply task
+- Updated gitleaks allowlist with `rbw`/`rbwFields` template expressions
+- Updated client migration runbooks (RUNBOOK-02, RUNBOOK-03) for rbw workflow
+- Replaced `bitwarden-cli` with `rbw` in Homebrew package list
+
+**Stats:**
+- Out-of-band (no GSD phases)
+- 1 commit, 11 files changed, +30 / -74 lines
+
+**Git range:** main branch (3eff140)
+
+**What's next:** Next milestone TBD
+
+---
+

@@ -9,6 +9,7 @@
 - ✅ **v2.1 Mise Task Runner** -- Phases 23-25 (shipped 2026-02-15)
 - ✅ **v3.0 Client Migration** -- Phases 26-31 (shipped 2026-02-16)
 - ✅ **v4.0 Shell UX Polish** -- Phases 32-33 (shipped 2026-02-20)
+- ✅ **v4.1 rbw Migration** -- Out-of-band (shipped 2026-02-28)
 
 ## Phases
 
@@ -115,6 +116,15 @@ Wired existing shell tools together for polished UX — Dracula-themed fzf with 
 
 </details>
 
+<details>
+<summary>✅ v4.1 rbw Migration -- SHIPPED 2026-02-28</summary>
+
+Migrated secret templating from bitwarden-cli (bw) to rbw. Single commit, done out-of-band (no GSD phases). Replaced all chezmoi template functions, removed bw shebang wrapper and session management, updated runbooks and gitleaks allowlist.
+
+**Stats:** Out-of-band, 1 commit, 11 files changed, +30 / -74 lines
+
+</details>
+
 ## Progress
 
 | Phase | Milestone | Plans Complete | Status | Completed |
@@ -154,4 +164,4 @@ Wired existing shell tools together for polished UX — Dracula-themed fzf with 
 | 33. Project Picker | v4.0 | 1/1 | Complete | 2026-02-20 |
 
 ---
-*Last updated: 2026-02-20 -- v4.0 Shell UX Polish shipped*
+*Last updated: 2026-02-28 -- v4.1 rbw Migration shipped*
