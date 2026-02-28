@@ -5,7 +5,7 @@
 **Prerequisites:**
 - Phase 26 audit complete (`~/migration-audit/` populated)
 - Homebrew installed on client Mac (if not, install from https://brew.sh)
-- Access to Bitwarden CLI or web vault
+- Access to rbw (Bitwarden CLI) or web vault
 - Age private key moved to `dotfiles/shared` folder in Bitwarden (item name: `age-private-key`). If it is still in `dotfiles/personal`, move it via the web vault or CLI before proceeding.
 - Git access to the chezmoi source repository (`github.com/sleicht/chezmoi`)
 - Terminal access on the client Mac
@@ -40,13 +40,17 @@ This is the critical bootstrap chain: the age key decrypts SSH keys and other se
    ```
 
 4. Retrieve the age private key and write it directly to the target path. There are two options:
-   - **Option A: From Bitwarden** (preferred):
+   - **Option A: From Bitwarden via rbw** (preferred):
      ```bash
-     # Log in to Bitwarden CLI
-     export BW_SESSION=$(bw login --raw)  # or bw unlock --raw if already logged in
+     # Install and configure rbw
+     brew install rbw
+     rbw config set email <your-email>
+     rbw login
+     rbw unlock
+     rbw sync
 
      # Retrieve the age key directly to the target path
-     bw get notes "age-private-key" > ~/.config/age/key-client.txt
+     rbw get age-private-key --folder dotfiles/shared > ~/.config/age/key-client.txt
      chmod 600 ~/.config/age/key-client.txt
      ```
    - **Option B: Copy from personal Mac** (simpler):
@@ -80,7 +84,7 @@ The file `~/.config/age/key-client.txt` exists with 600 permissions. The encrypt
 
 - If `age -d` fails with "no identity matched any of the recipients": the private key does not match the public key in the repo. Verify you copied the correct key.
 - If the key is lost entirely: you must regenerate a key pair on the personal Mac, re-encrypt all `encrypted_*.age` files in the chezmoi source, update the `recipient` in `.chezmoi.yaml.tmpl`, and push. Then repeat this procedure with the new key.
-- If Bitwarden CLI is not installed: `brew install bitwarden-cli`, or just copy the key directly from your personal Mac.
+- If rbw is not installed: `brew install rbw`, configure it with `rbw config set email <your-email>`, then `rbw login && rbw unlock && rbw sync`. Or just copy the key directly from your personal Mac.
 
 ### Output
 
@@ -146,20 +150,13 @@ Chezmoi source repo at `~/.local/share/chezmoi/` with all files present.
 
 ### Steps
 
-1. Ensure Bitwarden CLI is installed and unlocked (chezmoi templates reference Bitwarden for secrets):
+1. Ensure rbw is installed and unlocked (chezmoi templates reference rbw for secrets):
    ```bash
-   brew install bitwarden-cli  # if not already installed
-   export BW_SESSION=$(bw unlock --raw)
-   ```
-
-   If Bitwarden is not yet set up on the client Mac, the installed `~/.local/bin/bw` won't exist yet. Use the Homebrew version for now:
-   ```bash
-   # Temporarily use Homebrew bw (chezmoi config expects ~/.local/bin/bw)
-   # Option A: Create a temporary symlink
-   mkdir -p ~/.local/bin
-   ln -sf $(which bw) ~/.local/bin/bw
-
-   # Option B: Or just set BW_SESSION and chezmoi will find it
+   brew install rbw  # if not already installed
+   rbw config set email <your-email>
+   rbw login
+   rbw unlock
+   rbw sync
    ```
 
 2. Run chezmoi init (this processes `.chezmoi.yaml.tmpl` and prompts for configuration):
@@ -193,8 +190,6 @@ Chezmoi source repo at `~/.local/share/chezmoi/` with all files present.
    age:
      identity: "/Users/<you>/.config/age/key-client.txt"
      recipient: "age1hl7puvh5w5d49qgygxpj7q7zmc9gqyutqufk2p9x55mfm7ul742qg9vjn8"
-   bitwarden:
-     command: "/Users/<you>/.local/bin/bw"
    data:
      machine_type: "client"
      personal_email: "<your-personal-email>"
@@ -222,7 +217,7 @@ Chezmoi source repo at `~/.local/share/chezmoi/` with all files present.
 ### Troubleshooting
 
 - If `chezmoi init` fails with "age: decryption failed": the age key at `key-client.txt` does not match the recipient. Go back to Procedure 1.
-- If `chezmoi init` fails with "bitwarden: command not found": either install bw or create the symlink in step 1. If you don't need Bitwarden secrets immediately, you can also temporarily comment out the bitwarden section in `.chezmoi.yaml.tmpl` (not recommended).
+- If `chezmoi init` fails with template errors referencing `rbw`: ensure rbw is installed, configured, and unlocked (`rbw unlock`).
 - If prompts don't appear: chezmoi may have found an existing `chezmoi.yaml` from a previous run. Delete `~/.config/chezmoi/chezmoi.yaml` and rerun.
 - If `chezmoi diff` fails with age decryption errors but `chezmoi init` succeeded: verify the age key file path and permissions (`ls -la ~/.config/age/key-client.txt` should show `-rw-------`).
 

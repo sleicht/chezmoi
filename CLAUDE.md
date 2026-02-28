@@ -33,7 +33,7 @@ pre-commit install --hook-type pre-commit --hook-type pre-push
 pre-commit run --all-files   # run all checks manually
 ```
 
-> **Note:** Commands that expand chezmoi templates (`chezmoi diff`, `chezmoi apply`, `mise run d`, `mise run a`, `mise run s`) require the Bitwarden vault to be unlocked. Automated agents typically cannot unlock or access your vault session, so run these commands manually in a terminal.
+> **Note:** Commands that expand chezmoi templates (`chezmoi diff`, `chezmoi apply`, `mise run d`, `mise run a`, `mise run s`) require the rbw agent to be running and unlocked (`rbw unlock`). Automated agents typically cannot unlock or access your vault, so run these commands manually in a terminal.
 
 ## Architecture
 
@@ -96,5 +96,5 @@ Seven lifecycle scripts execute during `chezmoi apply` in order: Homebrew bootst
 
 - **autoCommit is on** — chezmoi auto-commits source changes on `chezmoi edit`/`chezmoi add`, but does NOT auto-push
 - **`edit.apply: false`** — editing source files does not auto-apply; you must run `chezmoi apply` manually
-- **Gitleaks allowlist** — `.gitleaks.toml` allowlists chezmoi template expressions (`{{bitwarden.*}}`, `{{chezmoi.*}}`); update it if adding new secret template patterns
+- **Gitleaks allowlist** — `.gitleaks.toml` allowlists chezmoi template expressions (`{{rbw.*}}`, `{{chezmoi.*}}`); update it if adding new secret template patterns
 - **Permission verification** — `run_after_10-verify-permissions.sh.tmpl` enforces 600/700 on sensitive files after every apply

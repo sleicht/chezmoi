@@ -164,7 +164,7 @@ All Dotbot symlinks materialised as real files. Backup in `~/migration-audit/pre
    Review the output for any errors, especially:
    - Age decryption failures on encrypted files
    - Template rendering errors
-   - Bitwarden lookup failures (if `BW_SESSION` has expired, re-export it: `export BW_SESSION=$(bw unlock --raw)`)
+   - rbw lookup failures (if the agent has locked, re-unlock with `rbw unlock`)
 
 4. If the dry run looks clean, apply:
    ```bash
@@ -223,7 +223,7 @@ All ~131 managed files deployed. Critical files present as real files (not symli
 ### Troubleshooting
 
 - **`chezmoi apply` fails with age decryption errors:** Re-check `~/.config/age/key-client.txt` permissions (must be 600) and content. Re-run the Phase 27 verification command.
-- **Bitwarden lookups fail (`bw: command not found` or session expired):** Re-export `BW_SESSION=$(bw unlock --raw)` and retry.
+- **rbw lookups fail (`rbw: command not found` or agent locked):** Run `rbw unlock` and retry.
 - **Lifecycle scripts fail (Homebrew install errors):** These are non-fatal for the core file deployment. Note the errors and debug after the main apply completes. You can re-run scripts with `chezmoi apply --include=scripts`.
 - **Some files show as "would modify" but don't get applied:** chezmoi may be prompting for confirmation. Use `chezmoi apply --force` for those specific files (see Procedure 3 for conflict handling).
 - **`ssh -T git@github.com` fails after deploying SSH keys:** Check `~/.ssh/config` and `~/.ssh/id_rsa` permissions. Run `chmod 600 ~/.ssh/id_rsa && chmod 644 ~/.ssh/id_rsa.pub`.

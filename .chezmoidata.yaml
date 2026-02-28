@@ -29,7 +29,7 @@ packages:
       - "bash"
       - "bat"
       - "bat-extras"
-      - "bitwarden-cli"
+      - "rbw"
       - "bottom"
       - "broot"
       - "catimg"

@@ -23,7 +23,7 @@
   },
   "env": {
 {{- if eq .machine_type "personal" }}
-    "BRAVE_SEARCH_API_KEY": "{{ (bitwardenFields "item" "dotfiles/personal/claude-settings").brave_search_api_key.value }}"
+    "BRAVE_SEARCH_API_KEY": "{{ (rbwFields "claude-settings" "--folder" "dotfiles/personal").brave_search_api_key.value }}"
 {{- end }}
   },
   "hooks": {

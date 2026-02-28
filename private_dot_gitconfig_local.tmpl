@@ -3,9 +3,9 @@
 # Generated: {{ now | date "2006-01-02" }}
 
 [user]
-  name = {{ (bitwarden "item" "dotfiles/shared/git-config").login.username }} # gitleaks:allow
+  name = {{ (rbw "git-config" "--folder" "dotfiles/shared").data.username }} # gitleaks:allow
 {{- if eq .machine_type "client" }}
-  email = {{ (bitwardenFields "item" "dotfiles/shared/git-config").work_email.value }} # gitleaks:allow
+  email = {{ (rbwFields "git-config" "--folder" "dotfiles/shared").work_email.value }} # gitleaks:allow
 {{- else }}
-  email = {{ (bitwardenFields "item" "dotfiles/shared/git-config").personal_email.value }} # gitleaks:allow
+  email = {{ (rbwFields "git-config" "--folder" "dotfiles/shared").personal_email.value }} # gitleaks:allow
 {{- end }}
