@@ -266,7 +266,7 @@
     ]
   },
   "statusLine": {
-    "command": "branch=$(git symbolic-ref --short HEAD 2>/dev/null) && printf '%s %s' \"$branch\" \"${PWD/#$HOME/~}\" || printf '%s' \"${PWD/#$HOME/~}\"",
-    "type": "command"
+    "type": "command",
+    "command": "node \"/Users/stephanlv_fanaka/.claude/hooks/gsd-statusline.js\""
   }
 }
