@@ -8,6 +8,7 @@ font-family-bold-italic = Bold Italic
 font-size = 12
 font-style = Medium
 keybind = global:ctrl+1=toggle_quick_terminal
+keybind = cmd+w=unbind
 macos-titlebar-style = tabs
 minimum-contrast = 1.05
 mouse-hide-while-typing = true
