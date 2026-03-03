@@ -41,6 +41,9 @@ Rules:
 - Every changed line should trace to the user's request.
 - Clean up only what YOUR changes made unused.
 
+## Tool Preferences
+- Prefer `fd` over `find` for file discovery — use `/fd` skill for syntax reference
+
 ## Architecture Preferences
 - Spring Boot: prefer onion architecture (domain independence, clear layer separation)
 - Prefer pragmatic solutions over theoretical perfection
