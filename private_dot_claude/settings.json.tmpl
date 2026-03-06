@@ -1,163 +1,8 @@
 {
-  "alwaysThinkingEnabled": true,
-  "effortLevel": "medium",
-  "enableAllProjectMcpServers": false,
-  "enabledPlugins": {
-    "ast-grep@ast-grep-marketplace": true,
-    "brave-search-skills@brave-search": true,
-    "code-simplifier@claude-plugins-official": true,
-    "context7@claude-plugins-official": true,
-    "explanatory-output-style@claude-plugins-official": true,
-    "feature-dev@claude-plugins-official": true,
-    "firebase@claude-plugins-official": true,
-    "git-commit-messages@dotfiles-marketplace": true,
-    "gitlab-merge-requests@dotfiles-marketplace": true,
-    "gitlab@claude-plugins-official": true,
-    "jdtls-lsp@claude-plugins-official": true,
-    "kotlin-lsp@claude-plugins-official": true,
-    "learning-output-style@claude-plugins-official": true,
-    "lua-lsp@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true,
-    "stripe@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true
-  },
   "env": {
 {{- if eq .machine_type "personal" }}
     "BRAVE_SEARCH_API_KEY": "{{ (rbwFields "claude-settings" "--folder" "dotfiles/personal").brave_search_api_key.value }}"
 {{- end }}
-  },
-  "hooks": {
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
-            "timeout": 86400,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"/Users/stephanlv_fanaka/.claude/hooks/gsd-context-monitor.js\""
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ],
-        "matcher": "auto"
-      },
-      {
-        "hooks": [
-          {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ],
-        "matcher": "manual"
-      }
-    ],
-    "PreToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node \"/Users/stephanlv_fanaka/.claude/hooks/gsd-check-update.js\""
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ]
-      }
-    ],
-    "SubagentStop": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ]
-      }
-    ]
   },
   "includeCoAuthoredBy": false,
   "permissions": {
@@ -184,7 +29,6 @@
       "Bash(tr:*)",
       "Bash(wc:*)"
     ],
-    "defaultMode": "plan",
     "deny": [
       "Bash(rm -rf /:*)",
       "Bash(rm -rf /)",
@@ -263,10 +107,170 @@
       "Bash(rm -rf /home/:*)",
       "Bash(rm -rf /var/:*)",
       "Bash(rm -rf /opt/:*)"
+    ],
+    "defaultMode": "plan"
+  },
+  "enableAllProjectMcpServers": false,
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/claude-island-state.py"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "timeout": 86400
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/claude-island-state.py"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/stephanlv_fanaka/.claude/hooks/gsd-context-monitor.js\""
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "auto",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/claude-island-state.py"
+          }
+        ]
+      },
+      {
+        "matcher": "manual",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/claude-island-state.py"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/claude-island-state.py"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/claude-island-state.py"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/claude-island-state.py"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/stephanlv_fanaka/.claude/hooks/gsd-check-update.js\""
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/claude-island-state.py"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/claude-island-state.py"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 ~/.claude/hooks/claude-island-state.py"
+          }
+        ]
+      }
     ]
   },
   "statusLine": {
     "type": "command",
     "command": "node \"/Users/stephanlv_fanaka/.claude/hooks/gsd-statusline.js\""
-  }
+  },
+  "enabledPlugins": {
+    "ast-grep@ast-grep-marketplace": true,
+    "brave-search-skills@brave-search": true,
+    "code-simplifier@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "explanatory-output-style@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "firebase@claude-plugins-official": true,
+    "git-commit-messages@dotfiles-marketplace": true,
+    "gitlab-merge-requests@dotfiles-marketplace": true,
+    "gitlab@claude-plugins-official": true,
+    "jdtls-lsp@claude-plugins-official": true,
+    "kotlin-lsp@claude-plugins-official": true,
+    "learning-output-style@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "stripe@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "plugin-dev@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true
+  },
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "medium"
 }
