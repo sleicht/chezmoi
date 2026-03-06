@@ -209,18 +209,21 @@ func collectMetadata(repoPath, home string) Repo {
 	return r
 }
 
-// relativeTime formats a time as "Xm ago", "Xh ago", etc.
+// relativeTime formats a time as "Xm ago", "Xh ago", "Xd ago", "Xmo ago", or "Xy ago".
 func relativeTime(t time.Time) string {
 	delta := time.Since(t)
+	hours := delta.Hours()
 	switch {
 	case delta < time.Hour:
 		return strconv.Itoa(max(0, int(delta.Minutes()))) + "m ago"
-	case delta < 24*time.Hour:
-		return strconv.Itoa(int(delta.Hours())) + "h ago"
-	case delta < 7*24*time.Hour:
-		return strconv.Itoa(int(delta.Hours()/24)) + "d ago"
+	case hours < 24:
+		return strconv.Itoa(int(hours)) + "h ago"
+	case hours < 24*30:
+		return strconv.Itoa(int(hours/24)) + "d ago"
+	case hours < 24*365:
+		return strconv.Itoa(int(hours/(24*30))) + "mo ago"
 	default:
-		return strconv.Itoa(int(delta.Hours()/(24*7))) + "w ago"
+		return strconv.Itoa(int(hours/(24*365))) + "y ago"
 	}
 }
 

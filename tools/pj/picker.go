@@ -25,8 +25,8 @@ func runPicker(cfg Config, entries []string) (action, path string) {
 			return "", ""
 		}
 
-		// Extract path from "display|path" format
-		if idx := strings.LastIndex(selected, "|"); idx >= 0 {
+		// Extract path from "display\tpath" format
+		if idx := strings.LastIndex(selected, "\t"); idx >= 0 {
 			path = selected[idx+1:]
 		} else {
 			return "", ""
@@ -50,9 +50,9 @@ func launchFzf(entries []string) (key, selected string) {
 	cmd := exec.Command("fzf",
 		"--expect=ctrl-e,ctrl-o,ctrl-r",
 		"--ansi",
-		"--delimiter=|",
+		"--delimiter=\t",
 		"--with-nth=1",
-		"--preview=git -C {-1} log --oneline --graph --color=always -15 2>/dev/null",
+		"--preview=git -C {2} log --oneline --graph --color=always -15 2>/dev/null",
 		"--preview-window=bottom,40%,border-rounded",
 		"--header=Enter: cd  |  Ctrl+E: editor  |  Ctrl+O: cd+editor  |  Ctrl+R: refresh",
 		"--layout=reverse-list",

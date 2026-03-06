@@ -83,19 +83,59 @@ type Repo struct {
 	EditorTag  string // "[IJ]", "[SL]", or ""
 }
 
-// formatDisplay produces the fixed-width display string for fzf.
+// ANSI escape codes for colour output.
+const (
+	ansiReset   = "\033[0m"
+	ansiGreen   = "\033[32m"
+	ansiRed     = "\033[31m"
+	ansiDim     = "\033[2m"
+	ansiYellow  = "\033[33m"
+	ansiCyan    = "\033[36m"
+)
+
+// truncate shortens s to maxLen, replacing the last char with '…' if truncated.
+func truncate(s string, maxLen int) string {
+	if len(s) <= maxLen {
+		return s
+	}
+	if maxLen <= 1 {
+		return "…"
+	}
+	return s[:maxLen-1] + "…"
+}
+
+// formatDisplay produces the coloured fixed-width display string for fzf.
+// Layout: label(55) branch(25) time(8) editor(4)
 func (r *Repo) formatDisplay() string {
+	label := truncate(r.Label, 55)
+
 	branch := r.Branch
 	if r.Dirty {
 		branch += "*"
 	}
-	return fmt.Sprintf("%-35s  %-22s  %-45s  %-8s  %s",
-		r.Label, branch, r.TildePath, r.RelTime, r.EditorTag)
+	padded := fmt.Sprintf("%-25s", truncate(branch, 25))
+	// Colour the * red within the green branch
+	var branchCol string
+	if r.Dirty {
+		idx := strings.LastIndex(padded, "*")
+		branchCol = ansiGreen + padded[:idx] + ansiRed + "*" + ansiReset + padded[idx+1:]
+	} else {
+		branchCol = ansiGreen + padded + ansiReset
+	}
+
+	timeCol := ansiDim + fmt.Sprintf("%8s", r.RelTime) + ansiReset
+
+	editorCol := ""
+	if r.EditorTag != "" {
+		editorCol = ansiCyan + r.EditorTag + ansiReset
+	}
+
+	return fmt.Sprintf("%-55s  %s  %s  %s", label, branchCol, timeCol, editorCol)
 }
 
-// formatCacheLine produces the "display|path" line for cache and fzf.
+// formatCacheLine produces the "display\tpath" line for cache and fzf.
 func (r *Repo) formatCacheLine() string {
-	return r.formatDisplay() + "|" + r.Path
+	return r.formatDisplay() + "\t" + r.Path
 }
 
 func main() {
