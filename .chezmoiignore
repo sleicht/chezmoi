@@ -61,6 +61,8 @@ art
 art/**
 bin
 bin/**
+tools
+tools/**
 
 # -----------------------------------------------------------------------------
 # 3. Package Management (Managed separately via brew bundle)

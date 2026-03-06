@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #MISE description="Open interactive project picker (use 'pj' in your shell)"
 echo "The project picker must run as a shell function to change your directory."
+echo "It uses the pj-picker Go binary (~/.local/bin/pj-picker) for scanning and fzf."
 echo ""
 echo "Usage: type 'pj' directly in your shell."
 echo ""
