@@ -1,0 +1,20 @@
+# Worktree path template — mirrors Phantom layout
+# e.g. ~/git/ms/project/develop → ~/git/ms/project/feature-name
+{{- if eq .machine_type "client" }}
+worktree-path = "{{`{{ repo_path }}/../{{ branch | sanitize }}`}}"
+{{- else if eq .machine_type "personal" }}
+worktree-path = "{{`{{ repo_path }}/.worktrees/{{ branch | sanitize }}`}}"
+{{- end }}
+
+[commit]
+stage = "all"
+
+[commit.generation]
+command = "MAX_THINKING_TOKENS=0 claude -p --model=haiku --tools='' --disable-slash-commands --setting-sources='' --system-prompt=''"
+
+[merge]
+squash = true
+commit = true
+rebase = true
+remove = true
+verify = true
