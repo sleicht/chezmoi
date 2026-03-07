@@ -39,6 +39,13 @@ export NODE_NO_WARNINGS=1
 # === Erlang ===
 export ERL_AFLAGS='-kernel shell_history enabled'
 
+# === Project Picker ===
+{{- if eq .machine_type "personal" }}
+export PJ_DIRS="$HOME/Projects:$HOME/git:$HOME/jessie.ai"
+{{- else }}
+export PJ_DIRS="$HOME/Projects:$HOME/git"
+{{- end }}
+
 # === Misc ===
 export BASH_SILENCE_DEPRECATION_WARNING=1
 export OPENCODE_EXPERIMENTAL_FILEWATCHER=true

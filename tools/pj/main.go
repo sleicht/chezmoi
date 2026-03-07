@@ -118,7 +118,11 @@ func (r *Repo) formatDisplay() string {
 	var branchCol string
 	if r.Dirty {
 		idx := strings.LastIndex(padded, "*")
-		branchCol = ansiGreen + padded[:idx] + ansiRed + "*" + ansiReset + padded[idx+1:]
+		if idx >= 0 {
+			branchCol = ansiGreen + padded[:idx] + ansiRed + "*" + ansiReset + padded[idx+1:]
+		} else {
+			branchCol = ansiGreen + padded + ansiReset
+		}
 	} else {
 		branchCol = ansiGreen + padded + ansiReset
 	}

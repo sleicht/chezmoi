@@ -92,14 +92,24 @@ func discoverGitRepos(cfg Config, excludes map[string]bool) []string {
 			if err != nil {
 				return fs.SkipDir
 			}
+
+			name := d.Name()
+
+			// Found a .git file (worktree) or directory — record the parent as a repo
+			if name == ".git" {
+				paths = append(paths, filepath.Dir(path))
+				if d.IsDir() {
+					return fs.SkipDir
+				}
+				return nil
+			}
+
 			if !d.IsDir() {
 				return nil
 			}
 
-			name := d.Name()
-
 			// Skip excluded directories
-			if excludes[name] && name != ".git" {
+			if excludes[name] {
 				return fs.SkipDir
 			}
 
@@ -109,11 +119,6 @@ func discoverGitRepos(cfg Config, excludes map[string]bool) []string {
 				return fs.SkipDir
 			}
 
-			// Found a .git dir — record the parent as a repo
-			if name == ".git" {
-				paths = append(paths, filepath.Dir(path))
-				return fs.SkipDir
-			}
 			return nil
 		})
 	}
