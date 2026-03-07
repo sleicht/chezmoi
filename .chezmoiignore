@@ -38,6 +38,7 @@ AIDER.md
 CLAUDE.md
 .gitignore
 .gitmodules
+.editorconfig
 .commit-message.txt
 .git
 .git/**
