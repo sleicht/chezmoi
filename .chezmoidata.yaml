@@ -99,6 +99,7 @@ packages:
       - "vet-run"
       - "wget"
       - "woff2"
+      - "worktrunk"
       - "yabai"
       - "zoxide"
       - "zsh"
@@ -165,7 +166,6 @@ packages:
       - "sql-language-server"
       - "typescript-language-server"
       - "witr"
-      - "worktrunk"
       - "yaml-language-server"
       # rbenv removed - mise manages ruby
       # rust removed - mise manages rust via stable channel
