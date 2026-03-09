@@ -67,7 +67,7 @@ func launchFzf(entries []string) (key, selected string) {
 		return "", ""
 	}
 
-	lines := strings.SplitN(strings.TrimSpace(string(out)), "\n", 2)
+	lines := strings.SplitN(strings.TrimRight(string(out), "\n"), "\n", 2)
 	if len(lines) == 0 {
 		return "", ""
 	}
