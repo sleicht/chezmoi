@@ -1,29 +1,43 @@
-#!/bin/bash
-# Global pre-commit hook — light secret scanning for all repos
-# Deployed by chezmoi to ~/.config/git/hooks/pre-commit
+#!/bin/sh
+# GITBUTLER_MANAGED_HOOK_V1
+# This hook is managed by GitButler to prevent accidental commits on the workspace branch.
+# Your original pre-commit hook has been preserved as 'pre-commit-user'.
 
-# Delegate to repo-local hook if it exists (e.g., pre-commit framework)
-if [[ -x .git/hooks/pre-commit ]]; then
-  exec .git/hooks/pre-commit "$@"
+HOOKS_DIR=$(dirname "$0")
+
+# Run user's hook first if it exists - if it fails, stop here
+if [ -x "$HOOKS_DIR/pre-commit-user" ]; then
+    "$HOOKS_DIR/pre-commit-user" "$@" || exit $?
 fi
 
-# Skip if gitleaks is not installed
-if ! command -v gitleaks &> /dev/null; then
-  exit 0
+# Get the current branch name
+BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null)
+
+if [ "$BRANCH" = "gitbutler/workspace" ]; then
+    echo ""
+    echo "GITBUTLER_ERROR: Cannot commit directly to gitbutler/workspace branch."
+    echo ""
+    echo "GitButler manages commits on this branch. Please use GitButler to commit your changes:"
+    echo "  - Use the GitButler app to create commits"
+    echo "  - Or run 'but commit' from the command line"
+    echo ""
+    echo "If you want to exit GitButler mode and use normal git:"
+    echo "  - Run 'but teardown' to switch to a regular branch"
+    echo "  - Or directly checkout another branch: git checkout <branch>"
+    echo ""
+    echo "If you no longer have the GitButler CLI installed, you can simply remove this hook and checkout another branch:"
+    printf '  rm "%s/pre-commit"\n' "$HOOKS_DIR"
+    echo ""
+    exit 1
 fi
 
-# Scan staged changes
-gitleaks protect --staged --verbose 2>&1
-exit_code=$?
-
-if [[ $exit_code -ne 0 ]]; then
-  echo ""
-  echo "WARNING: Potential secrets detected in staged changes."
-  echo "Review the findings above. If these are false positives:"
-  echo "  - Add '# gitleaks:allow' inline comment"
-  echo "  - Or use SKIP=gitleaks git commit (use sparingly)"
-  echo ""
+# Not on workspace branch - run user's original hook if it exists
+if [ -x "$HOOKS_DIR/pre-commit-user" ]; then
+    echo ""
+    echo "WARNING: GitButler's pre-commit hook is still installed but you're not on gitbutler/workspace."
+    echo "If you're no longer using GitButler, you can restore your original hook:"
+    printf '  mv "%s/pre-commit-user" "%s/pre-commit"\n' "$HOOKS_DIR" "$HOOKS_DIR"
+    echo ""
 fi
 
-# Warn only on commit (exit 0 regardless) — per user decision
 exit 0
