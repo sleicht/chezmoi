@@ -10,6 +10,7 @@ packages:
       - "derailed/k9s"
       - "ggozad/formulas"
       - "jandedobbeleer/oh-my-posh"
+      - "jetbrains/junie"
       - "koekeishiya/formulae"
       - "manaflow-ai/cmux"
       - "mediosz/tap"
@@ -214,6 +215,7 @@ packages:
       - "exercism"
       - "firebase-cli"
       - "hledger"
+      - "jetbrains/junie/junie"
       - "neurosnap/tap/zmx"
       # rbenv removed - mise manages ruby
       # rust removed - mise manages rust via stable channel
