@@ -150,7 +150,6 @@ packages:
       - "dockerfile-language-server"
       - "git-delta"
       - "git-lfs"
-      - "golangci-lint"
       - "intelli-shell"
       - "jdtls"
       - "jfrog-cli"
