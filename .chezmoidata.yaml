@@ -216,6 +216,7 @@ packages:
       - "hledger"
       - "jetbrains/junie/junie"
       - "neurosnap/tap/zmx"
+      - "pi-coding-agent"
       # rbenv removed - mise manages ruby
       # rust removed - mise manages rust via stable channel
       - "tailscale"
