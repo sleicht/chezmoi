@@ -92,6 +92,7 @@ Brewfile_Personal
 Library
 Library/**
 .finicky.js
+run_once_before_macos-defaults.sh
 {{- end }}
 
 {{- if eq .chezmoi.os "darwin" }}
