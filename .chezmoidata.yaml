@@ -142,6 +142,7 @@ packages:
       - "raycast"
       - "slack"
       - "sublime-text"
+      - "supasidebar"
       - "t3-code"
       - "uhk-agent"
       - "wezterm"
