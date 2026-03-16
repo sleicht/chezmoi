@@ -30,10 +30,13 @@ function mkd() {
 	mkdir -p "$@" && cd "$_" || return;
 }
 
+{{- if eq .chezmoi.os "darwin" }}
+
 # Change working directory to the top-most Finder window location
 function cdf() { # short for `cdfinder`
 	cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')" || return;
 }
+{{- end }}
 
 # Create a .tar.gz archive, using `zopfli`, `pigz` or `gzip` for compression
 function targz() {
@@ -107,6 +110,8 @@ function server() {
 	python3 -m http.server "$port";
 }
 
+{{- if eq .chezmoi.os "darwin" }}
+
 # Start a PHP server from a directory, optionally specifying the port
 # (Requires PHP 5.4.0+.)
 function phpserver() {
@@ -116,6 +121,7 @@ function phpserver() {
 	sleep 1 && open "http://${ip}:${port}/" &
 	php -S "${ip}:${port}";
 }
+{{- end }}
 
 # Compare original and gzipped file size
 function gz() {

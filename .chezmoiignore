@@ -91,6 +91,8 @@ Brewfile_Personal
 .config/sketchybar/**
 Library
 Library/**
+.config/karabiner
+.config/karabiner/**
 .finicky.js
 run_once_before_macos-defaults.sh
 {{- end }}
