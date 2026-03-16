@@ -10,6 +10,7 @@ font-style = Medium
 keybind = global:ctrl+1=toggle_quick_terminal
 keybind = cmd+w=unbind
 macos-titlebar-style = tabs
+window-inherit-working-directory = true
 minimum-contrast = 1.05
 mouse-hide-while-typing = true
 macos-option-as-alt = true

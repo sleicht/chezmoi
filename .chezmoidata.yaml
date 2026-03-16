@@ -17,6 +17,7 @@ packages:
       - "neurosnap/tap"
       - "nikitabobko/tap"
       - "barutsrb/tap"
+      - "FelixKratz/formulae"
       - "olets/tap"
       - "rcmdnk/file"
       - "rsteube/homebrew-tap"
@@ -95,6 +96,7 @@ packages:
       - "rsteube/tap/carapace"
       - "screen"
       - "sheldon"
+      - "sketchybar"
       - "shellcheck"
       - "sql-language-server"
       - "ssh-copy-id"
@@ -275,6 +277,7 @@ packages:
 
     # Fonts - common to all machines
     fonts:
+      - "font-hack-nerd-font"
       - "font-fira-code"
       - "font-fira-code-nerd-font"
       - "font-fira-mono-nerd-font"

@@ -1,0 +1,45 @@
+#!/bin/bash
+{{- if ne .chezmoi.os "darwin" }}
+exit 0
+{{- end }}
+# hash: {{ include "private_dot_config/sketchybar/sketchybarrc" | sha256sum }}
+set -euo pipefail
+
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/sketchybar-app-font"
+ICON_MAP="$HOME/.config/sketchybar/plugins/icon_map_fn.sh"
+
+# Bootstrap icon_map_fn.sh if it doesn't exist yet (first apply)
+if [ ! -f "$ICON_MAP" ]; then
+  mkdir -p "$(dirname "$ICON_MAP")"
+  cat > "$ICON_MAP" << 'MARKER'
+#!/bin/bash
+
+### START-OF-ICON-MAP
+function __icon_map() { icon_result=":default:"; }
+### END-OF-ICON-MAP
+__icon_map "$@"
+echo "$icon_result"
+MARKER
+  chmod +x "$ICON_MAP"
+fi
+
+# Clone or update the sketchybar-app-font repo
+if [ -d "$CACHE_DIR/.git" ]; then
+  git -C "$CACHE_DIR" pull --ff-only 2>/dev/null || true
+else
+  rm -rf "$CACHE_DIR"
+  git clone https://github.com/kvndrsslr/sketchybar-app-font.git "$CACHE_DIR"
+fi
+
+# Build and install (font → ~/Library/Fonts, icon map → target script)
+cd "$CACHE_DIR"
+if command -v pnpm &>/dev/null; then
+  pnpm install --frozen-lockfile 2>/dev/null || pnpm install
+  pnpm run build:install "$ICON_MAP"
+  echo "sketchybar-app-font: font and icon map updated"
+else
+  echo "WARNING: pnpm not found — skipping icon map update. Install via: npm install -g pnpm"
+  # Fallback: just download the font
+  FONT_PATH="$HOME/Library/Fonts/sketchybar-app-font.ttf"
+  curl -fsSL "https://github.com/kvndrsslr/sketchybar-app-font/releases/latest/download/sketchybar-app-font.ttf" -o "$FONT_PATH" || true
+fi

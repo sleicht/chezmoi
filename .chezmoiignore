@@ -87,9 +87,16 @@ Brewfile_Personal
 # macOS-only configs — ignore on Linux
 .config/aerospace
 .config/aerospace/**
+.config/sketchybar
+.config/sketchybar/**
 Library
 Library/**
 .finicky.js
+{{- end }}
+
+{{- if eq .chezmoi.os "darwin" }}
+# Generated at runtime by run_onchange_after_05-install-sketchybar-app-font.sh
+.config/sketchybar/plugins/icon_map_fn.sh
 {{- end }}
 
 {{- if ne .chezmoi.os "linux" }}
