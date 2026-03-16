@@ -96,7 +96,9 @@ Library/**
 
 {{- if eq .chezmoi.os "darwin" }}
 # Generated at runtime by run_onchange_after_05-install-sketchybar-app-font.sh
-.config/sketchybar/plugins/icon_map_fn.sh
+.config/sketchybar/plugins
+.config/sketchybar/plugins/**
+.config/sketchybar/helpers/icon_map.lua
 {{- end }}
 
 {{- if ne .chezmoi.os "linux" }}

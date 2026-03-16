@@ -2,7 +2,7 @@
 {{- if ne .chezmoi.os "darwin" }}
 exit 0
 {{- end }}
-# hash: {{ include "private_dot_config/sketchybar/sketchybarrc" | sha256sum }}
+# hash: {{ include "private_dot_config/sketchybar/executable_sketchybarrc.tmpl" | sha256sum }}
 set -euo pipefail
 
 CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/sketchybar-app-font"
@@ -42,4 +42,97 @@ else
   # Fallback: just download the font
   FONT_PATH="$HOME/Library/Fonts/sketchybar-app-font.ttf"
   curl -fsSL "https://github.com/kvndrsslr/sketchybar-app-font/releases/latest/download/sketchybar-app-font.ttf" -o "$FONT_PATH" || true
+fi
+
+# Generate Lua icon map from the shell icon map
+LUA_ICON_MAP="$HOME/.config/sketchybar/helpers/icon_map.lua"
+if [ -f "$ICON_MAP" ]; then
+  echo "Generating Lua icon map from $ICON_MAP..."
+  mkdir -p "$(dirname "$LUA_ICON_MAP")"
+
+  awk '
+    BEGIN {
+      print "local icon_map_table = {"
+      exact_count = 0
+      pattern_count = 0
+    }
+
+    # Collect app names from case labels (between START/END markers)
+    /### START-OF-ICON-MAP/  { in_map = 1; next }
+    /### END-OF-ICON-MAP/    { in_map = 0; next }
+    !in_map { next }
+
+    # Case label line: collect all app names and detect wildcards
+    /\)$/ && !/icon_result/ && !/esac/ {
+      # Strip trailing )
+      line = $0; sub(/\)$/, "", line)
+      # Normalise | separators and split
+      gsub(/[ \t]*\|[ \t]*/, "|", line)
+      n = split(line, parts, "\\|")
+      delete apps; delete patterns; app_n = 0; pat_n = 0
+      for (i = 1; i <= n; i++) {
+        gsub(/^[ \t]+/, "", parts[i]); gsub(/[ \t]+$/, "", parts[i])
+        # Detect and strip wildcard before removing quotes
+        is_wild = (parts[i] ~ /\*$/)
+        sub(/\*$/, "", parts[i])
+        # Remove quotes
+        gsub(/^"/, "", parts[i]); gsub(/"$/, "", parts[i])
+        # Skip bare default or empty
+        if (parts[i] == "" || parts[i] == "*") { is_wild = 0 }
+        else if (is_wild) {
+          pat_n++; patterns[pat_n] = parts[i]
+        } else {
+          app_n++; apps[app_n] = parts[i]
+        }
+      }
+      next
+    }
+
+    # icon_result line: emit collected names
+    /icon_result=":/ {
+      icon = $0
+      sub(/.*icon_result="/, "", icon); sub(/".*/, "", icon)
+      for (i = 1; i <= app_n; i++) {
+        exact_count++
+        exact_apps[exact_count] = apps[i]
+        exact_icons[exact_count] = icon
+      }
+      for (i = 1; i <= pat_n; i++) {
+        pattern_count++
+        pat_apps[pattern_count] = patterns[i]
+        pat_icons[pattern_count] = icon
+      }
+      delete apps; delete patterns; app_n = 0; pat_n = 0
+      next
+    }
+
+    END {
+      for (i = 1; i <= exact_count; i++) {
+        printf "  [\"%s\"] = \"%s\",\n", exact_apps[i], exact_icons[i]
+      }
+      print "}"
+      print ""
+      print "local pattern_matches = {"
+      for (i = 1; i <= pattern_count; i++) {
+        printf "  { pattern = \"^%s\", icon = \"%s\" },\n", pat_apps[i], pat_icons[i]
+      }
+      print "}"
+      print ""
+      print "return function(app_name)"
+      print "  if icon_map_table[app_name] then"
+      print "    return icon_map_table[app_name]"
+      print "  end"
+      print ""
+      print "  for _, entry in ipairs(pattern_matches) do"
+      print "    if app_name:match(entry.pattern) then"
+      print "      return entry.icon"
+      print "    end"
+      print "  end"
+      print ""
+      print "  return \":default:\""
+      print "end"
+    }
+  ' "$ICON_MAP" > "$LUA_ICON_MAP"
+
+  echo "Lua icon map written to $LUA_ICON_MAP"
 fi

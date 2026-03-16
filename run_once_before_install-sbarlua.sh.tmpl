@@ -1,0 +1,20 @@
+#!/bin/bash
+{{- if ne .chezmoi.os "darwin" }}
+exit 0
+{{- end }}
+set -eufo pipefail
+
+INSTALL_DIR="{{ .chezmoi.homeDir }}/.local/share/sketchybar_lua"
+
+if [[ -f "$INSTALL_DIR/sketchybar.so" ]]; then
+  echo "SbarLua already installed — skipping"
+  exit 0
+fi
+
+echo "Installing SbarLua..."
+git clone https://github.com/FelixKratz/SbarLua.git /tmp/SbarLua
+cd /tmp/SbarLua && make install
+cp /tmp/SbarLua/lua-5.5.0/src/lua "$INSTALL_DIR/lua"
+chmod +x "$INSTALL_DIR/lua"
+rm -rf /tmp/SbarLua
+echo "SbarLua installed to $INSTALL_DIR"
