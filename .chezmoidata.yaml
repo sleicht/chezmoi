@@ -215,6 +215,7 @@ packages:
       - "intelli-shell"
       - "jdtls"
       - "jfrog-cli"
+      - "jira-cli"
       - "kubernetes-cli"
       - "kubectl-tree"
       - "mysql-client"
