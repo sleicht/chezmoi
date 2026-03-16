@@ -7,10 +7,12 @@ font-family-italic = Medium Italic
 font-family-bold-italic = Bold Italic
 font-size = 12
 font-style = Medium
+font-feature = +liga
 keybind = global:ctrl+1=toggle_quick_terminal
 keybind = cmd+w=unbind
 macos-titlebar-style = tabs
-window-inherit-working-directory = true
+working-directory=inherit
+# window-inherit-working-directory = true
 minimum-contrast = 1.05
 mouse-hide-while-typing = true
 macos-option-as-alt = true
@@ -39,3 +41,4 @@ cursor-color = #7970A9
 cursor-text = #7970A9
 selection-background = #454158
 selection-foreground = #F8F8F2
+background-opacity = 0.97
