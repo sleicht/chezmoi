@@ -1,11 +1,12 @@
 #!/bin/bash
-{{- if ne .chezmoi.os "darwin" }}
-exit 0
-{{- end }}
 # Remove Homebrew-installed runtimes that conflict with mise
 # Runs once after initial chezmoi apply
 
 set -e
+
+if ! command -v brew &> /dev/null; then
+  exit 0
+fi
 
 echo "=== Cleaning up Homebrew runtimes (mise will manage these) ==="
 
