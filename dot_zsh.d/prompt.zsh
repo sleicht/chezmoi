@@ -1,10 +1,14 @@
 # Managed by chezmoi - edit in ~/.local/share/chezmoi/dot_zsh.d/
 #!/usr/bin/env zsh
 
-if [ "$(uname -m)" = "x86_64" ]; then
-  : "${HOMEBREW_PREFIX:=/usr/local}"
-elif [ "$(uname -m)" = "arm64" ]; then
-  : "${HOMEBREW_PREFIX:=/opt/homebrew}"
+if [ -z "${HOMEBREW_PREFIX-}" ]; then
+  if [ -d /opt/homebrew ]; then
+    HOMEBREW_PREFIX=/opt/homebrew
+  elif [ -d /home/linuxbrew/.linuxbrew ]; then
+    HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
+  else
+    HOMEBREW_PREFIX=/usr/local
+  fi
 fi
 
 # Prompt: must be sync (sets precmd hooks)

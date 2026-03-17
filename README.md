@@ -29,6 +29,33 @@ Personal dotfiles for macOS, managed with [chezmoi](https://www.chezmoi.io/) and
 
 ### Fresh Machine Setup
 
+#### Prerequisites
+
+Two tools must be installed and configured **before** `chezmoi init` — templates pull secrets from Bitwarden at render time, which happens before any package-install scripts run.
+
+**1. Homebrew** (if not already installed)
+
+```bash
+# macOS / Linux
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+> On Linux, follow the "Next steps" printed by the installer to add Homebrew to your PATH.
+
+**2. rbw** (Rust Bitwarden CLI)
+
+```bash
+brew install rbw
+rbw config set email <your-bitwarden-email>
+rbw login
+rbw unlock
+rbw sync
+```
+
+**3. age private key** — must be placed manually. See [Age Encryption Bootstrap](#-security) below.
+
+#### Install
+
 ```bash
 # install chezmoi and initialise from this repo
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply sleicht/chezmoi
