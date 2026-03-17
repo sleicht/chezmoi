@@ -254,6 +254,7 @@ packages:
       - "podman-desktop"
       - "soapui"
       - "tablepro"
+      - "utm@beta"
       - "visual-studio-code"
       - "voiceink"
       - "wooshy"
