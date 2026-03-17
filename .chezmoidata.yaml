@@ -112,7 +112,7 @@ packages:
       - "yaml-language-server"
       - "zoxide"
       - "zsh"
-      - "zsh-abbr"
+      - "olets/tap/zsh-abbr"
 
     # macOS-only formulae
     darwin_only_brews:
