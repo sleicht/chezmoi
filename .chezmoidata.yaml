@@ -105,7 +105,7 @@ packages:
       - "uv"
       - "vale"
       - "vbindiff"
-      - "vet-run"
+      - "vet-run/vet/vet-run"
       - "wget"
       - "woff2"
       - "worktrunk"
