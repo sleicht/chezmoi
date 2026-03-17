@@ -3,6 +3,31 @@
 
 # Package lists (used in Phase 4)
 packages:
+  linux:
+    brews:
+      # Core — required for the shell config to function
+      - "chezmoi"
+      - "mise"
+      - "oh-my-posh"
+      - "sheldon"
+      - "zsh"
+      # CLI essentials
+      - "atuin"
+      - "bat"
+      - "eza"
+      - "fd"
+      - "fzf"
+      - "git"
+      - "gh"
+      - "glab"
+      - "htop"
+      - "jq"
+      - "lazygit"
+      - "neovim"
+      - "ripgrep"
+      - "tmux"
+      - "zoxide"
+
   darwin:
     # Taps - merged from all sources, deduplicated
     taps:
