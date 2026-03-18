@@ -56,12 +56,10 @@ local = "~/.zsh.d"
 use = ["prompt.zsh", "external-sync.zsh", "completions-sync.zsh", "aliases.zsh", "functions.zsh", "variables.zsh", "keybinds.zsh"]
 apply = ["source"]
 
-{{ if stat (joinPath .chezmoi.homeDir ".zsh.d.private") -}}
 [plugins.dotfiles-private]
 local = "~/.zsh.d.private"
 use = ["*.zsh"]
 apply = ["source"]
-{{ end -}}
 
 [plugins.dotfiles-defer]
 local = "~/.zsh.d"
