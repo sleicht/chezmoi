@@ -24,6 +24,7 @@ packages:
       - "jq"
       - "lazygit"
       - "neovim"
+      - "rbw"
       - "ripgrep"
       - "tmux"
       - "zoxide"
