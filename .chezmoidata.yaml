@@ -3,6 +3,20 @@
 
 # Package lists (used in Phase 4)
 packages:
+  container:
+    # Minimal set for Docker images — shell experience only, no Homebrew
+    apt_packages:
+      - "zsh"
+      - "git"
+      - "curl"
+      - "fzf"
+      - "jq"
+      - "ripgrep"
+      - "bat"
+      - "fd-find"
+      - "tmux"
+      - "neovim"
+
   linux:
     brews:
       # Core — required for the shell config to function
@@ -23,6 +37,7 @@ packages:
       - "htop"
       - "jq"
       - "lazygit"
+      - "lsd"
       - "neovim"
       - "rbw"
       - "ripgrep"

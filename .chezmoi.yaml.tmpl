@@ -1,8 +1,10 @@
 {{- $machineType := "personal" -}}
-{{- $machineType = promptString "Machine type (client/personal/server)" "personal" -}}
+{{- $machineType = promptString "Machine type (client/personal/container)" "personal" -}}
 
 {{- $personalEmail := "" -}}
-{{- $personalEmail = promptString "Personal email address" -}}
+{{- if ne $machineType "container" -}}
+{{-   $personalEmail = promptString "Personal email address" -}}
+{{- end -}}
 
 {{- $workEmail := "" -}}
 {{- if eq $machineType "client" -}}
@@ -32,10 +34,12 @@ git:
 diff:
   pager: "less"
 
+{{- if ne $machineType "container" }}
 encryption: "age"
 age:
   identity: "{{ .chezmoi.homeDir }}/.config/age/key-{{ $machineType }}.txt"
   recipient: "age1hl7puvh5w5d49qgygxpj7q7zmc9gqyutqufk2p9x55mfm7ul742qg9vjn8"
+{{- end }}
 
 data:
   machine_type: {{ $machineType | quote }}

@@ -61,7 +61,24 @@ rbw sync
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply sleicht/chezmoi
 ```
 
-You'll be prompted for machine type (`personal` / `client`) and email addresses.
+You'll be prompted for machine type (`personal` / `client` / `container`) and email addresses.
+
+### Docker / Container
+
+Use the `container` machine type for a minimal shell experience without Homebrew, secrets, or run scripts:
+
+```dockerfile
+FROM ubuntu:24.04
+RUN apt-get update && apt-get install -y zsh curl git \
+ && sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply \
+      --promptString machine_type=container \
+      --promptString 'Personal email address=' \
+      --exclude=encrypted \
+      sleicht/chezmoi \
+ && chsh -s "$(command -v zsh)"
+```
+
+This deploys only shell config (zsh, sheldon plugins, oh-my-posh theme, git config) — no encrypted files, desktop apps, or package management.
 
 ### Existing Machine
 
@@ -170,12 +187,14 @@ The bar displays active workspaces with app icons (via [sketchybar-app-font](htt
 
 Configs adapt based on machine type (set during `chezmoi init`):
 
-| | `personal` | `client` (work) |
-|--|------------|------------------|
-| **Packages** | `personal_*` + `common_*` | `client_*` + `common_*` |
-| **Git email** | personal | work |
-| **Age key** | `key-personal.txt` | `key-client.txt` |
-| **Extra tools** | personal apps | work-specific apps |
+| | `personal` | `client` (work) | `container` |
+|--|------------|------------------|-------------|
+| **Packages** | `personal_*` + `common_*` | `client_*` + `common_*` | none (apt in Dockerfile) |
+| **Git email** | personal | work | — |
+| **Age key** | `key-personal.txt` | `key-client.txt` | none |
+| **Encryption** | age | age | disabled |
+| **Run scripts** | all | all | skipped |
+| **Extra tools** | personal apps | work-specific apps | shell config only |
 
 ## 🔒 Security
 

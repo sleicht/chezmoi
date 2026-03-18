@@ -112,6 +112,41 @@ run_once_before_macos-defaults.sh
 .config/sway/**
 {{- end }}
 
+{{- if eq .machine_type "container" }}
+# Container — minimal shell config only
+# Skip encrypted files (no age key / rbw available)
+.ssh
+.ssh/**
+# Skip Homebrew management (packages installed in Dockerfile)
+.Brewfile
+# Skip run scripts (handled in image build)
+run_once_before_*
+run_onchange_after_*
+run_once_after_*
+run_after_*
+# Skip desktop/GUI configs
+.config/aerospace
+.config/aerospace/**
+.config/sketchybar
+.config/sketchybar/**
+.config/karabiner
+.config/karabiner/**
+.config/ghostty
+.config/ghostty/**
+.config/kitty
+.config/kitty/**
+.config/wezterm
+.config/wezterm/**
+.config/worktrunk
+.config/worktrunk/**
+.finicky.js
+Library
+Library/**
+# Skip Claude Code config
+.claude
+.claude/**
+{{- end }}
+
 {{- if ne .machine_type "personal" }}
 # Personal-only configs — ignore on work/client machines
 .claude/skills/commit-message
