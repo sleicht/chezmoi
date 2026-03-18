@@ -28,6 +28,7 @@ packages:
       - "ripgrep"
       - "tmux"
       - "zoxide"
+      - "olets/tap/zsh-abbr"
 
   darwin:
     # Taps - merged from all sources, deduplicated
