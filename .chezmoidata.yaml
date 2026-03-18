@@ -150,6 +150,7 @@ packages:
       - "vale"
       - "vbindiff"
       - "vet-run/vet/vet-run"
+      - "weave"
       - "wget"
       - "woff2"
       - "worktrunk"
