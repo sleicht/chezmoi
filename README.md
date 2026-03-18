@@ -61,7 +61,7 @@ rbw sync
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply sleicht/chezmoi
 ```
 
-You'll be prompted for machine type (`personal` / `client` / `container`) and email addresses.
+You'll be prompted for machine type (`personal` / `client` / `server` / `container`) and email addresses.
 
 ### Docker / Container
 
