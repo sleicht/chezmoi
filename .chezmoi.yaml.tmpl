@@ -1,5 +1,5 @@
 {{- $machineType := "personal" -}}
-{{- $machineType = promptString "Machine type (client/personal/container)" "personal" -}}
+{{- $machineType = promptString "Machine type (client/personal/server/container)" "personal" -}}
 
 {{- $personalEmail := "" -}}
 {{- if ne $machineType "container" -}}
