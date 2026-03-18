@@ -112,6 +112,17 @@ run_once_before_macos-defaults.sh
 .config/sway/**
 {{- end }}
 
+# Machine-type-specific SSH configs — deploy only the matching one
+{{- if ne .machine_type "personal" }}
+.ssh/config_personal
+{{- end }}
+{{- if ne .machine_type "client" }}
+.ssh/config_client
+{{- end }}
+{{- if ne .machine_type "server" }}
+.ssh/config_server
+{{- end }}
+
 {{- if eq .machine_type "container" }}
 # Container — minimal shell config only
 # Skip encrypted files (no age key / rbw available)
