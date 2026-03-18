@@ -1,12 +1,8 @@
-# Managed by chezmoi - edit in ~/.local/share/chezmoi/dot_zsh.d/
 #!/usr/bin/env zsh
-
-# `external-defer.zsh` handles deferred external tool initialisation.
-
+# Deferred external tool initialisation - Managed by chezmoi - edit in ~/.local/share/chezmoi/dot_zsh.d/
 
 # === z ===
 # https://github.com/ajeetdsouza/zoxide
-
 # `zoxide` has an option to use `fzf` to provide completions natively,
 # but it works only for `z NAME<SPACE><TAB>`,
 # it does not work for `z NAME<TAB>`.
@@ -15,7 +11,7 @@ if (( $+commands[zoxide] )); then
   _evalcache zoxide init zsh --no-cmd
 fi
 
-z () {
+z() {
   # I need this function to setup custom code completion for `zoxide`.
   \__zoxide_z "$@"
 }

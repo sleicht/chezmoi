@@ -1,5 +1,5 @@
-# Managed by chezmoi - edit in ~/.local/share/chezmoi/dot_zsh.d/
 #!/usr/bin/env zsh
+# Key bindings - Managed by chezmoi - edit in ~/.local/share/chezmoi/dot_zsh.d/
 
 bindkey -e
 

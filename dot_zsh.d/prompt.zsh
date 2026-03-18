@@ -1,5 +1,5 @@
-# Managed by chezmoi - edit in ~/.local/share/chezmoi/dot_zsh.d/
 #!/usr/bin/env zsh
+# Prompt configuration - Managed by chezmoi - edit in ~/.local/share/chezmoi/dot_zsh.d/
 
 if [ -z "${HOMEBREW_PREFIX-}" ]; then
   if [ -d /opt/homebrew ]; then

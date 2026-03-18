@@ -1,5 +1,5 @@
-# Managed by chezmoi - edit in ~/.local/share/chezmoi/dot_zsh.d/
 #!/usr/bin/env zsh
+# Deferred completions - Managed by chezmoi - edit in ~/.local/share/chezmoi/dot_zsh.d/
 
 _cache_hosts=()
 if [[ -r $HOME/.ssh/config ]]; then
