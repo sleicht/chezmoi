@@ -78,11 +78,11 @@ command = "CLAUDECODE= MAX_THINKING_TOKENS=0 claude -p --no-session-persistence 
 #
 # Persistent flag values for `wt list`. Override on command line as needed.
 #
-# [list]
-# summary = false    # Enable LLM branch summaries (requires [commit.generation])
+[list]
+summary = true    # Enable LLM branch summaries (requires [commit.generation])
 #
 # full = false       # Show CI, main…± diffstat, and LLM summaries (--full)
-# branches = false   # Include branches without worktrees (--branches)
+branches = true   # Include branches without worktrees (--branches)
 # remotes = false    # Include remote-only branches (--remotes)
 #
 # task-timeout-ms = 0   # Kill individual git commands after N ms; 0 disables
