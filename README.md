@@ -175,7 +175,8 @@ The bar displays active workspaces with app icons (via [sketchybar-app-font](htt
 │   ├── worktrunk/config.toml          #   git worktree manager config
 │   └── ...                            #   + 10 more tools
 ├── private_dot_ssh/                   # → ~/.ssh/
-│   ├── encrypted_private_config.age   #   age-encrypted SSH config
+│   ├── private_config.tmpl            #   SSH config wrapper (Include per machine type)
+│   ├── encrypted_private_config_*.age #   age-encrypted SSH configs (personal/client/server)
 │   └── encrypted_*.age                #   age-encrypted private keys
 ├── run_once_before_*                  # bootstrap scripts (Homebrew, bw-wrapper, etc.)
 ├── run_once_after_*                   # one-time cleanup scripts
@@ -187,19 +188,20 @@ The bar displays active workspaces with app icons (via [sketchybar-app-font](htt
 
 Configs adapt based on machine type (set during `chezmoi init`):
 
-| | `personal` | `client` (work) | `container` |
-|--|------------|------------------|-------------|
-| **Packages** | `personal_*` + `common_*` | `client_*` + `common_*` | none (apt in Dockerfile) |
-| **Git email** | personal | work | — |
-| **Age key** | `key-personal.txt` | `key-client.txt` | none |
-| **Encryption** | age | age | disabled |
-| **Run scripts** | all | all | skipped |
-| **Extra tools** | personal apps | work-specific apps | shell config only |
+| | `personal` | `client` (work) | `server` | `container` |
+|--|------------|------------------|----------|-------------|
+| **Packages** | `personal_*` + `common_*` | `client_*` + `common_*` | `common_*` | none (apt in Dockerfile) |
+| **Git email** | personal | work | personal | — |
+| **Age key** | `key-personal.txt` | `key-client.txt` | `key-server.txt` | none |
+| **Encryption** | age | age | age | disabled |
+| **SSH config** | `config_personal` | `config_client` | `config_server` | skipped |
+| **Run scripts** | all | all | all | skipped |
+| **Extra tools** | personal apps | work-specific apps | minimal | shell config only |
 
 ## 🔒 Security
 
 - **SSH keys** — age-encrypted at rest, decrypted on `chezmoi apply`
-- **SSH config** — age-encrypted (hides hostnames, IPs, network topology)
+- **SSH config** — age-encrypted per machine type ([migration guide](docs/RUNBOOK-07-ssh-config-migration.md))
 - **Secrets** — pulled from Bitwarden at apply time via templates
 - **Permissions** — `run_after_` script enforces 600/700 on sensitive files
 - **Pre-commit** — gitleaks scans every commit for accidental secret exposure
