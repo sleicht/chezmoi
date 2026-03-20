@@ -15,15 +15,15 @@ Personal dotfiles for macOS, managed with [chezmoi](https://www.chezmoi.io/) and
 
 ## ✨ What's Inside
 
-| Category | Tools |
-|----------|-------|
-| **Shell** | ZSH · `.profile` (POSIX base env) · [Sheldon](https://sheldon.cli.rs/) (plugin manager, cached source) · [Oh My Posh](https://ohmyposh.dev/) (prompt) · [zsh-defer](https://github.com/romkatv/zsh-defer) (lazy loading) · [evalcache](https://github.com/mroth/evalcache) (cached eval inits) · `pj` (fzf project picker) |
-| **Terminal** | [Ghostty](https://ghostty.org/) · [Kitty](https://sw.kovidgoyal.net/kitty/) · [WezTerm](https://wezfurlong.org/wezterm/) |
-| **Editor** | EditorConfig · [aider](https://aider.chat/) (AI pair programming) |
-| **Git** | [Lazygit](https://github.com/jesseduffield/lazygit) · [Gitleaks](https://gitleaks.io/) (secret scanning) · global config + hooks |
+| Category      | Tools                                                                                                                                                                                                                                                                                                                                                                            |
+|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Shell**     | ZSH · `.profile` (POSIX base env) · [Sheldon](https://sheldon.cli.rs/) (plugin manager, cached source) · [Oh My Posh](https://ohmyposh.dev/) (prompt) · [zsh-defer](https://github.com/romkatv/zsh-defer) (lazy loading) · [evalcache](https://github.com/mroth/evalcache) (cached eval inits) · `pj` (fzf project picker)                                                       |
+| **Terminal**  | [Ghostty](https://ghostty.org/) · [Kitty](https://sw.kovidgoyal.net/kitty/) · [WezTerm](https://wezfurlong.org/wezterm/)                                                                                                                                                                                                                                                         |
+| **Editor**    | EditorConfig · [aider](https://aider.chat/) (AI pair programming)                                                                                                                                                                                                                                                                                                                |
+| **Git**       | [Lazygit](https://github.com/jesseduffield/lazygit) · [Gitleaks](https://gitleaks.io/) (secret scanning) · global config + hooks                                                                                                                                                                                                                                                 |
 | **Dev Tools** | [mise](https://mise.jdx.dev/) (runtime manager + task runner) · [topgrade](https://github.com/topgrade-rs/topgrade) (all-in-one updater) · [bat](https://github.com/sharkdp/bat) · [lsd](https://github.com/lsd-rs/lsd) · [btop](https://github.com/aristocratos/btop) · [atuin](https://atuin.sh/) (shell history) · [worktrunk](https://worktrunk.dev/) (git worktree manager) |
-| **macOS** | [Homebrew](https://brew.sh/) (Brewfile) · [AeroSpace](https://github.com/nikitabobko/AeroSpace) (tiling WM) · [SketchyBar](https://github.com/FelixKratz/SketchyBar) (status bar) · [Karabiner-Elements](https://karabiner-elements.pqrs.org/) · [Finicky](https://github.com/nickmilo/finicky) (browser routing) |
-| **Security** | age encryption for SSH keys · Bitwarden for secrets · permission hardening |
+| **macOS**     | [Homebrew](https://brew.sh/) (Brewfile) · [AeroSpace](https://github.com/nikitabobko/AeroSpace) (tiling WM) · [SketchyBar](https://github.com/FelixKratz/SketchyBar) (status bar) · [Karabiner-Elements](https://karabiner-elements.pqrs.org/) · [Finicky](https://github.com/nickmilo/finicky) (browser routing)                                                                |
+| **Security**  | age encryption for SSH keys · Bitwarden for secrets · permission hardening                                                                                                                                                                                                                                                                                                       |
 
 ## 🚀 Getting Started
 
@@ -142,7 +142,7 @@ brew services start sketchybar    # start the bar service
 brew services restart sketchybar  # restart after config changes
 ```
 
-The bar displays active workspaces with app icons (via [sketchybar-app-font](https://github.com/kvndrsslr/sketchybar-app-font)), front app name, battery, volume, clock, and swap usage. The `icon_map_fn.sh` plugin and its companion font are managed by a `run_onchange_` script — not tracked in chezmoi source — and automatically rebuilt when `sketchybarrc` changes.
+The bar displays active workspaces with app icons (via [sketchybar-app-font](https://github.com/kvndrsslr/sketchybar-app-font)), front app name, battery, volume, clock, and swap usage. The `icon_map_fn.sh` plugin and its companion font are managed by a `run_onchange_` script — not tracked in the chezmoi source — and automatically rebuilt when `sketchybarrc` changes.
 
 > **Raw chezmoi** still works for anything not covered by tasks:
 > ```bash
@@ -188,15 +188,15 @@ The bar displays active workspaces with app icons (via [sketchybar-app-font](htt
 
 Configs adapt based on machine type (set during `chezmoi init`):
 
-| | `personal` | `client` (work) | `server` | `container` |
-|--|------------|------------------|----------|-------------|
-| **Packages** | `personal_*` + `common_*` | `client_*` + `common_*` | `common_*` | none (apt in Dockerfile) |
-| **Git email** | personal | work | personal | — |
-| **Age key** | `key-personal.txt` | `key-client.txt` | `key-server.txt` | none |
-| **Encryption** | age | age | age | disabled |
-| **SSH config** | `config_personal` | `config_client` | `config_server` | skipped |
-| **Run scripts** | all | all | all | skipped |
-| **Extra tools** | personal apps | work-specific apps | minimal | shell config only |
+|                 | `personal`                | `client` (work)         | `server`         | `container`              |
+|-----------------|---------------------------|-------------------------|------------------|--------------------------|
+| **Packages**    | `personal_*` + `common_*` | `client_*` + `common_*` | `common_*`       | none (apt in Dockerfile) |
+| **Git email**   | personal                  | work                    | personal         | —                        |
+| **Age key**     | `key-personal.txt`        | `key-client.txt`        | `key-server.txt` | none                     |
+| **Encryption**  | age                       | age                     | age              | disabled                 |
+| **SSH config**  | `config_personal`         | `config_client`         | `config_server`  | skipped                  |
+| **Run scripts** | all                       | all                     | all              | skipped                  |
+| **Extra tools** | personal apps             | work-specific apps      | minimal          | shell config only        |
 
 ## 🔒 Security
 
@@ -218,31 +218,31 @@ Bitwarden (dotfiles/shared/age-private-key)
         → SSH access unlocked
 ```
 
-| What | Where |
-|------|-------|
-| **Private key (on disk)** | `~/.config/age/key-{machine_type}.txt` (600 perms) |
-| **Private key (backup)** | Bitwarden item `age-private-key` in `dotfiles/shared` folder |
-| **Public key (recipient)** | Hardcoded in `.chezmoi.yaml.tmpl` |
-| **Encrypted files** | `private_dot_ssh/encrypted_*.age` (5 files) |
+| What                       | Where                                                        |
+|----------------------------|--------------------------------------------------------------|
+| **Private key (on disk)**  | `~/.config/age/key-{machine_type}.txt` (600 perms)           |
+| **Private key (backup)**   | Bitwarden item `age-private-key` in `dotfiles/shared` folder |
+| **Public key (recipient)** | Hardcoded in `.chezmoi.yaml.tmpl`                            |
+| **Encrypted files**        | `private_dot_ssh/encrypted_*.age` (5 files)                  |
 
-> **Note:** Chezmoi does **not** fetch the age key from Bitwarden automatically. It is a manual one-time setup per machine. See the [bootstrap runbook](.planning/phases/27-bootstrap/RUNBOOK-02-bootstrap.md) for step-by-step instructions.
+> **Note:** Chezmoi does **not** fetch the age key from Bitwarden automatically. It is a manual one-time setup per machine. See the [bootstrap runbook](docs/RUNBOOK-02-bootstrap.md) for step-by-step instructions.
 
 ## 🎯 Task Runner Reference
 
 All tasks are file-based scripts in `~/.config/mise/tasks/`, deployed by chezmoi. Run `mise tasks` to list them.
 
-| Task | Alias | Description |
-|------|-------|-------------|
-| `dotfiles:apply` | `a` | Deploy configs with verbose output |
-| `dotfiles:diff` | `d` | Preview changes before applying |
-| `dotfiles:verify` | `v` | Run 112 verification checks |
-| `dotfiles:smoke-test` | — | Validate shell functionality |
-| `dotfiles:update` | `u` | Pull remote + apply in one step |
-| `dotfiles:sync` | `s` | Full sync: backup → pull → apply → verify |
-| `git:commit` | `c` | Guided conventional commit with Jira prefix (AI or manual) |
-| `git:branch` | `b` | Create feature branch with naming convention |
-| `git:cleanup` | — | Prune merged local branches (safe delete) |
-| `git:pr` | — | Create PR/MR via gh or glab (auto-detects platform) |
-| `projects:pj` | — | Project picker usage instructions (run `pj` in shell) |
+| Task                  | Alias | Description                                                |
+|-----------------------|-------|------------------------------------------------------------|
+| `dotfiles:apply`      | `a`   | Deploy configs with verbose output                         |
+| `dotfiles:diff`       | `d`   | Preview changes before applying                            |
+| `dotfiles:verify`     | `v`   | Run 112 verification checks                                |
+| `dotfiles:smoke-test` | —     | Validate shell functionality                               |
+| `dotfiles:update`     | `u`   | Pull remote + apply in one step                            |
+| `dotfiles:sync`       | `s`   | Full sync: backup → pull → apply → verify                  |
+| `git:commit`          | `c`   | Guided conventional commit with Jira prefix (AI or manual) |
+| `git:branch`          | `b`   | Create feature branch with naming convention               |
+| `git:cleanup`         | —     | Prune merged local branches (safe delete)                  |
+| `git:pr`              | —     | Create PR/MR via gh or glab (auto-detects platform)        |
+| `projects:pj`         | —     | Project picker usage instructions (run `pj` in shell)      |
 
 Git tasks offer **hybrid AI/manual mode** — when `claude` CLI is available, AI generates commit messages from diffs and converts descriptions to kebab-case branch names. Falls back to interactive `fzf` prompts otherwise.
