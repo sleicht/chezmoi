@@ -65,12 +65,12 @@ preset = 'qwerty'
 # ── Gaps ──────────────────────────────────────────────────────────────────────
 # Cosmic Desktop has gaps between tiled windows by default
 [gaps]
-inner.horizontal = 10
-inner.vertical = 10
-outer.left = 20
-outer.bottom = 20
-outer.top = [{ monitor."DELL U2725QE" = 44 }, 14]
-outer.right = 20
+inner.horizontal = 3
+inner.vertical = 3
+outer.left = 5
+outer.bottom = 5
+outer.top = [{ monitor."DELL U2725QE" = 20 }, 5]
+outer.right = 5
 
 # ── Main Bindings ─────────────────────────────────────────────────────────────
 [mode.main.binding]
