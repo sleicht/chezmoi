@@ -10,17 +10,16 @@
 | `Ctrl + ↓` | Focus down |
 | `Ctrl + ↑` | Focus up |
 | `Ctrl + →` | Focus right |
-| `Ctrl + Alt + ←/→` | Focus prev/next monitor |
 | `Ctrl + Shift + ←/→/↑/↓` | Prev/next workspace |
 
 ## Move Windows
 
 | Shortcut | Action |
 |----------|--------|
-| `Ctrl + Alt + J` | Move window left |
-| `Ctrl + Alt + K` | Move window down |
-| `Ctrl + Alt + L` | Move window up |
-| `Ctrl + Alt + ;` | Move window right |
+| `Ctrl + Alt + ←` | Move window left |
+| `Ctrl + Alt + →` | Move window down |
+| `Ctrl + Alt + ↑` | Move window up |
+| `Ctrl + Alt + ↓` | Move window right |
 | `Ctrl + Alt + Shift + ←/→` | Move window to prev/next monitor |
 | `Ctrl + Alt + Shift + ↑/↓` | Move window to prev/next workspace |
 
@@ -31,10 +30,10 @@
 | `Ctrl + Q` | Close window |
 | `Ctrl + F` | Maximize (fullscreen) |
 | `Ctrl + F11` | Fullscreen (alternate) |
-| `Ctrl + Shift + F` | Toggle floating/tiling |
-| `Ctrl + O` | Flip tile orientation (H/V) |
-| `Alt + S` | Toggle stacking (accordion) |
-| `Ctrl + R` | Enter resize mode |
+| `Ctrl + Alt + F` | Toggle floating/tiling |
+| `Ctrl + Alt + O` | Flip tile orientation (H/V) |
+| `Ctrl + Alt + S` | Toggle stacking (accordion) |
+| `Ctrl + Alt + R` | Enter resize mode |
 | `Ctrl + Enter` | Launch Ghostty terminal |
 
 ## Workspaces — Switch
@@ -88,7 +87,7 @@
 |----------|--------|
 | `Alt + Shift + Tab` | Move workspace to next monitor |
 
-## Resize Mode (`Ctrl + R`)
+## Resize Mode (`Ctrl + Alt + R`)
 
 | Shortcut | Action |
 |----------|--------|

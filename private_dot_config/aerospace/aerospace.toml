@@ -83,10 +83,6 @@ ctrl-down  = 'focus down'
 ctrl-up    = 'focus up'
 ctrl-right = 'focus right'
 
-# Ctrl + Alt + Arrow keys → Focus next/prev monitor
-ctrl-alt-left  = 'focus-monitor --wrap-around prev'
-ctrl-alt-right = 'focus-monitor --wrap-around next'
-
 # Ctrl + Shift + Arrow keys → Navigate between workspaces
 ctrl-shift-up    = 'workspace prev'
 ctrl-shift-down  = 'workspace next'
@@ -117,10 +113,10 @@ ctrl-0 = 'workspace-back-and-forth'
 
 # Ctrl + Shift + Arrow keys are used for workspace nav, so use Ctrl + Alt for moving
 # Ctrl + Alt + Arrow keys → Move window in tiling layout
-ctrl-alt-j     = 'move left'
-ctrl-alt-k     = 'move down'
-ctrl-alt-l     = 'move up'
-ctrl-alt-semicolon = 'move right'
+ctrl-alt-left  = 'move left'
+ctrl-alt-right = 'move down'
+ctrl-alt-up    = 'move up'
+ctrl-alt-down  = 'move right'
 
 # Ctrl + Alt + Shift + Arrow keys → Move window to next/prev monitor
 ctrl-alt-shift-left  = 'move-node-to-monitor --wrap-around prev'
@@ -143,10 +139,10 @@ ctrl-shift-6 = 'move-node-to-workspace 6 --focus-follows-window'
 ctrl-q = 'close'
 
 # Ctrl + F → Maximize/fullscreen toggle
-ctrl-f = 'fullscreen'
+ctrl-f = ['fullscreen', 'exec-and-forget $HOME/.local/bin/aerospace-hud "$(aerospace list-windows --focused --format "%{window-layout}")"']
 
 # Ctrl + F11 → Fullscreen (alternate)
-ctrl-f11 = 'fullscreen'
+ctrl-f11 = ['fullscreen', 'exec-and-forget $HOME/.local/bin/aerospace-hud "$(aerospace list-windows --focused --format "%{window-layout}")"']
 
 # Ctrl + Enter → Launch terminal
 ctrl-enter = '''exec-and-forget osascript -e '
@@ -156,16 +152,16 @@ end tell'
 '''
 
 # Ctrl + R → Enter resize mode
-ctrl-r = 'mode resize'
+ctrl-alt-r = 'mode resize'
 
 # Ctrl + Shift + F → Toggle floating/tiling
-ctrl-shift-f = 'layout floating tiling'
+ctrl-alt-f = ['layout floating tiling', 'exec-and-forget $HOME/.local/bin/aerospace-hud "$(aerospace list-windows --focused --format "%{window-layout}")"']
 
 # Ctrl + O → Flip tile orientation (horizontal ↔ vertical)
-ctrl-o = 'layout tiles horizontal vertical'
+ctrl-alt-o = ['layout tiles horizontal vertical', 'exec-and-forget $HOME/.local/bin/aerospace-hud "$(aerospace list-windows --focused --format "%{window-layout}")"']
 
 # Ctrl + Shift + S conflicts with workspace S, use Alt + S for stacking
-alt-s = 'layout accordion tiling'
+ctrl-alt-s = ['layout accordion tiling', 'exec-and-forget $HOME/.local/bin/aerospace-hud "$(aerospace list-windows --focused --format "%{window-layout}")"']
 
 # ── Workspace / Monitor ──────────────────────────────────────────────────────
 
@@ -200,7 +196,7 @@ shift-up    = 'resize height +50'
 [mode.service.binding]
 esc       = ['reload-config', 'mode main']
 r         = ['flatten-workspace-tree', 'mode main'] # reset layout
-f         = ['layout floating tiling', 'mode main']
+f         = ['layout floating tiling', 'exec-and-forget $HOME/.local/bin/aerospace-hud "$(aerospace list-windows --focused --format "%{window-layout}")"', 'mode main']
 backspace = ['close-all-windows-but-current', 'mode main']
 
 # Move window to named workspace (service → letter)

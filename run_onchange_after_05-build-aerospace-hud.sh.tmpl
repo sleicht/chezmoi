@@ -1,0 +1,21 @@
+{{- if and (eq .chezmoi.os "darwin") (stat (joinPath .chezmoi.sourceDir "tools/aerospace-hud/main.swift")) -}}
+#!/usr/bin/env bash
+# Rebuild aerospace-hud when Swift source changes.
+# Source hash (trigger rebuild on change):
+# main.swift: {{ include "tools/aerospace-hud/main.swift" | sha256sum }}
+
+set -euo pipefail
+
+SOURCE="{{ .chezmoi.sourceDir }}/tools/aerospace-hud/main.swift"
+DEST="${HOME}/.local/bin/aerospace-hud"
+
+if ! command -v swiftc &>/dev/null; then
+  echo "aerospace-hud: swiftc not found, skipping build" >&2
+  exit 0
+fi
+
+echo "Building aerospace-hud..."
+mkdir -p "$(dirname "$DEST")"
+swiftc -O -o "$DEST" "$SOURCE"
+echo "aerospace-hud installed to $DEST"
+{{- end }}
