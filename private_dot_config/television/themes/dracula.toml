@@ -1,0 +1,34 @@
+# Dracula theme for television
+# https://draculatheme.com/contribute#color-palette
+#
+# Matches the Dracula colors used in FZF_DEFAULT_OPTS (external-sync.zsh)
+
+# General
+background = "#282a36"
+border_fg = "#6272a4"
+text_fg = "#f8f8f2"
+dimmed_text_fg = "#6272a4"
+
+# Input
+input_text_fg = "#f8f8f2"
+result_count_fg = "#bd93f9"
+
+# Results
+result_name_fg = "#8be9fd"
+result_line_number_fg = "#f1fa8c"
+result_value_fg = "#f8f8f2"
+selection_fg = "#f8f8f2"
+selection_bg = "#44475a"
+match_fg = "#50fa7b"
+
+# Preview
+preview_title_fg = "#bd93f9"
+
+# Modes
+channel_mode_fg = "#282a36"
+channel_mode_bg = "#bd93f9"
+remote_control_mode_fg = "#282a36"
+remote_control_mode_bg = "#50fa7b"
+action_picker_mode_fg = "#282a36"
+action_picker_mode_bg = "#ffb86c"
+send_to_channel_mode_fg = "#282a36"

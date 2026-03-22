@@ -21,11 +21,22 @@ if (( $+commands[oh-my-posh] )); then
   _evalcache oh-my-posh init zsh --config ~/.config/oh-my-posh.omp.json
 fi
 
-# FZF keybindings: must be sync (Ctrl+T, Alt+C widgets)
+# Key binding load order (later wins):
+#   fzf    → sets Ctrl+T, Alt+C, Ctrl+R
+#   tv     → overwrites Ctrl+T (smart autocomplete), Ctrl+R
+#   atuin  → overwrites Ctrl+R (history search)
+# Result: Ctrl+T=tv, Alt+C=fzf, Ctrl+R=atuin
+
+# FZF keybindings: must be sync (Alt+C widget, fzf-tab base)
 if [ -r "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh" ]; then source "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh"; fi
 if [ -r "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh" ]; then source "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"; fi
 
-# Atuin keybindings: must be sync (Ctrl+R widget)
+# Television keybindings: must be sync (Ctrl+T smart autocomplete)
+if (( $+commands[tv] )); then
+  eval "$(tv init zsh)"
+fi
+
+# Atuin keybindings: must be sync (Ctrl+R widget — overwrites tv's Ctrl+R)
 source "$XDG_CONFIG_HOME/atuin/atuin-keybindings.zsh"
 
 preexec() { print '' }

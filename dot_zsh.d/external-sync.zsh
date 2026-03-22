@@ -2,6 +2,14 @@
 #!/usr/bin/env zsh
 
 # `external-sync.zsh` handles FZF exports and compgen functions.
+#
+# Key binding ownership (configured in prompt.zsh):
+#   Ctrl+T  → television (tv) — context-aware smart autocomplete
+#   Ctrl+R  → atuin           — history search
+#   Alt+C   → fzf             — directory cd
+#   Tab     → fzf-tab         — shell completion
+#   fzf-git → fzf             — git branch/commit/etc search
+#   pj      → fzf             — project picker (Go binary)
 
 
 # === fzf ===
