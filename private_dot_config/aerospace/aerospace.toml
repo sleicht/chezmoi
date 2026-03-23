@@ -37,7 +37,7 @@ after-startup-command = ['''exec-and-forget bash -c '
 ''']
 
 # Start AeroSpace at login
-start-at-login = false
+start-at-login = true
 
 # Keep workspace 0 always available
 persistent-workspaces = ["0"]
@@ -208,6 +208,10 @@ if.app-id = 'com.flexibits.fantastical2.mac'
 run = 'move-node-to-workspace 4' # Mail
 
 [[on-window-detected]]
+if.app-id = 'com.microsoft.Outlook'
+run = 'move-node-to-workspace 4' # Mail
+
+[[on-window-detected]]
 if.app-id = 'com.jetbrains.intellij'
 run = 'move-node-to-workspace 2' # IDE
 
@@ -225,6 +229,14 @@ run = 'move-node-to-workspace 5' # Social
 
 [[on-window-detected]]
 if.app-id = 'com.apple.MobileSMS'
+run = 'move-node-to-workspace 5' # Social
+
+[[on-window-detected]]
+if.app-id = 'com.tinyspeck.slackmacgap'
+run = 'move-node-to-workspace 5' # Social
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.teams2'
 run = 'move-node-to-workspace 5' # Social
 
 [[on-window-detected]]
@@ -250,6 +262,10 @@ run = 'move-node-to-workspace 3' # Web
 
 [[on-window-detected]]
 if.app-id = 'com.vivaldi.Vivaldi'
+run = 'move-node-to-workspace 3' # Web
+
+[[on-window-detected]]
+if.app-id = 'company.thebrowser.Browser'
 run = 'move-node-to-workspace 3' # Web
 
 [[on-window-detected]]
