@@ -16,31 +16,31 @@ after-startup-command = ['''exec-and-forget bash -c '
     aerospace list-windows --monitor all --app-bundle-id "$1" --format "%{window-id}" 2>/dev/null \
       | while read -r wid; do aerospace layout --window-id "$wid" floating; aerospace move-node-to-workspace --window-id "$wid" "$2"; done
   }
-  move com.readdle.SparkDesktop M
-  move com.flexibits.fantastical2.mac M
-  move com.jetbrains.intellij I
-  move net.whatsapp.WhatsApp S
-  move ch.threema.threema-desktop S
-  move com.infomaniak.chat S
-  move com.apple.MobileSMS S
-  float_move com.mitchellh.ghostty T
-  move com.t3tools.t3code T
-  move com.gitbutler.app T
-  move com.google.Chrome W
-  move app.zen-browser.zen W
-  move com.vivaldi.Vivaldi W
-  float_move com.sublimetext.4 I
-  float_move com.apple.finder 1
-  float_move com.cocoatech.PathFinder 1
-  float_move io.tailscale.ipn.macos 1
+  move com.readdle.SparkDesktop 4
+  move com.flexibits.fantastical2.mac 4
+  move com.jetbrains.intellij 2
+  move net.whatsapp.WhatsApp 5
+  move ch.threema.threema-desktop 5
+  move com.infomaniak.chat 5
+  move com.apple.MobileSMS 5
+  float_move com.mitchellh.ghostty 1
+  move com.t3tools.t3code 1
+  move com.gitbutler.app 1
+  move com.google.Chrome 3
+  move app.zen-browser.zen 3
+  move com.vivaldi.Vivaldi 3
+  float_move com.sublimetext.4 2
+  float_move com.apple.finder 0
+  float_move com.cocoatech.PathFinder 0
+  float_move io.tailscale.ipn.macos 0
 '
 ''']
 
 # Start AeroSpace at login
 start-at-login = false
 
-# Keep workspace 1 always available
-persistent-workspaces = ["1"]
+# Keep workspace 0 always available
+persistent-workspaces = ["0"]
 
 # Normalizations keep the tree sane — Cosmic also uses a tree-based tiling model
 enable-normalization-flatten-containers = true
@@ -89,25 +89,17 @@ ctrl-shift-down  = 'workspace next'
 ctrl-shift-left  = 'workspace prev'
 ctrl-shift-right = 'workspace next'
 
-# Ctrl + 1-6 → Switch to numbered workspace
-ctrl-1 = 'workspace 1'
-ctrl-2 = 'workspace 2'
-ctrl-3 = 'workspace 3'
-ctrl-5 = 'workspace 5'
-ctrl-6 = 'workspace 6'
+# Ctrl + 0-6 → Switch to workspace
+ctrl-0 = 'workspace 0'       # File managers
+ctrl-1 = 'workspace 1'       # Terminal
+ctrl-2 = 'workspace 2'       # IDE
+ctrl-3 = 'workspace 3'       # Web
+ctrl-4 = 'workspace 4'       # Mail
+ctrl-5 = 'workspace 5'       # Social
+ctrl-6 = 'workspace 6'       # Free
 
-# Ctrl + letter → Switch to named workspace (mnemonic)
-ctrl-b = 'workspace B'
-ctrl-e = 'workspace E'
-ctrl-g = 'workspace G'       # General
-ctrl-i = 'workspace I'       # IDE
-ctrl-m = 'workspace M'       # Mail
-ctrl-s = 'workspace S'       # Social
-ctrl-t = 'workspace T'       # Terminal
-ctrl-w = 'workspace W'       # Web
-
-# Ctrl + 0 → Last used workspace (back-and-forth)
-ctrl-0 = 'workspace-back-and-forth'
+# Ctrl + 9 → Last used workspace (back-and-forth)
+ctrl-9 = 'workspace-back-and-forth'
 
 # ── Move Windows ──────────────────────────────────────────────────────────────
 
@@ -126,10 +118,12 @@ ctrl-alt-shift-right = 'move-node-to-monitor --wrap-around next'
 ctrl-alt-shift-up    = 'move-node-to-workspace prev --focus-follows-window'
 ctrl-alt-shift-down  = 'move-node-to-workspace next --focus-follows-window'
 
-# Ctrl + Shift + number → Move window to numbered workspace
+# Ctrl + Shift + number → Move window to workspace
+ctrl-shift-0 = 'move-node-to-workspace 0 --focus-follows-window'
 ctrl-shift-1 = 'move-node-to-workspace 1 --focus-follows-window'
 ctrl-shift-2 = 'move-node-to-workspace 2 --focus-follows-window'
 ctrl-shift-3 = 'move-node-to-workspace 3 --focus-follows-window'
+ctrl-shift-4 = 'move-node-to-workspace 4 --focus-follows-window'
 ctrl-shift-5 = 'move-node-to-workspace 5 --focus-follows-window'
 ctrl-shift-6 = 'move-node-to-workspace 6 --focus-follows-window'
 
@@ -160,7 +154,7 @@ ctrl-alt-f = ['layout floating tiling', 'exec-and-forget $HOME/.local/bin/aerosp
 # Ctrl + O → Flip tile orientation (horizontal ↔ vertical)
 ctrl-alt-o = ['layout tiles horizontal vertical', 'exec-and-forget $HOME/.local/bin/aerospace-hud "$(aerospace list-windows --focused --format "%{window-layout}")"']
 
-# Ctrl + Shift + S conflicts with workspace S, use Alt + S for stacking
+# Ctrl + Alt + S → Toggle stacking (accordion)
 ctrl-alt-s = ['layout accordion tiling', 'exec-and-forget $HOME/.local/bin/aerospace-hud "$(aerospace list-windows --focused --format "%{window-layout}")"']
 
 # ── Workspace / Monitor ──────────────────────────────────────────────────────
@@ -199,16 +193,6 @@ r         = ['flatten-workspace-tree', 'mode main'] # reset layout
 f         = ['layout floating tiling', 'exec-and-forget $HOME/.local/bin/aerospace-hud "$(aerospace list-windows --focused --format "%{window-layout}")"', 'mode main']
 backspace = ['close-all-windows-but-current', 'mode main']
 
-# Move window to named workspace (service → letter)
-b = ['move-node-to-workspace B --focus-follows-window', 'mode main']
-e = ['move-node-to-workspace E --focus-follows-window', 'mode main']
-g = ['move-node-to-workspace G --focus-follows-window', 'mode main']
-i = ['move-node-to-workspace I --focus-follows-window', 'mode main'] # IDE
-m = ['move-node-to-workspace M --focus-follows-window', 'mode main'] # Mail
-s = ['move-node-to-workspace S --focus-follows-window', 'mode main'] # Social
-t = ['move-node-to-workspace T --focus-follows-window', 'mode main'] # Terminal
-w = ['move-node-to-workspace W --focus-follows-window', 'mode main'] # Web
-
 # ── Window Detection Rules ───────────────────────────────────────────────────
 # Default: all new windows float (override per-app below)
 [[on-window-detected]]
@@ -217,73 +201,73 @@ run = 'layout floating'
 
 [[on-window-detected]]
 if.app-id = 'com.readdle.SparkDesktop'
-run = 'move-node-to-workspace M' # Mail
+run = 'move-node-to-workspace 4' # Mail
 
 [[on-window-detected]]
 if.app-id = 'com.flexibits.fantastical2.mac'
-run = 'move-node-to-workspace M' # Mail
+run = 'move-node-to-workspace 4' # Mail
 
 [[on-window-detected]]
 if.app-id = 'com.jetbrains.intellij'
-run = 'move-node-to-workspace I' # IDE
+run = 'move-node-to-workspace 2' # IDE
 
 [[on-window-detected]]
 if.app-id = 'net.whatsapp.WhatsApp'
-run = 'move-node-to-workspace S' # Social
+run = 'move-node-to-workspace 5' # Social
 
 [[on-window-detected]]
 if.app-id = 'ch.threema.threema-desktop'
-run = 'move-node-to-workspace S' # Social
+run = 'move-node-to-workspace 5' # Social
 
 [[on-window-detected]]
 if.app-id = 'com.infomaniak.chat'
-run = 'move-node-to-workspace S' # Social
+run = 'move-node-to-workspace 5' # Social
 
 [[on-window-detected]]
 if.app-id = 'com.apple.MobileSMS'
-run = 'move-node-to-workspace S' # Social
+run = 'move-node-to-workspace 5' # Social
 
 [[on-window-detected]]
 if.app-id = 'com.mitchellh.ghostty'
 check-further-callbacks = false
-run = ['layout floating', 'move-node-to-workspace T'] # Terminal — floating preserves native tabs
+run = ['layout floating', 'move-node-to-workspace 1'] # Terminal — floating preserves native tabs
 
 [[on-window-detected]]
 if.app-id = 'com.t3tools.t3code'
-run = 'move-node-to-workspace T' # Terminal
+run = 'move-node-to-workspace 1' # Terminal
 
 [[on-window-detected]]
 if.app-id = 'com.gitbutler.app'
-run = 'move-node-to-workspace T' # Terminal
+run = 'move-node-to-workspace 1' # Terminal
 
 [[on-window-detected]]
 if.app-id = 'com.google.Chrome'
-run = 'move-node-to-workspace W' # Web
+run = 'move-node-to-workspace 3' # Web
 
 [[on-window-detected]]
 if.app-id = 'app.zen-browser.zen'
-run = 'move-node-to-workspace W' # Web
+run = 'move-node-to-workspace 3' # Web
 
 [[on-window-detected]]
 if.app-id = 'com.vivaldi.Vivaldi'
-run = 'move-node-to-workspace W' # Web
+run = 'move-node-to-workspace 3' # Web
 
 [[on-window-detected]]
 if.app-id = 'com.sublimetext.4'
 check-further-callbacks = false
-run = ['layout floating', 'move-node-to-workspace I'] # IDE — floating
+run = ['layout floating', 'move-node-to-workspace 2'] # IDE — floating
 
 [[on-window-detected]]
 if.app-id = 'com.apple.finder'
 check-further-callbacks = false
-run = ['layout floating', 'move-node-to-workspace 1'] # Floating on workspace 1
+run = ['layout floating', 'move-node-to-workspace 0'] # Floating on workspace 0
 
 [[on-window-detected]]
 if.app-id = 'com.cocoatech.PathFinder'
 check-further-callbacks = false
-run = ['layout floating', 'move-node-to-workspace 1'] # Floating on workspace 1
+run = ['layout floating', 'move-node-to-workspace 0'] # Floating on workspace 0
 
 [[on-window-detected]]
 if.app-id = 'io.tailscale.ipn.macos'
 check-further-callbacks = false
-run = ['layout floating', 'move-node-to-workspace 1'] # Floating on workspace 1
+run = ['layout floating', 'move-node-to-workspace 0'] # Floating on workspace 0

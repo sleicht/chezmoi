@@ -40,46 +40,27 @@
 
 | Shortcut | Workspace |
 |----------|-----------|
-| `Ctrl + 1` | 1 |
-| `Ctrl + 2` | 2 |
-| `Ctrl + 3` | 3 |
-| `Ctrl + 5` | 5 |
-| `Ctrl + 6` | 6 |
-| `Ctrl + B` | B |
-| `Ctrl + E` | E |
-| `Ctrl + G` | G (General) |
-| `Ctrl + I` | I (IDE) |
-| `Ctrl + M` | M (Mail) |
-| `Ctrl + S` | S (Social) |
-| `Ctrl + T` | T (Terminal) |
-| `Ctrl + W` | W (Web) |
-| `Ctrl + 0` | Back-and-forth |
+| `Ctrl + 0` | 0 (File managers) |
+| `Ctrl + 1` | 1 (Terminal) |
+| `Ctrl + 2` | 2 (IDE) |
+| `Ctrl + 3` | 3 (Web) |
+| `Ctrl + 4` | 4 (Mail) |
+| `Ctrl + 5` | 5 (Social) |
+| `Ctrl + 6` | 6 (Free) |
+| `Ctrl + 9` | Back-and-forth |
 | `Alt + Tab` | Back-and-forth |
 
-## Workspaces — Move Window To (numbered)
+## Workspaces — Move Window To
 
 | Shortcut | Workspace |
 |----------|-----------|
-| `Ctrl + Shift + 1` | 1 |
-| `Ctrl + Shift + 2` | 2 |
-| `Ctrl + Shift + 3` | 3 |
-| `Ctrl + Shift + 5` | 5 |
-| `Ctrl + Shift + 6` | 6 |
-
-## Workspaces — Move Window To (named, via Service Mode)
-
-> Press `Alt + Shift + ;` first, then the letter:
-
-| Key | Workspace |
-|-----|-----------|
-| `B` | B |
-| `E` | E |
-| `G` | G (General) |
-| `I` | I (IDE) |
-| `M` | M (Mail) |
-| `S` | S (Social) |
-| `T` | T (Terminal) |
-| `W` | W (Web) |
+| `Ctrl + Shift + 0` | 0 (File managers) |
+| `Ctrl + Shift + 1` | 1 (Terminal) |
+| `Ctrl + Shift + 2` | 2 (IDE) |
+| `Ctrl + Shift + 3` | 3 (Web) |
+| `Ctrl + Shift + 4` | 4 (Mail) |
+| `Ctrl + Shift + 5` | 5 (Social) |
+| `Ctrl + Shift + 6` | 6 (Free) |
 
 ## Monitor
 
@@ -109,7 +90,6 @@
 | `R` | Reset layout (flatten) |
 | `F` | Toggle floating/tiling |
 | `Backspace` | Close all windows but current |
-| `B/E/G/I/M/S/T/W` | Move window to named workspace |
 
 ## Config
 
@@ -121,20 +101,20 @@
 
 | App | Workspace | Layout |
 |-----|-----------|--------|
-| Spark | M (Mail) | tiled |
-| Fantastical | M (Mail) | tiled |
-| IntelliJ | I (IDE) | tiled |
-| Sublime Text | I (IDE) | floating |
-| WhatsApp | S (Social) | tiled |
-| Threema | S (Social) | tiled |
-| Infomaniak Chat | S (Social) | tiled |
-| Messages | S (Social) | tiled |
-| Ghostty | T (Terminal) | floating |
-| T3 Code | T (Terminal) | tiled |
-| GitButler | T (Terminal) | tiled |
-| Chrome | W (Web) | tiled |
-| Zen Browser | W (Web) | tiled |
-| Vivaldi | W (Web) | tiled |
-| Finder | 1 | floating |
-| Path Finder | 1 | floating |
-| Tailscale | 1 | floating |
+| Finder | 0 (File managers) | floating |
+| Path Finder | 0 (File managers) | floating |
+| Tailscale | 0 (File managers) | floating |
+| Ghostty | 1 (Terminal) | floating |
+| T3 Code | 1 (Terminal) | tiled |
+| GitButler | 1 (Terminal) | tiled |
+| IntelliJ | 2 (IDE) | tiled |
+| Sublime Text | 2 (IDE) | floating |
+| Chrome | 3 (Web) | tiled |
+| Zen Browser | 3 (Web) | tiled |
+| Vivaldi | 3 (Web) | tiled |
+| Spark | 4 (Mail) | tiled |
+| Fantastical | 4 (Mail) | tiled |
+| WhatsApp | 5 (Social) | tiled |
+| Threema | 5 (Social) | tiled |
+| Infomaniak Chat | 5 (Social) | tiled |
+| Messages | 5 (Social) | tiled |
