@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#MISE description="List keyboard shortcuts from all sources"
+#MISE alias="kb"
+
+set -euo pipefail
+
+SCRIPT_PATH="${HOME}/.local/share/chezmoi/scripts/list-keybinds"
+
+if [[ ! -x "$SCRIPT_PATH" ]]; then
+  echo "ERROR: Keybinds script not found: $SCRIPT_PATH" >&2
+  exit 1
+fi
+
+"$SCRIPT_PATH" "$@"

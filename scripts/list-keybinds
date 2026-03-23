@@ -1,0 +1,631 @@
+#!/usr/bin/env bash
+# =============================================================================
+# list-keybinds — Aggregate keyboard shortcuts from AeroSpace, Ghostty, and ZSH
+# =============================================================================
+# Parses config files statically to produce a grouped, readable shortcut map.
+#
+# Usage:
+#   ./scripts/list-keybinds                    # Show all sources
+#   ./scripts/list-keybinds --source aerospace # One source only
+#   ./scripts/list-keybinds --raw              # No colour output
+# =============================================================================
+
+set -euo pipefail
+
+# ── Colour setup ─────────────────────────────────────────────────────────────
+
+RAW=false
+SOURCE_FILTER=""
+
+setup_colours() {
+  if [[ -t 1 ]] && [[ "$RAW" != true ]]; then
+    BOLD=$'\033[1m'
+    DIM=$'\033[2m'
+    CYAN=$'\033[0;36m'
+    NC=$'\033[0m'
+  else
+    BOLD='' DIM='' CYAN='' NC=''
+  fi
+}
+
+# ── Argument parsing ─────────────────────────────────────────────────────────
+
+usage() {
+  cat <<EOF
+Usage: list-keybinds [OPTIONS]
+
+Options:
+  --source NAME   Show only one source (macos, aerospace, ghostty, zsh)
+  --raw           Plain output without colours
+  --detect        Launch Shortcut Detective for live key interception
+  --help, -h      Show this help
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --source)
+      shift
+      SOURCE_FILTER="${1:-}"
+      [[ -z "$SOURCE_FILTER" ]] && { echo "ERROR: --source requires a value (aerospace, ghostty, zsh)" >&2; exit 2; }
+      ;;
+    --raw) RAW=true ;;
+    --detect) DETECT=true ;;
+    --help|-h) usage; exit 0 ;;
+    *) echo "ERROR: Unknown argument: $1" >&2; exit 2 ;;
+  esac
+  shift
+done
+
+setup_colours
+
+# ── Detect mode ──────────────────────────────────────────────────────────────
+
+DETECT="${DETECT:-false}"
+DETECTIVE_BIN="${HOME}/.local/bin/shortcut-detective"
+DETECTIVE_REPO="https://github.com/vijaydaultani/shortcut-detective.git"
+
+if [[ "$DETECT" == true ]]; then
+  if [[ -x "$DETECTIVE_BIN" ]]; then
+    echo "${BOLD}Launching Shortcut Detective...${NC}"
+    echo "${DIM}Press any modifier+key combo to see which app grabs it. Ctrl+C to stop.${NC}"
+    echo ""
+    exec "$DETECTIVE_BIN"
+  fi
+
+  echo "Shortcut Detective is not installed at ${DETECTIVE_BIN}"
+  echo ""
+  read -rp "Install it now? [y/N] " answer
+  if [[ "$answer" != [yY]* ]]; then
+    echo "Skipped. Install manually: ${DETECTIVE_REPO}"
+    exit 0
+  fi
+
+  tmpdir=$(mktemp -d)
+  trap 'rm -rf "$tmpdir"' EXIT
+  echo "Cloning and compiling..."
+  git clone --depth 1 --quiet "$DETECTIVE_REPO" "$tmpdir/shortcut-detective"
+  swiftc -O -o "$DETECTIVE_BIN" "$tmpdir/shortcut-detective/src/ShortcutDetective.swift"
+  echo "Installed to ${DETECTIVE_BIN}"
+  echo ""
+  echo "${BOLD}Launching Shortcut Detective...${NC}"
+  echo "${DIM}Press any modifier+key combo to see which app grabs it. Ctrl+C to stop.${NC}"
+  echo ""
+  exec "$DETECTIVE_BIN"
+fi
+
+# ── Helpers ──────────────────────────────────────────────────────────────────
+
+print_section() {
+  local title="$1"
+  local line
+  printf -v line '%.0s─' {1..50}
+  echo ""
+  echo "${BOLD}── ${title} ${line:${#title}+3}${NC}"
+}
+
+print_binding() {
+  printf "  ${CYAN}%-22s${NC} %s\n" "$1" "$2"
+}
+
+# Convert AeroSpace key notation to human-readable form
+# e.g. ctrl-alt-shift-left → Ctrl+Alt+Shift+Left
+normalise_key() {
+  local key="$1"
+  # Split on hyphens, capitalise known modifiers, rejoin with +
+  local result=""
+  local IFS='-'
+  for part in $key; do
+    case "$part" in
+      ctrl)      part="Ctrl" ;;
+      alt)       part="Alt" ;;
+      shift)     part="Shift" ;;
+      cmd)       part="Cmd" ;;
+      enter)     part="Enter" ;;
+      esc)       part="Esc" ;;
+      backspace) part="Backspace" ;;
+      tab)       part="Tab" ;;
+      left)      part="Left" ;;
+      right)     part="Right" ;;
+      up)        part="Up" ;;
+      down)      part="Down" ;;
+      semicolon) part=";" ;;
+      # F-keys: f11 → F11
+      f[0-9]*)   part="${part^^}" ;;
+      # Numbers and single letters stay as-is but uppercase
+      [0-9])     ;; # keep as-is
+      [a-z])     part="${part^^}" ;;
+    esac
+    if [[ -z "$result" ]]; then
+      result="$part"
+    else
+      result="${result}+${part}"
+    fi
+  done
+  echo "$result"
+}
+
+# Convert ZSH bindkey notation to human-readable form
+# e.g. ^[u → Alt+U, ^X → Ctrl+X, ^[[A → Up
+normalise_zsh_key() {
+  local key="$1"
+
+  # CSI sequences first (before generic ^[ handling)
+  case "$key" in
+    '^[[A') echo "Up"; return ;;
+    '^[[B') echo "Down"; return ;;
+    '^[[C') echo "Right"; return ;;
+    '^[[D') echo "Left"; return ;;
+    '^[[H') echo "Home"; return ;;
+    '^[[F') echo "End"; return ;;
+  esac
+
+  # Alt+key: ^[x → Alt+X (must be 3+ chars starting with ^[)
+  if [[ "$key" == '^['* && ${#key} -ge 3 ]]; then
+    local suffix="${key:2}"
+    [[ "$suffix" == " " ]] && suffix="Space"
+    echo "Alt+${suffix^^}"
+    return
+  fi
+
+  # Ctrl+key: ^X → Ctrl+X (exactly 2 chars starting with ^)
+  if [[ "$key" == '^'* && ${#key} -eq 2 ]]; then
+    local ch="${key:1}"
+    echo "Ctrl+${ch^^}"
+    return
+  fi
+
+  echo "$key"
+}
+
+# ── macOS system shortcuts parser ────────────────────────────────────────────
+#
+# The plist is a delta store — it only contains overrides from defaults.
+# Absent entries are active with their default binding.
+# We maintain a defaults table and overlay plist overrides.
+
+# Map macOS virtual keycodes to names
+keycode_name() {
+  case "$1" in
+    0) echo "A" ;; 1) echo "S" ;; 2) echo "D" ;; 3) echo "F" ;;
+    4) echo "H" ;; 5) echo "G" ;; 6) echo "Z" ;; 7) echo "X" ;;
+    8) echo "C" ;; 9) echo "V" ;; 11) echo "B" ;; 12) echo "Q" ;;
+    13) echo "W" ;; 14) echo "E" ;; 15) echo "R" ;; 16) echo "Y" ;;
+    17) echo "T" ;; 18) echo "1" ;; 19) echo "2" ;; 20) echo "3" ;;
+    21) echo "4" ;; 22) echo "6" ;; 23) echo "5" ;; 24) echo "=" ;;
+    25) echo "9" ;; 26) echo "7" ;; 27) echo "-" ;; 28) echo "8" ;;
+    29) echo "0" ;; 30) echo "]" ;; 31) echo "O" ;; 32) echo "U" ;;
+    33) echo "[" ;; 34) echo "I" ;; 35) echo "P" ;; 36) echo "Return" ;;
+    37) echo "L" ;; 38) echo "J" ;; 39) echo "'" ;; 40) echo "K" ;;
+    41) echo ";" ;; 42) echo "\\" ;; 43) echo "," ;; 44) echo "/" ;;
+    45) echo "N" ;; 46) echo "M" ;; 47) echo "." ;; 48) echo "Tab" ;;
+    49) echo "Space" ;; 50) echo "\`" ;; 51) echo "Delete" ;;
+    53) echo "Esc" ;; 71) echo "Clear" ;;
+    96) echo "F5" ;; 97) echo "F6" ;; 98) echo "F7" ;; 99) echo "F3" ;;
+    100) echo "F8" ;; 101) echo "F9" ;; 103) echo "F11" ;; 105) echo "F13" ;;
+    107) echo "F14" ;; 109) echo "F10" ;; 111) echo "F12" ;;
+    113) echo "F15" ;; 118) echo "F4" ;; 120) echo "F2" ;; 122) echo "F1" ;;
+    123) echo "Left" ;; 124) echo "Right" ;; 125) echo "Down" ;; 126) echo "Up" ;;
+    *) echo "Key($1)" ;;
+  esac
+}
+
+# Decode modifier bitmask to prefix string
+decode_modifiers() {
+  local flags="$1"
+  local mods=""
+  (( flags & 8388608 )) && mods+="Fn+" || true
+  (( flags & 262144 ))  && mods+="Ctrl+" || true
+  (( flags & 524288 ))  && mods+="Opt+" || true
+  (( flags & 131072 ))  && mods+="Shift+" || true
+  (( flags & 1048576 )) && mods+="Cmd+" || true
+  echo "$mods"
+}
+
+# Build the key display from keycode + modifiers
+build_key_display() {
+  local keycode="$1" modifiers="$2"
+  local mods key_name
+  mods=$(decode_modifiers "$modifiers")
+  key_name=$(keycode_name "$keycode")
+  echo "${mods}${key_name}"
+}
+
+parse_macos() {
+  # ── Defaults table ──────────────────────────────────────────────────────
+  # Format: ID|default_enabled|keycode|modifiers|category|description
+  # default_enabled: 1 = on by default, 0 = off by default
+  # Sources: System Settings > Keyboard > Keyboard Shortcuts (macOS 15)
+  local -a defaults=(
+    # Display
+    "215|1|107|0|Display|Decrease display brightness"
+    "216|1|113|0|Display|Increase display brightness"
+    # Mission Control
+    "32|0|20|1966080|Mission Control|Mission Control"
+    "33|0|125|8650752|Mission Control|Application windows"
+    "34|0|99|8519680|Mission Control|Show Desktop"
+    "36|0|99|9437184|Mission Control|Show Desktop (alt)"
+    "160|0|0|0|Mission Control|Mission Control (F-key)"
+    "162|0|96|9961472|Mission Control|Show Notification Centre"
+    "163|0|0|0|Mission Control|Turn Do Not Disturb on/off"
+    "164|0|0|0|Mission Control|Show Launchpad"
+    "222|1|12|8388608|Mission Control|Quick Note"
+    # Mission Control — Spaces
+    "79|0|123|8650752|Spaces|Move left a space"
+    "80|0|123|8781824|Spaces|Move left a space (alt)"
+    "81|0|124|8650752|Spaces|Move right a space"
+    "82|0|124|8781824|Spaces|Move right a space (alt)"
+    # Keyboard
+    "7|0|98|262144|Keyboard|Change the way Tab moves focus"
+    "12|0|122|262144|Keyboard|Turn keyboard access on or off"
+    "13|0|120|262144|Keyboard|Move focus to the menu bar"
+    "57|0|99|262144|Keyboard|Move focus to the Dock"
+    "51|0|118|262144|Keyboard|Move focus to active or next window"
+    "52|0|96|262144|Keyboard|Move focus to the window toolbar"
+    "53|0|97|262144|Keyboard|Move focus to the floating window"
+    "27|1|50|1048576|Keyboard|Move focus to next window"
+    "10|0|100|262144|Keyboard|Move focus to status menus"
+    "57|0|36|262144|Keyboard|Show contextual menu"
+    # Input Sources
+    "60|0|49|262144|Input Sources|Select previous input source"
+    "61|0|49|786432|Input Sources|Select next input source"
+    # Screenshots
+    "28|1|20|1179648|Screenshots|Save picture of screen as a file"
+    "29|1|20|1441792|Screenshots|Copy picture of screen to the clipboard"
+    "30|1|21|1179648|Screenshots|Save picture of selected area as a file"
+    "31|1|21|1441792|Screenshots|Copy picture of selected area to the clipboard"
+    "184|1|23|1179648|Screenshots|Screenshot and recording options"
+    # Spotlight
+    "64|0|49|1048576|Spotlight|Show Spotlight search"
+    "65|0|49|1572864|Spotlight|Show Finder search window"
+    # Accessibility
+    "59|0|96|9437184|Accessibility|Turn Dock hiding on/off"
+    "175|0|0|0|Accessibility|Show Accessibility controls"
+  )
+
+  # ── Parse plist overrides ───────────────────────────────────────────────
+  local plist_out
+  plist_out=$(defaults read com.apple.symbolichotkeys AppleSymbolicHotKeys 2>/dev/null) || {
+    echo "  (could not read macOS shortcuts)"
+    return
+  }
+
+  # Build override maps: id → enabled, id → keycode, id → modifiers
+  local -A override_enabled override_keycode override_modifiers
+  local current_id="" p_enabled="" p_keycode="" p_modifiers=""
+  local param_idx=0 in_params=false
+
+  while IFS= read -r line; do
+    if [[ "$line" =~ ^[[:space:]]+([0-9]+)[[:space:]]*=[[:space:]]*\{ ]]; then
+      current_id="${BASH_REMATCH[1]}"
+      p_enabled="" ; p_keycode="" ; p_modifiers=""
+      param_idx=0 ; in_params=false
+      continue
+    fi
+
+    [[ -z "$current_id" ]] && continue
+
+    if [[ "$line" =~ enabled[[:space:]]*=[[:space:]]*([01]) ]]; then
+      p_enabled="${BASH_REMATCH[1]}"
+      continue
+    fi
+
+    if [[ "$line" =~ parameters[[:space:]]*= ]]; then
+      in_params=true ; param_idx=0
+      continue
+    fi
+
+    if [[ "$in_params" == true && "$line" =~ ^[[:space:]]*([0-9]+) ]]; then
+      case "$param_idx" in
+        1) p_keycode="${BASH_REMATCH[1]}" ;;
+        2) p_modifiers="${BASH_REMATCH[1]}" ;;
+      esac
+      param_idx=$(( param_idx + 1 ))
+      continue
+    fi
+
+    if [[ "$in_params" == true && "$line" =~ \) ]]; then
+      in_params=false
+      continue
+    fi
+
+    # Outer closing };
+    if [[ "$line" =~ ^\ {4}\}\; && -n "$current_id" ]]; then
+      [[ -n "$p_enabled" ]] && override_enabled[$current_id]="$p_enabled"
+      [[ -n "$p_keycode" ]] && override_keycode[$current_id]="$p_keycode"
+      [[ -n "$p_modifiers" ]] && override_modifiers[$current_id]="$p_modifiers"
+      current_id=""
+      continue
+    fi
+  done <<< "$plist_out"
+
+  # ── Merge defaults with overrides and output ────────────────────────────
+  local -A shown_ids
+  local prev_category=""
+  for entry in "${defaults[@]}"; do
+    IFS='|' read -r id default_enabled keycode modifiers category description <<< "$entry"
+
+    # Determine effective enabled state
+    local enabled="$default_enabled"
+    if [[ -n "${override_enabled[$id]+x}" ]]; then
+      enabled="${override_enabled[$id]}"
+    fi
+
+    # Skip disabled shortcuts
+    [[ "$enabled" != "1" ]] && continue
+
+    # Use overridden key binding if present
+    if [[ -n "${override_keycode[$id]+x}" ]]; then
+      keycode="${override_keycode[$id]}"
+      modifiers="${override_modifiers[$id]:-0}"
+    fi
+
+    # Skip shortcuts with no binding (keycode 65535 or 0 with no modifiers)
+    [[ "$keycode" == "65535" ]] && continue
+    [[ "$keycode" == "0" && "$modifiers" == "0" ]] && continue
+
+    # Print category header when it changes
+    if [[ "$category" != "$prev_category" ]]; then
+      print_section "macOS — ${category}"
+      prev_category="$category"
+    fi
+
+    local display_key
+    display_key=$(build_key_display "$keycode" "$modifiers")
+    print_binding "$display_key" "$description"
+    shown_ids[$id]=1
+  done
+
+  # ── Fallback: plist entries with enabled=1 not in defaults table ────────
+  # These are user-customised shortcuts we don't have a default name for
+  local -A hotkey_names=(
+    [32]="Mission Control" [33]="Application windows" [34]="Show Desktop"
+    [36]="Dashboard" [37]="Screenshot (custom)" [52]="Dock hiding toggle"
+    [57]="Move focus to Dock" [59]="Dock hiding on/off" [60]="Previous input source"
+    [61]="Next input source" [64]="Spotlight" [65]="Finder search"
+    [118]="Switch to Desktop 1" [160]="Mission Control (alt)"
+    [162]="Show Notification Centre" [163]="Do Not Disturb toggle"
+    [164]="Show Launchpad" [175]="Accessibility controls" [176]="Siri"
+    [184]="Screenshot & recording options" [233]="Minimise" [260]="Dismiss notification"
+  )
+
+  local has_extra=false
+  for id in "${!override_enabled[@]}"; do
+    [[ "${override_enabled[$id]}" != "1" ]] && continue
+    [[ -n "${shown_ids[$id]+x}" ]] && continue
+    local kc="${override_keycode[$id]:-65535}"
+    local md="${override_modifiers[$id]:-0}"
+    [[ "$kc" == "65535" ]] && continue
+    if [[ "$has_extra" == false ]]; then
+      print_section "macOS — Custom Overrides"
+      has_extra=true
+    fi
+    local desc="${hotkey_names[$id]:-System shortcut $id}"
+    local display_key
+    display_key=$(build_key_display "$kc" "$md")
+    print_binding "$display_key" "$desc"
+  done
+}
+
+# ── AeroSpace parser ────────────────────────────────────────────────────────
+
+parse_aerospace() {
+  local config="${HOME}/.config/aerospace/aerospace.toml"
+  if [[ ! -f "$config" ]]; then
+    echo "  (aerospace config not found)"
+    return
+  fi
+
+  local current_mode=""
+  local in_multiline=false
+  local in_multiline_array=false
+  local multiline_array_key=""
+  local multiline_array_buf=""
+
+  while IFS= read -r line; do
+    # Skip lines inside multi-line triple-quoted strings
+    if [[ "$in_multiline" == true ]]; then
+      [[ "$line" == *"'''"* ]] && in_multiline=false
+      continue
+    fi
+
+    # Accumulate multi-line array values
+    if [[ "$in_multiline_array" == true ]]; then
+      multiline_array_buf+="$line"
+      if [[ "$line" == *"]"* ]]; then
+        in_multiline_array=false
+        # Process accumulated array as single-line
+        local raw_key="$multiline_array_key"
+        local raw_val="[${multiline_array_buf}"
+        local display_key
+        display_key=$(normalise_key "$raw_key")
+
+        local command=""
+        local arr="${raw_val#\[}"
+        arr="${arr%\]}"
+        while IFS= read -r part; do
+          part="${part## }" ; part="${part%% }"
+          part="${part//\'/}" ; part="${part//\"/}"
+          [[ -z "$part" || "$part" == "]" ]] && continue
+          # Strip trailing comma
+          part="${part%,}"
+          if [[ "$part" != exec-and-forget* && "$part" != "mode main" ]]; then
+            command="$part"
+            break
+          fi
+        done < <(echo "$arr" | tr ',' '\n')
+        [[ -z "$command" ]] && command="mode main"
+        [[ "$command" != exec-and-forget* ]] && print_binding "$display_key" "$command"
+      fi
+      continue
+    fi
+
+    # Detect mode section headers: [mode.main.binding]
+    if [[ "$line" =~ ^\[mode\.([a-z]+)\.binding\]$ ]]; then
+      current_mode="${BASH_REMATCH[1]}"
+      print_section "AeroSpace (${current_mode})"
+      continue
+    fi
+
+    # Not in a binding section — skip
+    [[ -z "$current_mode" ]] && continue
+
+    # New TOML section ends current binding block
+    if [[ "$line" =~ ^\[.*\]$ ]]; then
+      current_mode=""
+      continue
+    fi
+
+    # Skip blank lines and comments
+    [[ -z "${line// /}" || "$line" =~ ^[[:space:]]*# ]] && continue
+
+    # Extract key = value pairs
+    if [[ "$line" =~ ^([a-zA-Z0-9-]+)[[:space:]]*=[[:space:]]*(.*) ]]; then
+      local raw_key="${BASH_REMATCH[1]}"
+      local raw_val="${BASH_REMATCH[2]}"
+
+      # Detect multi-line string opening (triple quotes not closed on same line)
+      if [[ "$raw_val" == "'''"* && "$raw_val" != *"'''"*"'''"* ]]; then
+        in_multiline=true
+        continue
+      fi
+
+      # Detect multi-line array: starts with [ but doesn't close on same line
+      if [[ "$raw_val" == "["* && "$raw_val" != *"]"* ]]; then
+        in_multiline_array=true
+        multiline_array_key="$raw_key"
+        multiline_array_buf="${raw_val#\[}"
+        continue
+      fi
+
+      local display_key
+      display_key=$(normalise_key "$raw_key")
+
+      local command=""
+      if [[ "$raw_val" == "'"* ]]; then
+        # Single-quoted string value — strip quotes and inline comments
+        command="${raw_val//\'/}"
+        command="${command%%#*}"
+        # Strip trailing whitespace
+        command="${command%"${command##*[! ]}"}"
+      elif [[ "$raw_val" == "["* ]]; then
+        # Single-line array value — pick first meaningful command
+        local arr="${raw_val#\[}"
+        arr="${arr%\]}"
+        while IFS= read -r part; do
+          part="${part## }" ; part="${part%% }"
+          part="${part//\'/}" ; part="${part//\"/}"
+          if [[ "$part" != exec-and-forget* && "$part" != "mode main" ]]; then
+            command="$part"
+            break
+          fi
+        done < <(echo "$arr" | tr ',' '\n')
+        [[ -z "$command" ]] && command="mode main"
+      fi
+
+      # Skip pure exec-and-forget bindings (app launchers)
+      [[ "$command" == exec-and-forget* ]] && continue
+
+      print_binding "$display_key" "$command"
+    fi
+  done < "$config"
+}
+
+# ── Ghostty parser ──────────────────────────────────────────────────────────
+
+parse_ghostty() {
+  local config="${HOME}/.config/ghostty/config"
+  if [[ ! -f "$config" ]]; then
+    echo "  (ghostty config not found)"
+    return
+  fi
+
+  print_section "Ghostty"
+
+  grep '^keybind' "$config" | while IFS= read -r line; do
+    local val="${line#keybind = }"
+    local prefix=""
+    local key_action="$val"
+
+    if [[ "$val" == global:* ]]; then
+      prefix=" (global)"
+      key_action="${val#global:}"
+    fi
+
+    local key="${key_action%%=*}"
+    local action="${key_action#*=}"
+
+    # Capitalise modifier names
+    key="${key//ctrl/Ctrl}"
+    key="${key//cmd/Cmd}"
+    key="${key//alt/Alt}"
+    key="${key//shift/Shift}"
+
+    # Humanise action: toggle_quick_terminal → toggle quick terminal
+    action="${action//_/ }"
+
+    print_binding "${key}${prefix}" "$action"
+  done
+}
+
+# ── ZSH parser ──────────────────────────────────────────────────────────────
+
+parse_zsh() {
+  print_section "ZSH Shell"
+
+  # Known override winners (from prompt.zsh load order: fzf → tv → atuin)
+  print_binding "Ctrl+R" "atuin history search"
+  print_binding "Ctrl+T" "tv smart autocomplete"
+  print_binding "Alt+C" "fzf cd widget"
+
+  # Parse user-defined bindings from keybinds.zsh
+  local keybinds_file
+  keybinds_file="${HOME}/.local/share/chezmoi/dot_zsh.d/keybinds.zsh"
+  [[ -f "$keybinds_file" ]] || return
+
+  while IFS= read -r line; do
+    # Skip mode settings and conditionals
+    [[ "$line" =~ ^[[:space:]]*bindkey[[:space:]]+-e ]] && continue
+    [[ "$line" =~ ^[[:space:]]*bindkey[[:space:]]+-v ]] && continue
+
+    # Extract: bindkey 'KEY' widget  or  bindkey "KEY" widget
+    if [[ "$line" =~ bindkey[[:space:]]+[\'\"]([^\'\"]+)[\'\"][[:space:]]+([a-zA-Z0-9_-]+) ]]; then
+      local raw_key="${BASH_REMATCH[1]}"
+      local widget="${BASH_REMATCH[2]}"
+
+      # Skip keys with raw control characters (not ^X notation)
+      [[ "$raw_key" =~ [[:cntrl:]] ]] && continue
+
+      # Skip keys already covered by known overrides
+      case "$raw_key" in
+        '^R'|'^r'|'^T'|'^t') continue ;;
+      esac
+
+      local display_key
+      display_key=$(normalise_zsh_key "$raw_key")
+
+      print_binding "$display_key" "$widget"
+    fi
+  done < "$keybinds_file"
+}
+
+# ── Main ────────────────────────────────────────────────────────────────────
+
+main() {
+  case "${SOURCE_FILTER}" in
+    "")
+      parse_macos
+      parse_aerospace
+      parse_ghostty
+      parse_zsh
+      ;;
+    macos)     parse_macos ;;
+    aerospace) parse_aerospace ;;
+    ghostty)   parse_ghostty ;;
+    zsh)       parse_zsh ;;
+    *) echo "ERROR: Unknown source '${SOURCE_FILTER}'. Use: macos, aerospace, ghostty, zsh" >&2; exit 2 ;;
+  esac
+  echo ""
+}
+
+main
