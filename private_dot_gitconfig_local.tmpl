@@ -14,13 +14,18 @@
 {{ (rbw "git-config-includes" "--folder" "dotfiles/client").notes }}
 {{- end }}
 
-
 {{- if eq .machine_type "personal" }}
 [gitbutler]
-   gitbutlerCommitter = 0
-   aiModelProvider = ollama
-   aiAnthropicKeyOption = bringYourOwn
-   aiAnthropicModelName = claude-3-7-sonnet-20250219
-   aiOllamaModelName = llama3.2:3b
-   aiOllamaEndpoint = http://127.0.0.1:11434
+  gitbutlerCommitter = 0
+  aiAnthropicKeyOption = bringYourOwn
+  aiAnthropicModelName = claude-3-7-sonnet-20250219
+  aiModelProvider = ollama
+  aiOllamaEndpoint = http://127.0.0.1:11434
+  aiOllamaModelName = llama3.2:3b
+{{- else if eq .machine_type "client" }}
+[gitbutler]
+  aiOpenAIKeyOption = bringYourOwn
+  aiModelProvider = ollama
+  aiOllamaEndpoint = http://127.0.0.1:11435
+  aiOllamaModelName = claude-sonnet-4-5@20250929
 {{- end }}
