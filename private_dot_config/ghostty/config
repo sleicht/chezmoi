@@ -8,7 +8,7 @@ font-family-bold-italic = Bold Italic
 font-size = 12
 font-style = Medium
 font-feature = +liga
-keybind = global:ctrl+1=toggle_quick_terminal
+keybind = global:ctrl+grave_accent=toggle_quick_terminal
 keybind = cmd+w=unbind
 macos-titlebar-style = tabs
 working-directory=inherit
