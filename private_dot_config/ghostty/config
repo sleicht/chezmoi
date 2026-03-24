@@ -10,12 +10,12 @@ font-style = Medium
 font-feature = +liga
 keybind = global:ctrl+grave_accent=toggle_quick_terminal
 keybind = cmd+w=unbind
-macos-titlebar-style = tabs
+macos-titlebar-style = native
 working-directory=inherit
-# window-inherit-working-directory = true
 minimum-contrast = 1.05
 mouse-hide-while-typing = true
 macos-option-as-alt = true
+window-vsync = true
 
 #theme = Dracula
 ### Dracula Theme Pro
@@ -41,4 +41,3 @@ cursor-color = #7970A9
 cursor-text = #7970A9
 selection-background = #454158
 selection-foreground = #F8F8F2
-background-opacity = 0.97
