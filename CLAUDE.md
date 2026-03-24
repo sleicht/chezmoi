@@ -1,45 +1,22 @@
 # CLAUDE.md
 
-This file provides guidance to AI coding agents working with this repository.
-The filename stays `CLAUDE.md` for tool compatibility, and `AGENTS.md` points here.
-
-## What This Is
-
-A chezmoi dotfiles repository. Source files here deploy to `~/` via `chezmoi apply`. Never edit target files in `~/` directly — always edit source files in this repo.
+Chezmoi dotfiles repository. Source files here deploy to `~/` via `chezmoi apply`. Always edit source files in this repo, never target files in `~/`.
 
 ## Commands
 
 ```bash
-# Daily workflow (via mise shortcuts)
-mise run d                # preview pending changes (dotfiles:diff)
-mise run a                # deploy configs (dotfiles:apply)
-mise run v                # run verification checks (dotfiles:verify)
+mise run d                # preview pending changes
+mise run a                # deploy configs
+mise run v                # run verification checks
 mise run s                # full sync: backup → pull → apply → verify
 mise run c                # guided conventional commit with Jira prefix
 mise run b                # create feature branch
 mise run git:pr           # create PR/MR (auto-detects gh/glab)
-topgrade                  # update all tools (Homebrew, mise, chezmoi, sheldon)
-topgrade -n               # dry-run preview
-
-# Raw chezmoi (for advanced use)
-chezmoi diff              # preview pending changes
-chezmoi apply             # deploy to home directory
-chezmoi apply --dry-run   # simulate apply without writing
-chezmoi doctor            # diagnose problems
-chezmoi verify            # check for drift from source
-
-# Pre-commit hooks
-pre-commit install --hook-type pre-commit --hook-type pre-push
-pre-commit run --all-files   # run all checks manually
 ```
 
-> **Note:** Commands that expand chezmoi templates (`chezmoi diff`, `chezmoi apply`, `mise run d`, `mise run a`, `mise run s`) require the rbw agent to be running and unlocked (`rbw unlock`). Automated agents typically cannot unlock or access your vault, so run these commands manually in a terminal.
+> **Note:** Commands that expand templates (`chezmoi diff/apply`, `mise run d/a/s`) require `rbw unlock` first. Agents cannot unlock the vault — run these manually.
 
-## Architecture
-
-### Chezmoi Naming Conventions
-
-Source files use chezmoi prefixes that transform on apply:
+## Chezmoi Naming Conventions
 
 | Prefix | Effect | Example |
 |--------|--------|---------|
@@ -51,74 +28,25 @@ Source files use chezmoi prefixes that transform on apply:
 | `run_onchange_` | Runs when content hash changes | `run_onchange_after_01-install-packages.sh.tmpl` |
 | `run_after_` | Runs on every apply | `run_after_10-verify-permissions.sh.tmpl` |
 
-### Template System
+## Templates
 
-- **`.chezmoi.yaml.tmpl`** — master config; prompts for machine type on `chezmoi init`
-- **`.chezmoidata.yaml`** — static data (package lists, tool versions, bitwarden folders); ~6300 lines
-- **`.chezmoiignore`** — controls which files deploy; 11 sections with OS-conditional rules
-
-Templates use Go template syntax with these key variables:
+Key variables in Go templates:
 - `.machine_type` — `"client"` (work) or `"personal"`
-- `.personal_email`, `.work_email` — set during init
 - `.chezmoi.os` — `"darwin"` or `"linux"`
-- `.chezmoi.homeDir` — home directory path
+- `.personal_email`, `.work_email` — set during `chezmoi init`
 
-### Machine-Aware Configuration
+## Machine-Aware Configuration
 
-The Brewfile, git config, and run scripts conditionally include content based on `.machine_type`. When editing `.chezmoidata.yaml`, package lists are scoped:
+Package lists in `.chezmoidata.yaml` are scoped:
 - `darwin.common_*` — all machines
 - `darwin.client_*` — work machines only
 - `darwin.personal_*` — personal machines only
 
-### Encryption
-
-Sensitive files use age encryption. The identity key lives outside chezmoi at `~/.config/age/key-{machine_type}.txt`.
-
-### Shell Configuration
-
-ZSH config is modular: `dot_zshrc` loads Sheldon (plugin manager with deferred loading via `zsh-defer`), which sources `dot_zsh.d/*.zsh` modules. Plugin definitions live in `private_dot_config/sheldon/plugins.toml`. Mise tasks are file-based scripts in `private_dot_config/mise/tasks/` deployed by chezmoi.
-
-### Project Picker
-
-```bash
-pj                        # fzf-based project picker
-```
-
-- Discovers git repos under `~/Projects` and `~/git`
-- Sorted by zoxide frecency
-- Shows branch, dirty status, relative time
-
-### Run Scripts
-
-Seven lifecycle scripts execute during `chezmoi apply` in order: Homebrew bootstrap → package install → cleanup → permission verification. All are templated (`.tmpl`) and OS-conditional.
-
-## Troubleshooting
-
-### Prompt looks broken after tool upgrades
-
-The ZSH prompt uses `_evalcache` to cache the `oh-my-posh init` output for fast startup. If oh-my-posh is upgraded (e.g. via `brew upgrade` or `topgrade`), the cached init script can become stale and produce a garbled prompt.
-
-**Automatic fix:** `dot_zsh.d/prompt.zsh` includes an mtime check that invalidates the cache when the binary is newer. If this still fails, manually clear the cache:
-
-```bash
-rm -rf ~/.zsh-evalcache
-```
-
-Then open a new shell. The same issue can occur for any other tool using `_evalcache`.
-
-### Prompt not updating after theme config changes
-
-Oh-my-posh (v29+) bakes the theme config into a cached init script at `~/.cache/oh-my-posh/`. The evalcache then caches *that* init script. When you change the theme JSON (`oh-my-posh.omp.json`), **both caches** must be cleared:
-
-```bash
-rm -rf ~/.zsh-evalcache ~/.cache/oh-my-posh
-```
-
-Then open a new shell. Simply running `chezmoi apply` and `exec zsh` is not enough — the stale caches will keep serving the old config.
+The Brewfile, git config, and run scripts conditionally include content based on `.machine_type`.
 
 ## Key Conventions
 
-- **autoCommit is on** — chezmoi auto-commits source changes on `chezmoi edit`/`chezmoi add`, but does NOT auto-push
-- **`edit.apply: false`** — editing source files does not auto-apply; you must run `chezmoi apply` manually
-- **Gitleaks allowlist** — `.gitleaks.toml` allowlists chezmoi template expressions (`{{rbw.*}}`, `{{chezmoi.*}}`); update it if adding new secret template patterns
+- **autoCommit is on** — chezmoi auto-commits on `chezmoi edit`/`chezmoi add`, does NOT auto-push
+- **`edit.apply: false`** — editing source does not auto-apply; run `chezmoi apply` manually
+- **Gitleaks allowlist** — `.gitleaks.toml` allowlists template expressions (`{{rbw.*}}`, `{{chezmoi.*}}`); update when adding new secret patterns
 - **Permission verification** — `run_after_10-verify-permissions.sh.tmpl` enforces 600/700 on sensitive files after every apply
