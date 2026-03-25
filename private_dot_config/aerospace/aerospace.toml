@@ -39,8 +39,8 @@ after-startup-command = ['''exec-and-forget bash -c '
 # Start AeroSpace at login
 start-at-login = true
 
-# Keep workspace 0 always available
-persistent-workspaces = ["0"]
+# Keep workspace 0 always available; 7 is the small external monitor workspace
+persistent-workspaces = ["0", "7"]
 
 # Normalizations keep the tree sane — Cosmic also uses a tree-based tiling model
 enable-normalization-flatten-containers = true
@@ -58,6 +58,10 @@ exec-on-workspace-change = [
   '-c',
   'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE',
 ]
+
+# Pin workspace 7 to external monitor
+[workspace-to-monitor-force-assignment]
+7 = 'Wokyis'
 
 [key-mapping]
 preset = 'qwerty'
@@ -97,6 +101,7 @@ ctrl-3 = 'workspace 3'       # Web
 ctrl-4 = 'workspace 4'       # Mail
 ctrl-5 = 'workspace 5'       # Social
 ctrl-6 = 'workspace 6'       # Free
+ctrl-7 = 'workspace 7'       # External monitor
 
 # Ctrl + 9 → Last used workspace (back-and-forth)
 ctrl-9 = 'workspace-back-and-forth'
@@ -126,6 +131,7 @@ ctrl-shift-3 = 'move-node-to-workspace 3 --focus-follows-window'
 ctrl-shift-4 = 'move-node-to-workspace 4 --focus-follows-window'
 ctrl-shift-5 = 'move-node-to-workspace 5 --focus-follows-window'
 ctrl-shift-6 = 'move-node-to-workspace 6 --focus-follows-window'
+ctrl-shift-7 = 'move-node-to-workspace 7 --focus-follows-window'
 
 # ── Manage Windows ────────────────────────────────────────────────────────────
 
