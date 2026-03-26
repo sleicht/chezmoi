@@ -1,31 +1,8 @@
-# Managed by chezmoi - do not edit directly
+# Managed by chezmoi - edit with: chezmoi edit ~/.gitconfig_local
 # Machine type: {{ .machine_type }}
+# To apply changes: chezmoi apply
 # Generated: {{ now | date "2006-01-02" }}
-
-[user]
-  name = {{ (rbw "git-config" "--folder" "dotfiles/shared").data.username }} # gitleaks:allow
-{{- if eq .machine_type "client" }}
-  email = {{ (rbwFields "git-config" "--folder" "dotfiles/shared").client_email.value }} # gitleaks:allow
-{{- else }}
-  email = {{ (rbwFields "git-config" "--folder" "dotfiles/shared").work_email.value }} # gitleaks:allow
-{{- end }}
 
 {{- if eq .machine_type "client" }}
 {{ (rbw "git-config-includes" "--folder" "dotfiles/client").notes }}
-{{- end }}
-
-{{- if eq .machine_type "personal" }}
-[gitbutler]
-  gitbutlerCommitter = 0
-  aiAnthropicKeyOption = bringYourOwn
-  aiAnthropicModelName = claude-3-7-sonnet-20250219
-  aiModelProvider = ollama
-  aiOllamaEndpoint = http://127.0.0.1:11434
-  aiOllamaModelName = llama3.2:3b
-{{- else if eq .machine_type "client" }}
-[gitbutler]
-  aiOpenAIKeyOption = bringYourOwn
-  aiModelProvider = ollama
-  aiOllamaEndpoint = http://127.0.0.1:11435
-  aiOllamaModelName = claude-sonnet-4-5@20250929
 {{- end }}

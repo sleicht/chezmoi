@@ -1,5 +1,15 @@
 # Managed by chezmoi - edit with: chezmoi edit ~/.gitconfig
+# Machine type: {{ .machine_type }}
 # To apply changes: chezmoi apply
+# Generated: {{ now | date "2006-01-02" }}
+
+[user]
+  name = {{ (rbw "git-config" "--folder" "dotfiles/shared").data.username }} # gitleaks:allow
+{{- if eq .machine_type "client" }}
+  email = {{ (rbwFields "git-config" "--folder" "dotfiles/shared").client_email.value }} # gitleaks:allow
+{{- else }}
+  email = {{ (rbwFields "git-config" "--folder" "dotfiles/shared").work_email.value }} # gitleaks:allow
+{{- end }}
 
 [alias]
   ; better branch, with number commits ahead and behind upstream, ordered by most recent commit
@@ -120,7 +130,6 @@
   safecrlf = warn
 
 [color]
-
   # Use colors in Git commands that are capable of colored output when
   # outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
   ui = auto
@@ -207,18 +216,37 @@
 [init]
   defaultBranch = main
 
-# Allow local customizations in the .gitconfig_local file
-[include]
-  path = ~/.gitconfig_local
 [filter "lfs"]
   clean = git-lfs clean -- %f
   smudge = git-lfs smudge -- %f
   process = git-lfs filter-process
   required = true
+
 [credential]
   helper = /usr/local/share/gcm-core/git-credential-manager
+
 [phantom]
-	editor = idea
-	ai = claude --ide
-	worktreesDirectory = ../
-    directoryNameSeparator = _
+  editor = idea
+  ai = claude --ide
+  worktreesDirectory = ../
+  directoryNameSeparator = _
+
+{{- if eq .machine_type "personal" }}
+[gitbutler]
+  gitbutlerCommitter = 0
+  aiAnthropicKeyOption = bringYourOwn
+  aiAnthropicModelName = claude-3-7-sonnet-20250219
+  aiModelProvider = ollama
+  aiOllamaEndpoint = http://127.0.0.1:11434
+  aiOllamaModelName = llama3.2:3b
+{{- else if eq .machine_type "client" }}
+[gitbutler]
+  aiOpenAIKeyOption = bringYourOwn
+  aiModelProvider = ollama
+  aiOllamaEndpoint = http://127.0.0.1:11435
+  aiOllamaModelName = claude-sonnet-4-5@20250929
+{{- end }}
+
+# Allow local customizations in the .gitconfig_local file
+[include]
+  path = ~/.gitconfig_local
