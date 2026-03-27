@@ -211,24 +211,33 @@
       "Bash([ -f .gitlab\/merge_request_templates\/Feature_to_Develop.md ])",
 {{- end }}
       "Bash(awk:*)",
+      "Bash(but commit:*)",
+      "Bash(but pull:*)",
+      "Bash(but stage:*)",
+      "Bash(but status:*)",
       "Bash(cat:*)",
       "Bash(date:*)",
       "Bash(echo:*)",
+      "Bash(fd:*)",
       "Bash(find:*)",
+      "Bash(gh api:*)",
       "Bash(git add:*)",
       "Bash(git branch:*)",
       "Bash(git commit:*)",
       "Bash(git diff:*)",
       "Bash(git fetch:*)",
       "Bash(git log:*)",
+      "Bash(git rev-parse:*)",
       "Bash(git show:*)",
       "Bash(git status:*)",
       "Bash(git tag:*)",
       "Bash(grep:*)",
       "Bash(head:*)",
+      "Bash(jira issue:*)",
       "Bash(just compile:*)",
       "Bash(just generate-openapi-spec:*)",
       "Bash(just it-local:*)",
+      "Bash(just package:*)",
       "Bash(just recompile:*)",
       "Bash(just run:*)",
       "Bash(just test:*)",
@@ -244,10 +253,16 @@
       "Bash(tr:*)",
       "Bash(wc:*)",
       "mcp__ide__getDiagnostics",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:api.sdkman.io)",
+      "WebFetch(domain:app.gitbutler.com)",
       "WebFetch(domain:errorprone.info)",
       "WebFetch(domain:github.com)",
+      "WebFetch(domain:gitlab.sanet17.ch)",
+      "WebFetch(domain:issue.sanitas.com)",
       "WebFetch(domain:openapiprocessor.io)",
-      "WebSearch"
+      "WebSearch",
+      "mcp__ide__getDiagnostics"
     ],
     "defaultMode" : "plan",
     "deny" : [
@@ -329,6 +344,15 @@
       "Bash(rm -rf \/var\/:*)",
       "Bash(rm -rf \/opt\/:*)"
     ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "permissions": {
+      "additionalWritePaths": [
+        "/tmp/com_gitbutler_app_si.sock"
+      ]
+    }
   },
   "statusLine" : {
 {{- if eq .machine_type "personal" }}
