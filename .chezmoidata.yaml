@@ -271,6 +271,7 @@ packages:
       - "bats-core"
       - "exercism"
       - "firebase-cli"
+      - "flyctl"
       - "hledger"
       - "jetbrains/junie/junie"
       - "neurosnap/tap/zmx"
