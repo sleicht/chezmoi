@@ -5,10 +5,10 @@
 # Does NOT track mise (directory-dependent, not cached).
 # Does NOT track intelli-shell (not available on this system).
 
-{{- if eq .chezmoi.os "darwin" }}
 # oh-my-posh: {{ output "oh-my-posh" "--version" | trim | sha256sum }}
 # zoxide: {{ output "zoxide" "--version" | trim | sha256sum }}
 # atuin: {{ output "atuin" "--version" | trim | sha256sum }}
+{{- if eq .chezmoi.os "darwin" }}
 # carapace: {{ output "carapace" "--version" | trim | sha256sum }}
 {{- end }}
 
