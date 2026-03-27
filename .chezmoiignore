@@ -286,3 +286,4 @@ zgenom/**
 *~
 .DS_Store
 firebase-debug.log
+.omc
