@@ -93,18 +93,6 @@ ctrl-shift-down  = 'workspace next'
 ctrl-shift-left  = 'workspace prev'
 ctrl-shift-right = 'workspace next'
 
-# Ctrl + 0-6 → Switch to workspace
-ctrl-0 = 'workspace 0'       # File managers
-ctrl-1 = 'workspace 1'       # Terminal
-ctrl-2 = 'workspace 2'       # IDE
-ctrl-3 = 'workspace 3'       # Web
-ctrl-4 = 'workspace 4'       # Mail
-ctrl-5 = 'workspace 5'       # Social
-ctrl-6 = 'workspace 6'       # Free
-ctrl-7 = 'workspace 7'       # External monitor
-
-# Ctrl + 9 → Last used workspace (back-and-forth)
-ctrl-9 = 'workspace-back-and-forth'
 
 # ── Move Windows ──────────────────────────────────────────────────────────────
 
@@ -256,6 +244,10 @@ run = 'move-node-to-workspace 1' # Terminal
 
 [[on-window-detected]]
 if.app-id = 'com.gitbutler.app'
+run = 'move-node-to-workspace 1' # Terminal
+
+[[on-window-detected]]
+if.app-id = 'com.cmuxterm.app'
 run = 'move-node-to-workspace 1' # Terminal
 
 [[on-window-detected]]

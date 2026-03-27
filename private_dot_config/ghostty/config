@@ -1,12 +1,12 @@
 cursor-invert-fg-bg = true
 cursor-style = block
 cursor-style-blink = false
-font-family = JetBrainsMono Nerd Font
+font-family = FiraCode Nerd Font Mono
 font-family-bold = Bold
-font-family-italic = Medium Italic
+font-family-italic = Retina Italic
 font-family-bold-italic = Bold Italic
 font-size = 12
-font-style = Medium
+font-style = Retina
 font-feature = +liga
 keybind = global:ctrl+grave_accent=toggle_quick_terminal
 keybind = cmd+w=unbind

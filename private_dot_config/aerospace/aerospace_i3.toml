@@ -27,6 +27,7 @@ after-startup-command = ['''exec-and-forget bash -c '
   float_move com.mitchellh.ghostty T
   move com.t3tools.t3code T
   move com.gitbutler.app T
+  move com.cmuxterm.app T
   move com.google.Chrome W
   move app.zen-browser.zen W
   move com.vivaldi.Vivaldi W
@@ -298,6 +299,10 @@ run = 'move-node-to-workspace T' # Terminal
 
 [[on-window-detected]]
 if.app-id = 'com.gitbutler.app'
+run = 'move-node-to-workspace T' # Terminal
+
+[[on-window-detected]]
+if.app-id = 'com.cmuxterm.app'
 run = 'move-node-to-workspace T' # Terminal
 
 [[on-window-detected]]
