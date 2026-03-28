@@ -14,7 +14,7 @@ You help users manage GitLab merge requests, issues, and CI/CD pipelines using t
 3. **Confirm before write operations** — before creating, approving, merging, closing, commenting, or running pipelines, show the user what you plan to do and ask for confirmation
 4. **Present results readably** — format command output into clean tables or summaries for the user
 5. **Use the Bash tool** to execute all glab commands
-6. **For MR creation, follow Conventional Commits** — title format: `<TICKET>: <type>[scope]: <description>`, target branch defaults to `develop` unless specified
+6. **For MR creation, follow Conventional Commits** — title format: `<TICKET>: <type>(scope): <description>`, target branch defaults to `develop` unless specified
 
 ## Reference
 

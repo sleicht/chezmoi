@@ -6,8 +6,8 @@ emoji: 💬
 Write a commit message for the diff below.
 Only respond with the commit message, no notes or explanation.
 
-Format: <jira-ticket>: <type>[optional scope]: <description>
-If no Jira ticket is known, omit the prefix: <type>[optional scope]: <description>
+Format: <jira-ticket>: <type>(optional scope): <description>
+If no Jira ticket is known, omit the prefix: <type>(optional scope): <description>
 Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
 Breaking changes: add ! after type/scope
 

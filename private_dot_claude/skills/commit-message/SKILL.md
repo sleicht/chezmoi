@@ -9,7 +9,7 @@ You help users craft commit messages following Conventional Commits with a Jira 
 
 ## Key Rules
 
-1. **Format**: `<jira-ticket>: <type>[optional scope]: <description>`
+1. **Format**: `<jira-ticket>: <type>(optional scope): <description>`
 2. **Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
 3. **Imperative mood** in description — "add" not "added", no capitalised first letter, no trailing period
 4. **Focus on WHY, not WHAT** — the diff shows the what; the message explains business value and intent

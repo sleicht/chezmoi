@@ -170,7 +170,7 @@
   - Verification: Enabled (verifies before merge)
 
 **Conventional Commits:**
-- Format: `<jira-ticket>: <type>[scope]: <description>`
+- Format: `<jira-ticket>: <type>(scope): <description>`
 - Enforced by: `mise run git:commit` task
 - AI generation: Falls back to interactive `fzf` if claude unavailable
 - Jira ticket inference: Extracted from branch name when possible

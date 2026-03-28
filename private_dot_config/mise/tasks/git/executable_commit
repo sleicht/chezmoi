@@ -30,9 +30,9 @@ if [[ "$MODE" == "ai" ]]; then
   # AI-assisted: generate message from staged diff
   DIFF=$(git diff --cached)
   if [[ -n "$TICKET" ]]; then
-    AI_FORMAT="${TICKET}: <type>[optional scope]: <description>"
+    AI_FORMAT="${TICKET}: <type>(optional scope): <description>"
   else
-    AI_FORMAT="<type>[optional scope]: <description>"
+    AI_FORMAT="<type>(optional scope): <description>"
   fi
   COMMIT_MSG=$(echo "$DIFF" | claude --print --model haiku -p \
     "Generate a single-line conventional commit message for this diff.

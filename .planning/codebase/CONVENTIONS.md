@@ -168,7 +168,7 @@ Comments in shell functions use descriptive style:
 
 **Format:** Jira ticket prefix + Conventional Commits
 
-- Pattern: `<JIRA-TICKET>: <type>[scope]: <description>`
+- Pattern: `<JIRA-TICKET>: <type>(scope): <description>`
 - Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `perf`, `test`
 - Rules:
   - Imperative present tense: "add" not "added"
