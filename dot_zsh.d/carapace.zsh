@@ -3,7 +3,7 @@
 
 # === multi-shell multi-command argument complete ===
 if (( $+commands[carapace] )); then
-  export CARAPACE_BRIDGES='bat,zsh,fish,bash,inshellisense,tofu' # optional
+  export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
   zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
   # shellcheck disable=SC1090
   _evalcache carapace _carapace
