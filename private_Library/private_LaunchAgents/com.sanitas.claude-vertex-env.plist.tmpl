@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.sanitas.claude-vertex-env</string>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/bin/sh</string>
+		<string>-c</string>
+		<string>launchctl setenv CLAUDE_CODE_USE_VERTEX 1 &amp;&amp; launchctl setenv CLOUD_ML_REGION {{ (rbwFields "claude-vertex-config" "--folder" "dotfiles/client").region.value }} &amp;&amp; launchctl setenv ANTHROPIC_VERTEX_PROJECT_ID {{ (rbwFields "claude-vertex-config" "--folder" "dotfiles/client").project_id.value }}</string>
+	</array>
+</dict>
+</plist>
