@@ -118,6 +118,7 @@ run_once_before_macos-defaults.sh
 {{- end }}
 {{- if ne .machine_type "client" }}
 .ssh/config_client
+Library/LaunchAgents/com.client.claude-vertex-env.plist
 {{- end }}
 {{- if ne .machine_type "server" }}
 .ssh/config_server
