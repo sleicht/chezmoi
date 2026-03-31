@@ -17,6 +17,7 @@
     "skill-creator@claude-plugins-official" : true,
     "superpowers@claude-plugins-official" : true,
     "typescript-lsp@claude-plugins-official" : true,
+    "worktrunk@worktrunk": true,
 {{- if eq .machine_type "client" }}
 {{- range splitList "\n" (rbw "claude-client-config" "--folder" "dotfiles/client").notes }}
 {{- if ne . "" }}
@@ -58,7 +59,7 @@
     },
     "visual-explainer-marketplace" : {
       "source" : {
-        "repo" : "nicobailon\/visual-explainer",
+        "repo": "nicobailon/visual-explainer",
         "source" : "github"
       }
     }
@@ -70,6 +71,12 @@
       }
     }
 {{- end }}
+    ,"worktrunk" : {
+      "source" : {
+        "repo" : "max-sixty/worktrunk",
+        "source" : "github"
+      }
+    }
   },
   "hooks" : {
     "Notification" : [
@@ -217,7 +224,7 @@
     "allow" : [
       "Bash([ -f .commit-message.txt ])",
 {{- if eq .machine_type "client" }}
-      "Bash([ -f .gitlab\/merge_request_templates\/Feature_to_Develop.md ])",
+      "Bash([ -f .gitlab/merge_request_templates/Feature_to_Develop.md ])",
 {{- end }}
       "Bash(awk:*)",
       "Bash(but commit:*)",
@@ -370,7 +377,7 @@
 {{- if eq .machine_type "personal" }}
     "command" : "node ~/.claude/hud/omc-hud.mjs",
 {{- else }}
-    "command" : "bash ~\/.claude\/statusline-command.sh",
+    "command": "bash ~/.claude/statusline-command.sh",
 {{- end }}
     "type" : "command"
   }
