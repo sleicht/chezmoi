@@ -369,7 +369,8 @@
     "enabled" : true,
     "permissions" : {
       "additionalWritePaths" : [
-        "/tmp/com_gitbutler_app_si.sock"
+        "/tmp/com_gitbutler_app_si.sock",
+        "{{ .chezmoi.homeDir }}/.gnupg"
       ]
     }
   },
