@@ -31,18 +31,16 @@ fi
 {{- end }}
 
 # === Plugin management (sheldon) ===
-() {
-  local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/sheldon"
-  local cache_file="$cache_dir/source.zsh"
-  local lock_file="${XDG_DATA_HOME:-$HOME/.local/share}/sheldon/plugins.lock"
+_sheldon_cache="${XDG_CACHE_HOME:-$HOME/.cache}/sheldon/source.zsh"
+_sheldon_lock="${XDG_DATA_HOME:-$HOME/.local/share}/sheldon/plugins.lock"
 
-  if [[ ! -f "$cache_file" || "$lock_file" -nt "$cache_file" ]]; then
-    mkdir -p "$cache_dir"
-    sheldon source > "$cache_file"
-  fi
+if [[ ! -f "$_sheldon_cache" || "$_sheldon_lock" -nt "$_sheldon_cache" ]]; then
+  mkdir -p "${_sheldon_cache:h}"
+  sheldon source > "$_sheldon_cache"
+fi
 
-  source "$cache_file"
-}
+source "$_sheldon_cache"
+unset _sheldon_cache _sheldon_lock
 
 # === Startup monitoring ===
 if [[ -n "$ZSHRC_START_TIME" ]]; then

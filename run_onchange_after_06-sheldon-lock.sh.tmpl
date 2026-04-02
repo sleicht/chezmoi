@@ -1,0 +1,15 @@
+#!/bin/bash
+# Regenerates sheldon lock and cache when plugin config changes.
+# plugins.toml: {{ include "private_dot_config/sheldon/plugins.toml.tmpl" | sha256sum }}
+
+set -eufo pipefail
+
+if ! command -v sheldon > /dev/null; then
+  echo "WARNING: sheldon not found, skipping lock regeneration"
+  exit 0
+fi
+
+echo "==> Sheldon plugins changed, regenerating lock file..."
+sheldon lock
+rm -f "${XDG_CACHE_HOME:-$HOME/.cache}/sheldon/source.zsh"
+echo "==> Sheldon cache cleared. Next shell startup will regenerate."
