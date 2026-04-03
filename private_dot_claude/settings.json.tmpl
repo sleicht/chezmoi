@@ -28,6 +28,7 @@
 {{- else if eq .machine_type "personal" }}
     "ast-grep@ast-grep-marketplace" : true,
     "brave-search-skills@brave-search" : true,
+    "codex@openai-codex": true,
     "context7@claude-plugins-official" : true,
     "firebase@claude-plugins-official" : true,
     "gitlab@claude-plugins-official" : true,
@@ -68,6 +69,12 @@
       "source" : {
         "source" : "git",
         "url" : "https://github.com/Yeachan-Heo/oh-my-claudecode.git"
+      }
+    },
+    "openai-codex": {
+      "source": {
+        "repo": "openai/codex-plugin-cc",
+        "source": "github"
       }
     }
 {{- end }}
