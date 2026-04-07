@@ -12,7 +12,9 @@
   },
   "onboardingComplete": true,
   "telemetry": {
-    "appDistinctId": "user_36612",
-    "migratedFromLegacy": true
+    "appDistinctId": "019d3eea-aef8-7192-b99c-4a13a84c7c7b",
+    "migratedFromLegacy": true,
+    "appErrorReportingEnabled": false,
+    "appMetricsEnabled": false
   }
 }
