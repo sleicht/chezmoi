@@ -28,6 +28,15 @@ apply = ["defer"]
 github = "junegunn/fzf-git.sh"
 apply = ["defer"]
 
+[plugins.forgit]
+{{- if eq .chezmoi.os "darwin" }}
+local = "/opt/homebrew/share/forgit"
+{{- else }}
+local = "/home/linuxbrew/.linuxbrew/share/forgit"
+{{- end }}
+use = ["forgit.plugin.zsh"]
+apply = ["defer"]
+
 [plugins.zsh-syntax-highlighting]
 github = "zsh-users/zsh-syntax-highlighting"
 apply = ["defer"]

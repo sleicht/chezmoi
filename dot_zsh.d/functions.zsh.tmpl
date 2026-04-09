@@ -245,6 +245,76 @@ function br {
     fi
 }
 
+#
+# Jira helper functions
+# (sorted alphabetically by function name)
+#
+
+# Output the Jira issue key from the current branch name (e.g. TE-0000).
+# In a GitButler repo the git branch is always `gitbutler/workspace`, so we
+# instead read the applied virtual branch names from `but branch list`.
+# If multiple Jira-keyed branches are applied, fzf is used to pick one.
+# Requires gnu-grep: brew install grep
+function jb() {
+  if but status &>/dev/null 2>&1; then
+    # Collect all applied branch names that contain a Jira issue key.
+    local branches
+    branches=$(
+      but branch list --local --no-ahead --no-check --empty \
+        | ggrep '^active' \
+        | awk '{gsub(/^\*/, "", $2); print $2}' \
+        | ggrep -P '\w+-\d+'
+    )
+    if [[ -z "$branches" ]]; then
+      echo "jb: no active branch with a Jira issue key found" >&2
+      return 1
+    fi
+    local chosen
+    if [[ $(echo "$branches" | wc -l) -eq 1 ]]; then
+      chosen="$branches"
+    else
+      chosen=$(echo "$branches" | fzf --height=10 --prompt="Jira branch> ")
+      [[ -z "$chosen" ]] && return 1
+    fi
+    echo "$chosen" | ggrep -oP '\w+-\d+'
+  else
+    git branch --show-current | ggrep -oP '\w+-\d+'
+  fi
+}
+
+# Commit all changes with a Jira-prefixed message: jcam "my message"
+# Uses `but commit` when the repo is managed by GitButler, falls back to `git commit --all`.
+function jcam() {
+  local msg="$(jb): $*"
+  if but status &>/dev/null 2>&1; then
+    but commit -m "$msg"
+  else
+    git commit --all --message "$msg"
+  fi
+}
+
+# Checkout (or create) a branch named after a Jira issue and its summary.
+# Usage: jcb <ISSUE> [branch_type]
+# Example: jcb TE-1234 feature
+# Requires: jira-cli, jq
+# Uses `but branch new` when the repo is managed by GitButler, falls back to forgit::checkout::branch.
+function jcb() {
+  local issue=$1
+  local branch_type=${2:-feature}
+  if [[ -z "$issue" ]]; then
+    echo "usage: jcb jira_issue [branch_type]" >&2
+    return 1
+  fi
+  local summary
+  summary=$(jira issue view "$issue" --raw | jq -r '.fields.summary | ascii_downcase | gsub("[^a-z0-9 ]"; "") | gsub(" +"; "-")')
+  local branch_name="$branch_type/$issue-$summary"
+  if but status &>/dev/null 2>&1; then
+    but branch new "$branch_name"
+  else
+    forgit::checkout::branch "$branch_name"
+  fi
+}
+
 load_gitlab_projects () {
   SEARCH=$1
   glab api graphql --hostname gitlab.sanet17.ch -f query="{ projects(first: 100, search: \"$SEARCH\") { nodes { id sshUrlToRepo fullPath }}}"
