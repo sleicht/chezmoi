@@ -18,7 +18,7 @@ if (( $+commands[oh-my-posh] )); then
   if [[ -f "$_omp_cache" && "$(command -v oh-my-posh)" -nt "$_omp_cache" ]]; then
     rm -f "$_omp_cache"
   fi
-  _evalcache oh-my-posh init zsh --config ~/.config/oh-my-posh.omp.json
+  _evalcache oh-my-posh init zsh --config ~/.config/oh-my-posh.omp.yaml
 fi
 
 # Key binding load order (later wins):
