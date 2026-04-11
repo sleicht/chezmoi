@@ -1,8 +1,9 @@
 {
   "alwaysThinkingEnabled" : true,
+  "effortLevel" : "medium",
   "enableAllProjectMcpServers" : false,
   "enabledPlugins" : {
-    "code-review@claude-plugins-official": true,
+    "code-review@claude-plugins-official" : true,
     "claude-code-setup@claude-plugins-official" : true,
     "code-simplifier@claude-plugins-official" : true,
     "explanatory-output-style@claude-plugins-official" : true,
@@ -17,7 +18,7 @@
     "skill-creator@claude-plugins-official" : true,
     "superpowers@claude-plugins-official" : true,
     "typescript-lsp@claude-plugins-official" : true,
-    "worktrunk@worktrunk": true,
+    "worktrunk@worktrunk" : true,
 {{- if eq .machine_type "client" }}
 {{- range splitList "\n" (rbw "claude-client-config" "--folder" "dotfiles/client").notes }}
 {{- if ne . "" }}
@@ -28,7 +29,7 @@
 {{- else if eq .machine_type "personal" }}
     "ast-grep@ast-grep-marketplace" : true,
     "brave-search-skills@brave-search" : true,
-    "codex@openai-codex": true,
+    "codex@openai-codex" : true,
     "context7@claude-plugins-official" : true,
     "firebase@claude-plugins-official" : true,
     "gitlab@claude-plugins-official" : true,
@@ -71,10 +72,10 @@
         "url" : "https://github.com/Yeachan-Heo/oh-my-claudecode.git"
       }
     },
-    "openai-codex": {
-      "source": {
-        "repo": "openai/codex-plugin-cc",
-        "source": "github"
+    "openai-codex" : {
+      "source" : {
+        "repo" : "openai/codex-plugin-cc",
+        "source" : "github"
       }
     }
 {{- end }}
@@ -225,6 +226,8 @@
   "includeCoAuthoredBy" : false,
 {{- if eq .machine_type "client" }}
   "model" : "claude-opus-4-6",
+{{- else }}
+  "model" : "opusplan",
 {{- end }}
   "outputStyle" : "Learning",
   "permissions" : {
@@ -385,7 +388,7 @@
 {{- if eq .machine_type "personal" }}
     "command" : "node ~/.claude/hud/omc-hud.mjs",
 {{- else }}
-    "command": "bash ~/.claude/statusline-command.sh",
+    "command" : "bash ~/.claude/statusline-command.sh",
 {{- end }}
     "type" : "command"
   }
