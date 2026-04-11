@@ -4,8 +4,7 @@ console_title_template: '{{ .Folder }}'
 final_space: true
 version: 4
 transient_prompt:
-  background: transparent
-  foreground: lightGreen
+  foreground: '#62ED8B'
   newline: true
   template: '{{ with .Segments.git }}{{ .UpstreamIcon }}{{ abbrevboth 12 22 .HEAD }}{{ if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }}{{ end }} ❯ '
 blocks:
@@ -19,26 +18,20 @@ blocks:
         options:
           fetch_status: true
           fetch_upstream_icon: true
-      - background: '#546E7A'
-        foreground: '#26C6DA'
-        leading_diamond: 
+      - foreground: '#E36464'
         style: plain
-        template: ' {{ .Icon }} '
+        template: ' {{ .Icon }} '
         type: os
-      - background: '#6272a4'
-        foreground: '#f8f8f2'
-        style: diamond
+      - foreground: '#D4AAFC'
+        style: plain
         template: ' {{ .Shell }} '
         type: session
       - template: '  '
-        foreground: '#26C6DA'
-        background: '#546E7A'
+        foreground: '#E36464'
         type: root
         style: plain
-      - background: '#bd93f9'
-        foreground: '#f8f8f2'
-        powerline_symbol: 
-        style: powerline
+      - foreground: '#56B6C2'
+        style: plain
         template: ' {{ .Path }} '
         type: path
         options:
@@ -47,79 +40,59 @@ blocks:
           max_width: 30
       - template: '  {{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{
       .Full }} '
-        foreground: '#f8f8f2'
-        powerline_symbol: 
-        background: '#8be9fd'
+        foreground: '#62ED8B'
         type: node
-        style: powerline
+        style: plain
         options:
           fetch_version: true
-      - background: '#4063D8'
-        foreground: '#ffffff'
-        powerline_symbol: 
-        style: powerline
+      - foreground: '#E36464'
+        style: plain
         template: '  {{ .Full }}'
         type: java
-      - background: '#906cff'
-        foreground: '#ffffff'
-        powerline_symbol: 
-        style: powerline
+      - foreground: '#D4AAFC'
+        style: plain
         template: ' <b>K</b> {{ .Full }} '
         type: kotlin
-      - background: '#FFDE57'
-        foreground: '#111111'
-        powerline_symbol: 
-        style: powerline
+      - foreground: '#DDB15F'
+        style: plain
         template: ' {{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}  '
         type: python
         options:
           display_mode: files
           fetch_virtual_env: false
-      - background: '#AE1401'
-        foreground: '#ffffff'
-        powerline_symbol: 
-        style: powerline
+      - foreground: '#E36464'
+        style: plain
         template: ' {{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}  '
         type: ruby
         options:
           display_mode: files
           fetch_version: true
-      - background: '#47888d'
-        foreground: '#ffffff'
-        powerline_symbol: 
-        style: powerline
+      - foreground: '#56B6C2'
+        style: plain
         template: '  {{abbrevboth 10 15 .Project}}{{ if .Region }}@{{ .Region }}{{ end
       }}   '
         type: gcp
         options:
           display_default: false
-      - background: '#ebcc34'
-        foreground: '#000000'
-        powerline_symbol: 
-        style: powerline
+      - foreground: '#D4AAFC'
+        style: plain
         template: '{{ if .Version }} {{ .Version }}{{ end }}'
         type: terraform
-      - background: '#c4a000'
-        foreground: '#000000'
-        powerline_symbol: 
-        style: powerline
+      - foreground: '#DCB977'
+        style: plain
         template: ' {{ .FormattedMs }}  '
         type: executiontime
-      - background: '#ff79c6'
-        foreground: '#f8f8f2'
-        style: diamond
+      - foreground: '#DCB977'
+        style: plain
         template: ' {{ .CurrentDate | date .Format }}  '
-        trailing_diamond: 
         type: time
         options:
           time_format: 15:04
       - template: ' ❯ '
-        foreground: '#d3d7cf'
-        powerline_symbol: 
-        background: transparent
+        foreground: '#DCB977'
         type: status
         style: plain
         foreground_templates:
-          - '{{ if gt .Code 0 }}#cc2222{{ end }}'
+          - '{{ if gt .Code 0 }}#E36464{{ end }}'
         options:
           always_enabled: true
