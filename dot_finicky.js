@@ -91,7 +91,7 @@ export default {
             browser: "Safari"
         },
         {
-            match: (url) => url.host.endsWith("127.0.0.1"),
+            match: (url) => url.host.endsWith("127.0.0.1:9099"),
             browser: "Google Chrome"
         }
     ]
