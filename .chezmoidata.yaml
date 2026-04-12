@@ -141,6 +141,7 @@ packages:
       - "screen"
       - "sheldon"
       - "shellcheck"
+      - "shfmt"
       - "sql-language-server"
       - "ssh-copy-id"
       - "television"
@@ -164,8 +165,10 @@ packages:
 
     # macOS-only formulae
     darwin_only_brews:
+      - "apfel"
       - "mackup"
       - "mas"
+      - "mole"
       - "sketchybar"
       - "yabai"
 
@@ -181,10 +184,12 @@ packages:
       - "deepl"
       - "finicky"
       - "fman"
+      - "bitwarden"
       - "gcloud-cli"
       - "ghostty"
       - "git-credential-manager"
       - "gitbutler"
+      - "homerow"
       - "istat-menus"
       - "jetbrains-toolbox"
       - "jordanbaird-ice"
@@ -200,6 +205,7 @@ packages:
       - "thebrowsercompany-dia"
       - "uhk-agent"
       - "wezterm"
+      - "wooshy"
       - "zen"
 
     # Client-specific brews
@@ -234,7 +240,6 @@ packages:
     client_casks:
       - "apache-directory-studio"
       - "atuin-desktop"
-      - "bitwarden"
       - "bruno"
       - "camunda-modeler"
       - "citrix-workspace"
@@ -243,7 +248,6 @@ packages:
       - "font-zxgamut"
       - "google-chrome@beta"
       - "gpg-suite"
-      - "homerow"
       - "insomnia"
       - "jdk-mission-control"
       - "jprofiler"
@@ -265,7 +269,6 @@ packages:
       - "utm@beta"
       - "visual-studio-code"
       - "voiceink"
-      - "wooshy"
       - "yubico-authenticator"
 
     # Personal-specific brews
