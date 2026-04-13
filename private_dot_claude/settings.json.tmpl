@@ -1,5 +1,6 @@
 {
   "alwaysThinkingEnabled": true,
+  "autoUpdatesChannel": "latest",
   "enableAllProjectMcpServers": false,
   "enabledPlugins": {
     "code-review@claude-plugins-official": true,
@@ -90,7 +91,7 @@
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "type": "command"
           }
         ],
@@ -101,7 +102,7 @@
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "type": "command"
           }
         ],
@@ -112,7 +113,7 @@
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "timeout": 86400,
             "type": "command"
           }
@@ -124,7 +125,7 @@
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "type": "command"
           }
         ],
@@ -133,7 +134,7 @@
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "type": "command"
           }
         ],
@@ -144,7 +145,7 @@
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "type": "command"
           }
         ],
@@ -154,7 +155,7 @@
       ,{
         "hooks": [
           {
-            "command": "node ~/.claude/hooks/gsd-context-monitor.js",
+            "command": "node {{ .chezmoi.homeDir }}/.claude/hooks/gsd-context-monitor.js",
             "type": "command"
           }
         ]
@@ -165,7 +166,7 @@
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "type": "command"
           }
         ],
@@ -176,7 +177,7 @@
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "type": "command"
           }
         ],
@@ -185,7 +186,7 @@
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "type": "command"
           }
         ],
@@ -196,7 +197,7 @@
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "type": "command"
           }
         ],
@@ -207,7 +208,7 @@
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "type": "command"
           }
         ]
@@ -228,7 +229,7 @@
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "type": "command"
           }
         ]
@@ -237,7 +238,7 @@
       ,{
         "hooks": [
           {
-            "command": "node ~/.claude/hooks/gsd-check-update.js",
+            "command": "node {{ .chezmoi.homeDir }}/.claude/hooks/gsd-check-update.js",
             "type": "command"
           }
         ]
@@ -257,7 +258,7 @@
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "type": "command"
           }
         ]
@@ -267,7 +268,7 @@
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "type": "command"
           }
         ]
@@ -277,7 +278,7 @@
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "type": "command"
           }
         ]
@@ -294,24 +295,11 @@
       }
 {{- end }}
     ],
-{{- if eq .machine_type "personal" }}
-    "SubagentStart": [
-      {
-        "hooks": [
-          {
-            "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
-            "type": "command"
-          }
-        ],
-        "matcher": ".*"
-      }
-    ],
-{{- end }}
     "SubagentStop": [
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "type": "command"
           }
         ]
@@ -345,7 +333,7 @@
       {
         "hooks": [
           {
-            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "command": "python3 {{ .chezmoi.homeDir }}/.claude/hooks/claude-island-state.py",
             "type": "command"
           }
         ]
@@ -515,9 +503,9 @@
   },
   "statusLine": {
 {{- if eq .machine_type "personal" }}
-    "command": "node ~/.claude/hud/omc-hud.mjs",
+    "command": "node {{ .chezmoi.homeDir }}/.claude/hud/omc-hud.mjs",
 {{- else }}
-    "command": "bash ~/.claude/statusline-command.sh",
+    "command": "bash {{ .chezmoi.homeDir }}/.claude/statusline-command.sh",
 {{- end }}
     "type": "command"
   }
