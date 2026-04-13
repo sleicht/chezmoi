@@ -171,6 +171,17 @@
           }
         ]
       }
+{{- if eq .machine_type "personal" }}
+      ,{
+        "hooks": [
+          {
+            "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
+            "type": "command"
+          }
+        ],
+        "matcher": ".*"
+      }
+{{- end }}
     ],
     "SessionStart" : [
       {
@@ -189,6 +200,15 @@
             "type" : "command"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
+            "type": "command"
+          }
+        ],
+        "matcher": ".*"
       }
 {{- end }}
     ],
@@ -201,7 +221,31 @@
           }
         ]
       }
+{{- if eq .machine_type "personal" }}
+      ,{
+        "hooks": [
+          {
+            "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
+            "type": "command"
+          }
+        ],
+        "matcher": ".*"
+      }
+{{- end }}
     ],
+{{- if eq .machine_type "personal" }}
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
+            "type": "command"
+          }
+        ],
+        "matcher": ".*"
+      }
+    ],
+{{- end }}
     "SubagentStop" : [
       {
         "hooks" : [
@@ -211,7 +255,31 @@
           }
         ]
       }
+{{- if eq .machine_type "personal" }}
+      ,{
+        "hooks": [
+          {
+            "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
+            "type": "command"
+          }
+        ],
+        "matcher": ".*"
+      }
+{{- end }}
     ],
+{{- if eq .machine_type "personal" }}
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {
+            "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
+            "type": "command"
+          }
+        ],
+        "matcher": ".*"
+      }
+    ],
+{{- end }}
     "UserPromptSubmit" : [
       {
         "hooks" : [
