@@ -1,173 +1,214 @@
 {
-  "alwaysThinkingEnabled" : true,
-  "effortLevel" : "medium",
-  "enableAllProjectMcpServers" : false,
-  "enabledPlugins" : {
-    "code-review@claude-plugins-official" : true,
-    "claude-code-setup@claude-plugins-official" : true,
-    "code-simplifier@claude-plugins-official" : true,
-    "explanatory-output-style@claude-plugins-official" : true,
-    "feature-dev@claude-plugins-official" : true,
-    "frontend-design@claude-plugins-official" : true,
-    "jdtls-lsp@claude-plugins-official" : true,
-    "kotlin-lsp@claude-plugins-official" : true,
-    "learning-output-style@claude-plugins-official" : true,
-    "lua-lsp@claude-plugins-official" : true,
-    "plugin-dev@claude-plugins-official" : true,
-    "pyright-lsp@claude-plugins-official" : true,
-    "skill-creator@claude-plugins-official" : true,
-    "superpowers@claude-plugins-official" : true,
-    "typescript-lsp@claude-plugins-official" : true,
-    "worktrunk@worktrunk" : true,
+  "alwaysThinkingEnabled": true,
+  "enableAllProjectMcpServers": false,
+  "enabledPlugins": {
+    "code-review@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "explanatory-output-style@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "jdtls-lsp@claude-plugins-official": true,
+    "kotlin-lsp@claude-plugins-official": true,
+    "learning-output-style@claude-plugins-official": true,
+    "lua-lsp@claude-plugins-official": true,
+    "plugin-dev@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "worktrunk@worktrunk": true,
 {{- if eq .machine_type "client" }}
 {{- range splitList "\n" (rbw "claude-client-config" "--folder" "dotfiles/client").notes }}
 {{- if ne . "" }}
-    "{{ . }}" : true,
+    "{{ . }}": true,
 {{- end }}
 {{- end }}
-    "visual-explainer@visual-explainer-marketplace" : true
+    "visual-explainer@visual-explainer-marketplace": true
 {{- else if eq .machine_type "personal" }}
-    "ast-grep@ast-grep-marketplace" : true,
-    "brave-search-skills@brave-search" : true,
-    "codex@openai-codex" : true,
-    "context7@claude-plugins-official" : true,
-    "firebase@claude-plugins-official" : true,
-    "gitlab@claude-plugins-official" : true,
-    "stripe@claude-plugins-official" : true,
-    "claude-md-management@claude-plugins-official" : true,
-    "chrome-devtools-mcp@claude-plugins-official" : true,
-    "git-commit-messages@dotfiles-marketplace" : true,
-    "gitlab-merge-requests@dotfiles-marketplace" : true,
-    "glab-cli@dotfiles-marketplace" : true,
-    "jdtls-lombok@dotfiles-marketplace" : true,
-    "oh-my-claudecode@omc" : true
+    "ast-grep@ast-grep-marketplace": true,
+    "brave-search-skills@brave-search": true,
+    "codex@openai-codex": true,
+    "context7@claude-plugins-official": true,
+    "firebase@claude-plugins-official": true,
+    "gitlab@claude-plugins-official": true,
+    "stripe@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "chrome-devtools-mcp@claude-plugins-official": true,
+    "git-commit-messages@dotfiles-marketplace": true,
+    "gitlab-merge-requests@dotfiles-marketplace": true,
+    "glab-cli@dotfiles-marketplace": true,
+    "jdtls-lombok@dotfiles-marketplace": true,
+    "oh-my-claudecode@omc": true
 {{- end }}
   },
-  "env" : {
+  "env": {
 {{- if eq .machine_type "personal" }}
-    "BRAVE_SEARCH_API_KEY" : "{{ (rbwFields "claude-settings" "--folder" "dotfiles/personal").brave_search_api_key.value }}",
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS" : "1"
+    "BRAVE_SEARCH_API_KEY": "{{ (rbwFields "claude-settings" "--folder" "dotfiles/personal").brave_search_api_key.value }}",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
 {{- end }}
   },
-  "extraKnownMarketplaces" : {
+  "extraKnownMarketplaces": {
 {{- if eq .machine_type "client" }}
 {{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
-    "{{ $cc.marketplace_name.value }}" : {
-      "source" : {
-        "ref" : "{{ $cc.marketplace_ref.value }}",
-        "source" : "git",
-        "url" : "{{ $cc.marketplace_url.value }}"
+    "{{ $cc.marketplace_name.value }}": {
+      "source": {
+        "ref": "{{ $cc.marketplace_ref.value }}",
+        "source": "git",
+        "url": "{{ $cc.marketplace_url.value }}"
       }
     },
-    "visual-explainer-marketplace" : {
-      "source" : {
+    "visual-explainer-marketplace": {
+      "source": {
         "repo": "nicobailon/visual-explainer",
-        "source" : "github"
+        "source": "github"
       }
     }
 {{- else if eq .machine_type "personal" }}
-    "omc" : {
-      "source" : {
-        "source" : "git",
-        "url" : "https://github.com/Yeachan-Heo/oh-my-claudecode.git"
+    "omc": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/Yeachan-Heo/oh-my-claudecode.git"
       }
     },
-    "openai-codex" : {
-      "source" : {
-        "repo" : "openai/codex-plugin-cc",
-        "source" : "github"
+    "openai-codex": {
+      "source": {
+        "repo": "openai/codex-plugin-cc",
+        "source": "github"
       }
     }
 {{- end }}
-    ,"worktrunk" : {
-      "source" : {
-        "repo" : "max-sixty/worktrunk",
-        "source" : "github"
+    ,"worktrunk": {
+      "source": {
+        "repo": "max-sixty/worktrunk",
+        "source": "github"
       }
     }
   },
-  "hooks" : {
-    "Notification" : [
+  "hooks": {
+    "Notification": [
       {
-        "hooks" : [
+        "hooks": [
           {
-            "command" : "python3 ~/.claude/hooks/claude-island-state.py",
-            "type" : "command"
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "type": "command"
           }
         ],
-        "matcher" : "*"
+        "matcher": "*"
       }
     ],
-    "PermissionRequest" : [
+    "PermissionDenied": [
       {
-        "hooks" : [
+        "hooks": [
           {
-            "command" : "python3 ~/.claude/hooks/claude-island-state.py",
-            "timeout" : 86400,
-            "type" : "command"
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "type": "command"
           }
         ],
-        "matcher" : "*"
+        "matcher": "*"
       }
     ],
-    "PostToolUse" : [
+    "PermissionRequest": [
       {
-        "hooks" : [
+        "hooks": [
           {
-            "command" : "python3 ~/.claude/hooks/claude-island-state.py",
-            "type" : "command"
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "timeout": 86400,
+            "type": "command"
           }
         ],
-        "matcher" : "*"
+        "matcher": "*"
+      }
+    ],
+    "PostCompact": [
+      {
+        "hooks": [
+          {
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "type": "command"
+          }
+        ],
+        "matcher": "auto"
+      },
+      {
+        "hooks": [
+          {
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "type": "command"
+          }
+        ],
+        "matcher": "manual"
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
       }
 {{- if eq .machine_type "personal" }}
       ,{
-        "hooks" : [
+        "hooks": [
           {
-            "command" : "node \"~/.claude/hooks/gsd-context-monitor.js\"",
-            "type" : "command"
+            "command": "node ~/.claude/hooks/gsd-context-monitor.js",
+            "type": "command"
           }
         ]
       }
 {{- end }}
     ],
-    "PreCompact" : [
+    "PostToolUseFailure": [
       {
-        "hooks" : [
+        "hooks": [
           {
-            "command" : "python3 ~/.claude/hooks/claude-island-state.py",
-            "type" : "command"
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "type": "command"
           }
         ],
-        "matcher" : "auto"
+        "matcher": "*"
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "type": "command"
+          }
+        ],
+        "matcher": "auto"
       },
       {
-        "hooks" : [
+        "hooks": [
           {
-            "command" : "python3 ~/.claude/hooks/claude-island-state.py",
-            "type" : "command"
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "type": "command"
           }
         ],
-        "matcher" : "manual"
+        "matcher": "manual"
       }
     ],
-    "PreToolUse" : [
+    "PreToolUse": [
       {
-        "hooks" : [
+        "hooks": [
           {
-            "command" : "python3 ~/.claude/hooks/claude-island-state.py",
-            "type" : "command"
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "type": "command"
           }
         ],
-        "matcher" : "*"
+        "matcher": "*"
       }
     ],
-    "SessionEnd" : [
+    "SessionEnd": [
       {
-        "hooks" : [
+        "hooks": [
           {
-            "command" : "python3 ~/.claude/hooks/claude-island-state.py",
-            "type" : "command"
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "type": "command"
           }
         ]
       }
@@ -183,21 +224,21 @@
       }
 {{- end }}
     ],
-    "SessionStart" : [
+    "SessionStart": [
       {
-        "hooks" : [
+        "hooks": [
           {
-            "command" : "python3 ~/.claude/hooks/claude-island-state.py",
-            "type" : "command"
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "type": "command"
           }
         ]
       }
 {{- if eq .machine_type "personal" }}
       ,{
-        "hooks" : [
+        "hooks": [
           {
-            "command" : "node \"~/.claude/hooks/gsd-check-update.js\"",
-            "type" : "command"
+            "command": "node ~/.claude/hooks/gsd-check-update.js",
+            "type": "command"
           }
         ]
       },
@@ -212,12 +253,32 @@
       }
 {{- end }}
     ],
-    "Stop" : [
+    "Stop": [
       {
-        "hooks" : [
+        "hooks": [
           {
-            "command" : "python3 ~/.claude/hooks/claude-island-state.py",
-            "type" : "command"
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "type": "command"
           }
         ]
       }
@@ -246,12 +307,12 @@
       }
     ],
 {{- end }}
-    "SubagentStop" : [
+    "SubagentStop": [
       {
-        "hooks" : [
+        "hooks": [
           {
-            "command" : "python3 ~/.claude/hooks/claude-island-state.py",
-            "type" : "command"
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "type": "command"
           }
         ]
       }
@@ -280,26 +341,26 @@
       }
     ],
 {{- end }}
-    "UserPromptSubmit" : [
+    "UserPromptSubmit": [
       {
-        "hooks" : [
+        "hooks": [
           {
-            "command" : "python3 ~/.claude/hooks/claude-island-state.py",
-            "type" : "command"
+            "command": "python3 ~/.claude/hooks/claude-island-state.py",
+            "type": "command"
           }
         ]
       }
     ]
   },
-  "includeCoAuthoredBy" : false,
+  "includeCoAuthoredBy": false,
 {{- if eq .machine_type "client" }}
-  "model" : "claude-opus-4-6",
+  "model": "claude-opus-4-6",
 {{- else }}
-  "model" : "opusplan",
+  "model": "opusplan",
 {{- end }}
-  "outputStyle" : "Learning",
-  "permissions" : {
-    "allow" : [
+  "outputStyle": "Learning",
+  "permissions": {
+    "allow": [
       "Bash([ -f .commit-message.txt ])",
 {{- if eq .machine_type "client" }}
       "Bash([ -f .gitlab/merge_request_templates/Feature_to_Develop.md ])",
@@ -361,8 +422,8 @@
       "WebSearch",
       "mcp__ide__getDiagnostics"
     ],
-    "defaultMode" : "plan",
-    "deny" : [
+    "defaultMode": "plan",
+    "deny": [
       "Bash(rm -rf /:*)",
       "Bash(rm -rf /)",
       "Bash(sudo rm -rf /:*)",
@@ -442,22 +503,22 @@
       "Bash(rm -rf /opt/:*)"
     ]
   },
-  "sandbox" : {
-    "autoAllowBashIfSandboxed" : true,
-    "enabled" : true,
-    "permissions" : {
-      "additionalWritePaths" : [
+  "sandbox": {
+    "autoAllowBashIfSandboxed": true,
+    "enabled": true,
+    "permissions": {
+      "additionalWritePaths": [
         "/tmp/com_gitbutler_app_si.sock",
         "{{ .chezmoi.homeDir }}/.gnupg"
       ]
     }
   },
-  "statusLine" : {
+  "statusLine": {
 {{- if eq .machine_type "personal" }}
-    "command" : "node ~/.claude/hud/omc-hud.mjs",
+    "command": "node ~/.claude/hud/omc-hud.mjs",
 {{- else }}
-    "command" : "bash ~/.claude/statusline-command.sh",
+    "command": "bash ~/.claude/statusline-command.sh",
 {{- end }}
-    "type" : "command"
+    "type": "command"
   }
 }
