@@ -8,7 +8,8 @@
   "featureFlags": {
     "apply3": true,
     "rules": true,
-    "ws3": true
+    "ws3": true,
+    "irc": false
   },
   "onboardingComplete": true,
   "telemetry": {
