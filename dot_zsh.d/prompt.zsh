@@ -13,12 +13,7 @@ fi
 
 # Prompt: must be sync (sets precmd hooks)
 if (( $+commands[oh-my-posh] )); then
-  # Invalidate evalcache when the oh-my-posh binary is upgraded
-  local _omp_cache="$HOME/.zsh-evalcache/oh-my-posh.zsh"
-  if [[ -f "$_omp_cache" && "$(command -v oh-my-posh)" -nt "$_omp_cache" ]]; then
-    rm -f "$_omp_cache"
-  fi
-  _evalcache oh-my-posh init zsh --config ~/.config/oh-my-posh.omp.yaml
+  eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh.omp.yaml)"
 fi
 
 # Key binding load order (later wins):
