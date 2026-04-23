@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Wrapper for Beyond Compare that normalizes exit codes for chezmoi
+# bcomp exit codes: 0=identical, 11=binary same, 12=binary diff, 13=rules diff, etc.
+# chezmoi expects: 0=success (regardless of differences)
+
+bcomp "$@"
+exit_code=$?
+
+# Exit codes 11-14 indicate successful comparison with differences
+# Exit code 0 indicates identical files
+# Anything else is a real error
+if [[ $exit_code -eq 0 || ($exit_code -ge 11 && $exit_code -le 14) ]]; then
+    exit 0
+else
+    exit $exit_code
+fi

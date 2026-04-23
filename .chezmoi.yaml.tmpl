@@ -32,7 +32,7 @@ git:
   autoPush: false
 
 diff:
-  pager: "less"
+  command: "{{ .chezmoi.homeDir }}/.local/bin/chezmoi-bcomp"
 
 {{- if ne $machineType "container" }}
 encryption: "age"
