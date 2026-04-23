@@ -3,8 +3,8 @@
   "autoUpdatesChannel": "latest",
   "enableAllProjectMcpServers": false,
   "enabledPlugins": {
-    "code-review@claude-plugins-official": true,
     "claude-code-setup@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true,
     "explanatory-output-style@claude-plugins-official": true,
     "feature-dev@claude-plugins-official": true,
@@ -86,72 +86,13 @@
     }
   },
   "hooks": {
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "PermissionDenied": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
-            "timeout": 86400,
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "PostCompact": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ],
-        "matcher": "auto"
-      },
-      {
-        "hooks": [
-          {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ],
-        "matcher": "manual"
-      }
-    ],
+    "Notification": [],
+    "PermissionDenied": [],
+    "PermissionRequest": [],
+    "PostCompact": [],
     "PostToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
 {{- if eq .machine_type "personal" }}
-      ,{
+      {
         "hooks": [
           {
             "command": "node ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/gsd-context-monitor.js",
@@ -161,59 +102,11 @@
       }
 {{- end }}
     ],
-    "PostToolUseFailure": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
-    "PreCompact": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ],
-        "matcher": "auto"
-      },
-      {
-        "hooks": [
-          {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ],
-        "matcher": "manual"
-      }
-    ],
-    "PreToolUse": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ],
-        "matcher": "*"
-      }
-    ],
+    "PostToolUseFailure": [],
+    "PreCompact": [],
+    "PreToolUse": [],
     "SessionEnd": [
       {
-        "hooks": [
-          {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ]
-      }
-{{- if eq .machine_type "personal" }}
-      ,{
         "hooks": [
           {
             "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
@@ -222,16 +115,16 @@
         ],
         "matcher": ".*"
       }
-{{- end }}
     ],
     "SessionStart": [
       {
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
+            "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
             "type": "command"
           }
-        ]
+        ],
+        "matcher": ".*"
       }
 {{- if eq .machine_type "personal" }}
       ,{
@@ -241,15 +134,6 @@
             "type": "command"
           }
         ]
-      },
-      {
-        "hooks": [
-          {
-            "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
-            "type": "command"
-          }
-        ],
-        "matcher": ".*"
       }
 {{- end }}
     ],
@@ -257,33 +141,16 @@
       {
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
+            "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
             "type": "command"
           }
-        ]
+        ],
+        "matcher": ".*"
       }
     ],
-    "StopFailure": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ]
-      }
-    ],
+    "StopFailure": [],
     "SubagentStart": [
       {
-        "hooks": [
-          {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ]
-      }
-{{- if eq .machine_type "personal" }}
-      ,{
         "hooks": [
           {
             "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
@@ -292,30 +159,18 @@
         ],
         "matcher": ".*"
       }
-{{- end }}
     ],
     "SubagentStop": [
       {
         "hooks": [
           {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ]
-      }
-{{- if eq .machine_type "personal" }}
-      ,{
-        "hooks": [
-          {
             "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
             "type": "command"
           }
         ],
         "matcher": ".*"
       }
-{{- end }}
     ],
-{{- if eq .machine_type "personal" }}
     "TaskCompleted": [
       {
         "hooks": [
@@ -327,21 +182,11 @@
         "matcher": ".*"
       }
     ],
-{{- end }}
-    "UserPromptSubmit": [
-      {
-        "hooks": [
-          {
-            "command": "python3 ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/claude-island-state.py",
-            "type": "command"
-          }
-        ]
-      }
-    ]
+    "UserPromptSubmit": []
   },
   "includeCoAuthoredBy": false,
 {{- if eq .machine_type "client" }}
-  "model": "claude-opus-4-6",
+  "model": "opusplan",
 {{- else }}
   "model": "opusplan",
 {{- end }}
