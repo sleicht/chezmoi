@@ -205,7 +205,7 @@ packages:
       - "sublime-text"
       - "supasidebar"
       - "t3-code"
-      - "thaw"
+      - "thaw@beta"
       - "thebrowsercompany-dia"
       - "uhk-agent"
       - "wezterm"
