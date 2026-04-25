@@ -93,6 +93,7 @@ packages:
       - "eza"
       - "fd"
       - "findutils"
+      - "forgecode"
       - "forgit"
       - "fzf"
       - "gh"
