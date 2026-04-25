@@ -71,6 +71,10 @@ export default {
             browser: "Google Chrome"
         },
         {
+            match: (url) => url.host.endsWith("openai.com"),
+            browser: "Google Chrome"
+        },
+        {
             match: (url) => url.host.endsWith("jessie.ai"),
             browser: "Google Chrome"
         },
