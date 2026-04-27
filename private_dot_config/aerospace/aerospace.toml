@@ -8,31 +8,45 @@ after-login-command = []
 
 # Move already-open windows to their workspaces on startup
 after-startup-command = ['''exec-and-forget bash -c '
-  move() {
+  tile_move() {
     aerospace list-windows --monitor all --app-bundle-id "$1" --format "%{window-id}" 2>/dev/null \
-      | while read -r wid; do aerospace move-node-to-workspace --window-id "$wid" "$2"; done
+      | while read -r wid; do aerospace layout --window-id "$wid" h_tiles; aerospace move-node-to-workspace --window-id "$wid" "$2"; done
+  }
+  accordion_move() {
+    aerospace list-windows --monitor all --app-bundle-id "$1" --format "%{window-id}" 2>/dev/null \
+      | while read -r wid; do aerospace layout --window-id "$wid" accordion; aerospace move-node-to-workspace --window-id "$wid" "$2"; done
+  }
+  resize_width() {
+    aerospace list-windows --monitor all --app-bundle-id "$1" --format "%{window-id}" 2>/dev/null \
+      | while read -r wid; do aerospace resize --window-id "$wid" width "$2"; done
   }
   float_move() {
     aerospace list-windows --monitor all --app-bundle-id "$1" --format "%{window-id}" 2>/dev/null \
       | while read -r wid; do aerospace layout --window-id "$wid" floating; aerospace move-node-to-workspace --window-id "$wid" "$2"; done
   }
-  move com.readdle.SparkDesktop 4
-  move com.flexibits.fantastical2.mac 4
-  move com.jetbrains.intellij 2
-  move net.whatsapp.WhatsApp 5
-  move ch.threema.threema-desktop 5
-  move com.infomaniak.chat 5
-  move com.apple.MobileSMS 5
-  float_move com.mitchellh.ghostty 1
-  move com.t3tools.t3code 1
-  move com.gitbutler.app 1
-  move com.google.Chrome 3
-  move app.zen-browser.zen 3
-  move com.vivaldi.Vivaldi 3
-  float_move com.sublimetext.4 2
   float_move com.apple.finder 0
   float_move com.cocoatech.PathFinder 0
   float_move io.tailscale.ipn.macos 0
+  tile_move com.mitchellh.ghostty 1
+  tile_move com.cmuxterm.app 1
+  tile_move com.t3tools.t3code 1
+  tile_move com.gitbutler.app 1
+  accordion_move com.jetbrains.intellij 2
+  accordion_move com.sublimetext.4 2
+  float_move com.google.Chrome 3
+  float_move app.zen-browser.zen 3
+  float_move com.vivaldi.Vivaldi 3
+  float_move company.thebrowser.Browser 3
+  tile_move com.readdle.SparkDesktop 4
+  tile_move com.flexibits.fantastical2.mac 4
+  tile_move com.microsoft.Outlook 4
+  resize_width com.readdle.SparkDesktop 1400
+  tile_move net.whatsapp.WhatsApp 5
+  tile_move ch.threema.threema-desktop 5
+  tile_move com.infomaniak.chat 5
+  tile_move com.apple.MobileSMS 5
+  tile_move com.tinyspeck.slackmacgap 5
+  tile_move com.microsoft.teams2 5
 '
 ''']
 
@@ -194,84 +208,6 @@ check-further-callbacks = true
 run = 'layout floating'
 
 [[on-window-detected]]
-if.app-id = 'com.readdle.SparkDesktop'
-run = 'move-node-to-workspace 4' # Mail
-
-[[on-window-detected]]
-if.app-id = 'com.flexibits.fantastical2.mac'
-run = 'move-node-to-workspace 4' # Mail
-
-[[on-window-detected]]
-if.app-id = 'com.microsoft.Outlook'
-run = 'move-node-to-workspace 4' # Mail
-
-[[on-window-detected]]
-if.app-id = 'com.jetbrains.intellij'
-run = 'move-node-to-workspace 2' # IDE
-
-[[on-window-detected]]
-if.app-id = 'net.whatsapp.WhatsApp'
-run = 'move-node-to-workspace 5' # Social
-
-[[on-window-detected]]
-if.app-id = 'ch.threema.threema-desktop'
-run = 'move-node-to-workspace 5' # Social
-
-[[on-window-detected]]
-if.app-id = 'com.infomaniak.chat'
-run = 'move-node-to-workspace 5' # Social
-
-[[on-window-detected]]
-if.app-id = 'com.apple.MobileSMS'
-run = 'move-node-to-workspace 5' # Social
-
-[[on-window-detected]]
-if.app-id = 'com.tinyspeck.slackmacgap'
-run = 'move-node-to-workspace 5' # Social
-
-[[on-window-detected]]
-if.app-id = 'com.microsoft.teams2'
-run = 'move-node-to-workspace 5' # Social
-
-[[on-window-detected]]
-if.app-id = 'com.mitchellh.ghostty'
-check-further-callbacks = false
-run = ['layout floating', 'move-node-to-workspace 1'] # Terminal — floating preserves native tabs
-
-[[on-window-detected]]
-if.app-id = 'com.t3tools.t3code'
-run = 'move-node-to-workspace 1' # Terminal
-
-[[on-window-detected]]
-if.app-id = 'com.gitbutler.app'
-run = 'move-node-to-workspace 1' # Terminal
-
-[[on-window-detected]]
-if.app-id = 'com.cmuxterm.app'
-run = 'move-node-to-workspace 1' # Terminal
-
-[[on-window-detected]]
-if.app-id = 'com.google.Chrome'
-run = 'move-node-to-workspace 3' # Web
-
-[[on-window-detected]]
-if.app-id = 'app.zen-browser.zen'
-run = 'move-node-to-workspace 3' # Web
-
-[[on-window-detected]]
-if.app-id = 'com.vivaldi.Vivaldi'
-run = 'move-node-to-workspace 3' # Web
-
-[[on-window-detected]]
-if.app-id = 'company.thebrowser.Browser'
-run = 'move-node-to-workspace 3' # Web
-
-[[on-window-detected]]
-if.app-id = 'com.sublimetext.4'
-check-further-callbacks = false
-run = ['layout floating', 'move-node-to-workspace 2'] # IDE — floating
-
-[[on-window-detected]]
 if.app-id = 'com.apple.finder'
 check-further-callbacks = false
 run = ['layout floating', 'move-node-to-workspace 0'] # Floating on workspace 0
@@ -285,3 +221,81 @@ run = ['layout floating', 'move-node-to-workspace 0'] # Floating on workspace 0
 if.app-id = 'io.tailscale.ipn.macos'
 check-further-callbacks = false
 run = ['layout floating', 'move-node-to-workspace 0'] # Floating on workspace 0
+
+[[on-window-detected]]
+if.app-id = 'com.mitchellh.ghostty'
+check-further-callbacks = false
+run = ['layout h_tiles', 'move-node-to-workspace 1'] # Terminal
+
+[[on-window-detected]]
+if.app-id = 'com.t3tools.t3code'
+run = ['layout h_tiles', 'move-node-to-workspace 1'] # Terminal
+
+[[on-window-detected]]
+if.app-id = 'com.gitbutler.app'
+run = ['layout h_tiles', 'move-node-to-workspace 1'] # Terminal
+
+[[on-window-detected]]
+if.app-id = 'com.cmuxterm.app'
+run = ['layout h_tiles', 'move-node-to-workspace 1'] # Terminal
+
+[[on-window-detected]]
+if.app-id = 'com.jetbrains.intellij'
+run = ['layout accordion', 'move-node-to-workspace 2'] # IDE
+
+[[on-window-detected]]
+if.app-id = 'com.sublimetext.4'
+check-further-callbacks = false
+run = ['layout accordion', 'move-node-to-workspace 2'] # IDE
+
+[[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+run = ['layout floating', 'move-node-to-workspace 3'] # Web
+
+[[on-window-detected]]
+if.app-id = 'app.zen-browser.zen'
+run = ['layout floating', 'move-node-to-workspace 3'] # Web
+
+[[on-window-detected]]
+if.app-id = 'com.vivaldi.Vivaldi'
+run = ['layout floating', 'move-node-to-workspace 3'] # Web
+
+[[on-window-detected]]
+if.app-id = 'company.thebrowser.Browser'
+run = ['layout floating', 'move-node-to-workspace 3'] # Web
+
+[[on-window-detected]]
+if.app-id = 'com.readdle.SparkDesktop'
+run = ['layout h_tiles', 'move-node-to-workspace 4', 'resize width 1400'] # Mail
+
+[[on-window-detected]]
+if.app-id = 'com.flexibits.fantastical2.mac'
+run = ['layout h_tiles', 'move-node-to-workspace 4'] # Calendar
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.Outlook'
+run = ['layout h_tiles', 'move-node-to-workspace 4'] # Mail
+
+[[on-window-detected]]
+if.app-id = 'net.whatsapp.WhatsApp'
+run = ['layout h_tiles', 'move-node-to-workspace 5'] # Social
+
+[[on-window-detected]]
+if.app-id = 'ch.threema.threema-desktop'
+run = ['layout h_tiles', 'move-node-to-workspace 5'] # Social
+
+[[on-window-detected]]
+if.app-id = 'com.infomaniak.chat'
+run = ['layout h_tiles', 'move-node-to-workspace 5'] # Social
+
+[[on-window-detected]]
+if.app-id = 'com.apple.MobileSMS'
+run = ['layout h_tiles', 'move-node-to-workspace 5'] # Social
+
+[[on-window-detected]]
+if.app-id = 'com.tinyspeck.slackmacgap'
+run = ['layout h_tiles', 'move-node-to-workspace 5'] # Social
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.teams2'
+run = ['layout h_tiles', 'move-node-to-workspace 5'] # Social
