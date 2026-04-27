@@ -234,7 +234,8 @@
 {{- if eq .machine_type "personal" }}
 [gitbutler]
   gitbutlerCommitter = 0
-  aiModelProvider = anthropic
+  aiModelProvider = openai
+  aiOpenAIKeyOption = bringYourOwn
   aiAnthropicKeyOption = bringYourOwn
   aiAnthropicModelName = claude-sonnet-4-0
   aiOllamaEndpoint = http://127.0.0.1:11434
