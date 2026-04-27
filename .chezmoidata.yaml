@@ -207,6 +207,7 @@ packages:
       - "t3-code"
       - "thaw@beta"
       - "thebrowsercompany-dia"
+      - "tolaria"
       - "uhk-agent"
       - "wezterm"
       - "wooshy"
