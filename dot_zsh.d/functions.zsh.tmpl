@@ -385,6 +385,18 @@ function ideaclone () {
 function codeclone () {
   clone "$1" "$2" | xargs -r code
 }
+
+# Java
+
+java-import-certs() {
+  for cert in ~/.tls/*.crt; do
+    keytool -import -trustcacerts -cacerts \
+      -storepass changeit -noprompt \
+      -alias "$(basename "$cert" .crt)" \
+      -file "$cert"
+  done
+}
+
 function run-mr-code-reviewer() {
     local project_input=$1
     local mr_id=$2
