@@ -17,5 +17,10 @@
     "migratedFromLegacy": true,
     "appErrorReportingEnabled": false,
     "appMetricsEnabled": false
+  },
+  "claude": {
+    "useConfiguredModel": true,
+    "notifyOnCompletion": true,
+    "notifyOnPermissionRequest": true
   }
 }
