@@ -120,29 +120,10 @@
     "PostToolUseFailure": [],
     "PreCompact": [],
     "PreToolUse": [],
-    "SessionEnd": [
-      {
-        "hooks": [
-          {
-            "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
-            "type": "command"
-          }
-        ],
-        "matcher": ".*"
-      }
-    ],
+    "SessionEnd": [],
     "SessionStart": [
-      {
-        "hooks": [
-          {
-            "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
-            "type": "command"
-          }
-        ],
-        "matcher": ".*"
-      }
 {{- if eq .machine_type "personal" }}
-      ,{
+      {
         "hooks": [
           {
             "command": "node ${CLAUDE_CONFIG_DIR:-$HOME/.claude}/hooks/gsd-check-update.js",
@@ -152,51 +133,11 @@
       }
 {{- end }}
     ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
-            "type": "command"
-          }
-        ],
-        "matcher": ".*"
-      }
-    ],
+    "Stop": [],
     "StopFailure": [],
-    "SubagentStart": [
-      {
-        "hooks": [
-          {
-            "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
-            "type": "command"
-          }
-        ],
-        "matcher": ".*"
-      }
-    ],
-    "SubagentStop": [
-      {
-        "hooks": [
-          {
-            "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
-            "type": "command"
-          }
-        ],
-        "matcher": ".*"
-      }
-    ],
-    "TaskCompleted": [
-      {
-        "hooks": [
-          {
-            "command": "__claudebar_hook() { PORT=$(cat \"$HOME/.claude/claudebar-hook-port\" 2>/dev/null || echo 19847); cat | curl -s -X POST \"http://localhost:${PORT}/hook\" -H 'Content-Type: application/json' -d @- > /dev/null 2>&1 & }; __claudebar_hook",
-            "type": "command"
-          }
-        ],
-        "matcher": ".*"
-      }
-    ],
+    "SubagentStart": [],
+    "SubagentStop": [],
+    "TaskCompleted": [],
     "UserPromptSubmit": []
   },
   "includeCoAuthoredBy": false,
