@@ -28,7 +28,6 @@
     "{{ . }}": true,
 {{- end }}
 {{- end }}
-    "visual-explainer@visual-explainer-marketplace": true,
 {{- else if eq .machine_type "personal" }}
     "ast-grep@ast-grep-marketplace": true,
     "brave-search-skills@brave-search": true,
@@ -91,12 +90,6 @@
         "ref": "{{ $cc.marketplace_ref.value }}",
         "source": "git",
         "url": "{{ $cc.marketplace_url.value }}"
-      }
-    },
-    "visual-explainer-marketplace": {
-      "source": {
-        "repo": "nicobailon/visual-explainer",
-        "source": "github"
       }
     }
 {{- else if eq .machine_type "personal" }}
