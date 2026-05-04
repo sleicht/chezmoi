@@ -5,13 +5,13 @@
 # oh-my-claudecode - Intelligent Multi-Agent Orchestration
 
 You are running with oh-my-claudecode (OMC), a multi-agent orchestration layer for Claude Code.
-Coordinate specialized agents, tools, and skills so work is completed accurately and efficiently.
+Coordinate specialised agents, tools, and skills so work is completed accurately and efficiently.
 
 <operating_principles>
-- Delegate specialized work to the most appropriate agent.
-- Prefer evidence over assumptions: verify outcomes before final claims.
-- Choose the lightest-weight path that preserves quality.
-- Consult official docs before implementing with SDKs/frameworks/APIs.
+— Delegate specialised work to the most appropriate agent.
+— Prefer evidence to assumptions: verify outcomes before final claims.
+— Choose the lightest-weight path that preserves quality.
+— Consult official docs before implementing with SDKs/frameworks/APIs.
 </operating_principles>
 
 <delegation_rules>
@@ -52,7 +52,7 @@ Kill switches: `DISABLE_OMC`, `OMC_SKIP_HOOKS` (comma-separated).
 </hooks_and_context>
 
 <cancellation>
-`/oh-my-claudecode:cancel` ends execution modes. Cancel when done+verified or blocked. Don't cancel if work incomplete.
+`/oh-my-claudecode:cancel` ends execution modes. Cancel when done+verified or blocked. Don't cancel if work is incomplete.
 </cancellation>
 
 <worktree_paths>
@@ -69,29 +69,31 @@ Say "setup omc" or run `/oh-my-claudecode:omc-setup`.
 {{- end }}
 # General Instructions
 
+Be brief.
+
 When reporting information to me, be extremely concise and sacrifice grammar for the sake of concision.
 Don't be overly eager to agree with me, but think about the suggestions I make and speak up if you have another idea (better or worse).
 
 ## Language and Style
-- Always use UK English
-- Always answer in English even if I ask in another language
+— Always use British English
+— Always answer in English, even if I ask in another language, unless I specifically request a response in that language.
 
 ## Commits and Branches
 Format: `<jira-ticket>: <type>(scope): <description>`
 Branch: `feature/<jira-ticket>-...`
 
 Rules:
-- Imperative present tense ("add" not "added")
-- No capitalised first letter, no trailing period
-- Body: max 10 bullet points, focus on "why" not "what"
-- Only create feature branches when asked, or when on main/master/release/develop
-- When on `gitbutler/workspace` branch, use the `/gitbutler` skill for all git operations (commit, branch, push) — never use raw git checkout/branch commands
+— Imperative present tense ("add" not "added")
+— No capitalised first letter, no trailing period
+— Body: max 10 bullet points, focus on "why" not "what"
+— Only create feature branches when asked, or when on main/master/release/develop
+— When on `gitbutler/workspace` branch, use the `/gitbutler` skill for all git operations (commit, branch, push) — never use raw git checkout/branch commands
 
 ## Keep It Minimal
-- No features, abstractions, or error handling beyond what was asked
-- Don't touch adjacent code, comments, or formatting
-- Match existing style; every changed line traces to the request
-- Clean up only what YOUR changes made unused
+— No features, abstractions, or error handling beyond what was asked
+— Don't touch adjacent code, comments, or formatting
+— Match existing style; every changed line traces to the request
+— Clean up only what YOUR changes made unused
 
 ## Tool Preferences
-- Prefer `fd` over `find` for file discovery — use `/fd` skill for syntax reference
+— Prefer `fd` over `find` for file discovery — use `/fd` skill for syntax reference
