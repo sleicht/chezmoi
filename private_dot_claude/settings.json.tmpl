@@ -32,18 +32,18 @@
 {{- else if eq .machine_type "personal" }}
     "ast-grep@ast-grep-marketplace": true,
     "brave-search-skills@brave-search": true,
+    "chrome-devtools-mcp@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
     "codex@openai-codex": true,
     "context7@claude-plugins-official": true,
     "firebase@claude-plugins-official": true,
-    "gitlab@claude-plugins-official": true,
-    "stripe@claude-plugins-official": true,
-    "claude-md-management@claude-plugins-official": true,
-    "chrome-devtools-mcp@claude-plugins-official": true,
     "git-commit-messages@dotfiles-marketplace": true,
     "gitlab-merge-requests@dotfiles-marketplace": true,
+    "gitlab@claude-plugins-official": true,
     "glab-cli@dotfiles-marketplace": true,
     "jdtls-lombok@dotfiles-marketplace": true,
-    "oh-my-claudecode@omc": true
+    "oh-my-claudecode@omc": true,
+    "stripe@claude-plugins-official": true
 {{- end }}
   },
   "env": {
@@ -121,12 +121,37 @@
             "type": "command"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "command": "node \"/Users/stephanlv_fanaka/.claude/hooks/gitnexus/gitnexus-hook.cjs\"",
+            "statusMessage": "Checking GitNexus index freshness...",
+            "timeout": 10,
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
       }
 {{- end }}
     ],
     "PostToolUseFailure": [],
     "PreCompact": [],
-    "PreToolUse": [],
+    "PreToolUse": [
+{{- if eq .machine_type "personal" }}
+      {
+        "hooks": [
+          {
+            "command": "node \"/Users/stephanlv_fanaka/.claude/hooks/gitnexus/gitnexus-hook.cjs\"",
+            "statusMessage": "Enriching with GitNexus graph context...",
+            "timeout": 10,
+            "type": "command"
+          }
+        ],
+        "matcher": "Grep|Glob|Bash"
+      }
+{{- end }}
+    ],
     "SessionEnd": [],
     "SessionStart": [
 {{- if eq .machine_type "personal" }}
