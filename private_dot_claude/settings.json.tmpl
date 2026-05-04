@@ -4,6 +4,7 @@
   "autoUpdatesChannel": "latest",
   "enableAllProjectMcpServers": false,
   "enabledPlugins": {
+    "aiup-core@ai-unified-process-marketplace": true,
     "andrej-karpathy-skills@karpathy-skills": true,
     "caveman@caveman": true,
     "ck@cavekit-marketplace": true,
@@ -53,6 +54,12 @@
 {{- end }}
   },
   "extraKnownMarketplaces": {
+    "ai-unified-process-marketplace": {
+      "source": {
+        "repo": "ai-unified-process/marketplace",
+        "source": "github"
+      }
+    },
     "cavekit-marketplace": {
       "source": {
         "repo": "JuliusBrussee/cavekit",
