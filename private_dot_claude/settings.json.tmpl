@@ -4,6 +4,7 @@
   "autoUpdatesChannel": "latest",
   "enableAllProjectMcpServers": false,
   "enabledPlugins": {
+    "andrej-karpathy-skills@karpathy-skills": true,
     "caveman@caveman": true,
     "ck@cavekit-marketplace": true,
     "claude-code-setup@claude-plugins-official": true,
@@ -21,14 +22,13 @@
     "pyright-lsp@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "worktrunk@worktrunk": true,
 {{- if eq .machine_type "client" }}
 {{- range splitList "\n" (rbw "claude-client-config" "--folder" "dotfiles/client").notes }}
 {{- if ne . "" }}
     "{{ . }}": true,
 {{- end }}
 {{- end }}
-    "visual-explainer@visual-explainer-marketplace": true
+    "visual-explainer@visual-explainer-marketplace": true,
 {{- else if eq .machine_type "personal" }}
     "ast-grep@ast-grep-marketplace": true,
     "brave-search-skills@brave-search": true,
@@ -43,8 +43,9 @@
     "glab-cli@dotfiles-marketplace": true,
     "jdtls-lombok@dotfiles-marketplace": true,
     "oh-my-claudecode@omc": true,
-    "stripe@claude-plugins-official": true
+    "stripe@claude-plugins-official": true,
 {{- end }}
+    "worktrunk@worktrunk": true
   },
   "env": {
 {{- if eq .machine_type "personal" }}
@@ -68,6 +69,18 @@
     "fullstack-dev-skills": {
       "source": {
         "repo": "jeffallan/claude-skills",
+        "source": "github"
+      }
+    },
+    "karpathy-skills": {
+      "source": {
+        "repo": "forrestchang/andrej-karpathy-skills",
+        "source": "github"
+      }
+    },
+    "worktrunk": {
+      "source": {
+        "repo": "max-sixty/worktrunk",
         "source": "github"
       }
     },
@@ -100,12 +113,6 @@
       }
     }
 {{- end }}
-    ,"worktrunk": {
-      "source": {
-        "repo": "max-sixty/worktrunk",
-        "source": "github"
-      }
-    }
   },
   "hooks": {
     "Notification": [],
