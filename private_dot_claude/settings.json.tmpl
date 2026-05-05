@@ -48,7 +48,14 @@
     "worktrunk@worktrunk": true
   },
   "env": {
-{{- if eq .machine_type "personal" }}
+{{- if eq .machine_type "client" }}
+    "CLAUDE_CODE_USE_VERTEX": "1",
+    "ANTHROPIC_VERTEX_PROJECT_ID": "{{ (rbwFields "claude-vertex-config" "--folder" "dotfiles/client").project_id.value }}",
+    "CLOUD_ML_REGION": "{{ (rbwFields "claude-vertex-config" "--folder" "dotfiles/client").region.value }}",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5@20251001",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-6",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6"
+{{- else if eq .machine_type "personal" }}
     "BRAVE_SEARCH_API_KEY": "{{ (rbwFields "claude-settings" "--folder" "dotfiles/personal").brave_search_api_key.value }}",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
 {{- end }}
@@ -266,7 +273,7 @@
       "WebFetch(domain:openapiprocessor.io)",
       "WebSearch"
     ],
-    "defaultMode": "plan",
+    "defaultMode": "default",
     "deny": [
       "Bash(* | base64 -d | bash*)",
       "Bash(* | base64 -d | sh*)",
@@ -347,7 +354,7 @@
       "Bash(wget * | sh*)"
     ]
   },
-  "preferredNotifChannel": "ghostty",
+  "preferredNotifChannel": "auto",
   "remoteControlAtStartup": true,
   "sandbox": {
     "autoAllowBashIfSandboxed": true,
