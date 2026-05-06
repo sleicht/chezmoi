@@ -75,6 +75,12 @@ exec-on-workspace-change = [
 
 # Pin workspace 7 to external monitor
 [workspace-to-monitor-force-assignment]
+1 = 'DELL U3419W'
+2 = 'DELL U3419W'
+3 = 'DELL U3419W'
+4 = 'DELL U3419W'
+5 = 'DELL U3419W'
+6 = 'DELL U3419W'
 7 = 'Wokyis'
 
 [key-mapping]
