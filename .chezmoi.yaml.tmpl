@@ -28,11 +28,23 @@ edit:
   apply: false
 
 git:
-  autoCommit: true
+  autoCommit: false
   autoPush: false
 
 diff:
-  command: "{{ .chezmoi.homeDir }}/.local/bin/chezmoi-bcomp"
+  command: "idea"
+  args:
+    - "diff"
+    - "{{ .Destination }}"
+    - "{{ .Target }}"
+
+merge:
+  command: "idea"
+  args:
+    - "merge"
+    - "{{ .Destination }}"
+    - "{{ .Source }}"
+    - "{{ .Target }}"
 
 {{- if ne $machineType "container" }}
 encryption: "age"
