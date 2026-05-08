@@ -4,7 +4,6 @@
   "autoUpdatesChannel": "latest",
   "enableAllProjectMcpServers": false,
   "enabledPlugins": {
-    "aiup-core@ai-unified-process-marketplace": true,
     "andrej-karpathy-skills@karpathy-skills": true,
     "caveman@caveman": true,
     "ck@cavekit-marketplace": true,
@@ -61,12 +60,6 @@
 {{- end }}
   },
   "extraKnownMarketplaces": {
-    "ai-unified-process-marketplace": {
-      "source": {
-        "repo": "ai-unified-process/marketplace",
-        "source": "github"
-      }
-    },
     "cavekit-marketplace": {
       "source": {
         "repo": "JuliusBrussee/cavekit",
@@ -99,6 +92,12 @@
     },
 {{- if eq .machine_type "client" }}
 {{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
+    "ai-unified-process-marketplace": {
+      "source": {
+        "repo": "sleicht/ai-unified-marketplace",
+        "source": "github"
+      }
+    },
     "{{ $cc.marketplace_name.value }}": {
       "source": {
         "ref": "{{ $cc.marketplace_ref.value }}",
