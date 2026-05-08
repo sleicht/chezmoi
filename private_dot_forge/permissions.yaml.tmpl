@@ -1,0 +1,514 @@
+# ForgeCode permissions policy
+# Translated from Claude Code settings.json permissions
+#
+# Requires: restricted = true in ~/.forge/.forge.toml
+#
+# Evaluation: top-to-bottom
+#   deny    -> reject immediately
+#   confirm -> prompt immediately
+#   allow   -> tentative (later deny/confirm overrides)
+#   no match -> confirm (default fallback)
+#
+# Scope: built-in tools only (MCP tools bypass this file)
+#   read    -> Read, FsSearch
+#   write   -> Write, Patch, MultiPatch, Remove
+#   command -> Shell
+#   url     -> Fetch
+
+policies:
+  # -- File reads: allow everywhere --
+  - permission: allow
+    rule:
+      read: "**/*"
+
+  # -- File writes --
+  # No blanket allow; unmatched writes fall through to confirm
+  # (matches Claude Code defaultMode: "default" behaviour)
+  - permission: allow
+    rule:
+      write: "**/*"
+
+  # -- Commands: allow safe operations --------------------------------
+
+  # File tests (broader than Claude Code's per-file patterns)
+  - permission: allow
+    rule:
+      command: "[ *"
+  - permission: allow
+    rule:
+      command: "test *"
+
+  # Text processing
+  - permission: allow
+    rule:
+      command: "awk *"
+  - permission: allow
+    rule:
+      command: "cat *"
+  - permission: allow
+    rule:
+      command: "grep *"
+  - permission: allow
+    rule:
+      command: "head *"
+  - permission: allow
+    rule:
+      command: "sed *"
+  - permission: allow
+    rule:
+      command: "sort *"
+  - permission: allow
+    rule:
+      command: "tail *"
+  - permission: allow
+    rule:
+      command: "tr *"
+  - permission: allow
+    rule:
+      command: "wc *"
+
+  # Filesystem
+  - permission: allow
+    rule:
+      command: "fd *"
+  - permission: allow
+    rule:
+      command: "find *"
+  - permission: allow
+    rule:
+      command: "ls *"
+  - permission: allow
+    rule:
+      command: "mkdir *"
+  - permission: allow
+    rule:
+      command: "rg *"
+
+  # Git
+  - permission: allow
+    rule:
+      command: "git add *"
+  - permission: allow
+    rule:
+      command: "git branch *"
+  - permission: allow
+    rule:
+      command: "git commit *"
+  - permission: allow
+    rule:
+      command: "git diff *"
+  - permission: allow
+    rule:
+      command: "git fetch *"
+  - permission: allow
+    rule:
+      command: "git log *"
+  - permission: allow
+    rule:
+      command: "git rev-parse *"
+  - permission: allow
+    rule:
+      command: "git show *"
+  - permission: allow
+    rule:
+      command: "git status *"
+  - permission: allow
+    rule:
+      command: "git tag *"
+
+  # GitButler
+  - permission: allow
+    rule:
+      command: "but commit *"
+  - permission: allow
+    rule:
+      command: "but pull *"
+  - permission: allow
+    rule:
+      command: "but stage *"
+  - permission: allow
+    rule:
+      command: "but status *"
+
+  # GitHub CLI
+  - permission: allow
+    rule:
+      command: "gh api *"
+
+  # GitLab CLI
+  - permission: allow
+    rule:
+      command: "glab ci view *"
+  - permission: allow
+    rule:
+      command: "glab issue list *"
+  - permission: allow
+    rule:
+      command: "glab issue view *"
+  - permission: allow
+    rule:
+      command: "glab mr diff *"
+  - permission: allow
+    rule:
+      command: "glab mr list *"
+  - permission: allow
+    rule:
+      command: "glab mr view *"
+  - permission: allow
+    rule:
+      command: "glab pipeline list *"
+  - permission: allow
+    rule:
+      command: "glab pipeline view *"
+
+  # Jira CLI (jira issue * covers list/search/view subcommands)
+  - permission: allow
+    rule:
+      command: "jira issue *"
+  - permission: allow
+    rule:
+      command: "jira sprint list *"
+
+  # Confluence CLI
+  - permission: allow
+    rule:
+      command: "confluence page get *"
+  - permission: allow
+    rule:
+      command: "confluence page list *"
+  - permission: allow
+    rule:
+      command: "confluence search *"
+  - permission: allow
+    rule:
+      command: "confluence space list *"
+
+  # Build tools
+  - permission: allow
+    rule:
+      command: "just compile *"
+  - permission: allow
+    rule:
+      command: "just generate-openapi-spec *"
+  - permission: allow
+    rule:
+      command: "just it-local *"
+  - permission: allow
+    rule:
+      command: "just package *"
+  - permission: allow
+    rule:
+      command: "just recompile *"
+  - permission: allow
+    rule:
+      command: "just run *"
+  - permission: allow
+    rule:
+      command: "just test *"
+  - permission: allow
+    rule:
+      command: "just unit *"
+  - permission: allow
+    rule:
+      command: "mvn dependency:tree *"
+
+  # Utilities
+  - permission: allow
+    rule:
+      command: "date *"
+  - permission: allow
+    rule:
+      command: "echo *"
+  - permission: allow
+    rule:
+      command: "which *"
+
+  # -- URLs: allow specific domains -----------------------------------
+  - permission: allow
+    rule:
+      url: "https://api.github.com/*"
+  - permission: allow
+    rule:
+      url: "https://api.sdkman.io/*"
+  - permission: allow
+    rule:
+      url: "https://app.gitbutler.com/*"
+  - permission: allow
+    rule:
+      url: "https://errorprone.info/*"
+  - permission: allow
+    rule:
+      url: "https://github.com/*"
+  - permission: allow
+    rule:
+      url: "https://openapiprocessor.io/*"
+{{- if eq .machine_type "client" }}
+{{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
+  - permission: allow
+    rule:
+      url: "https://{{ $cc.gitlab_domain.value }}/*"
+  - permission: allow
+    rule:
+      url: "https://{{ $cc.jira_domain.value }}/*"
+{{- end }}
+
+  # -- Commands: deny dangerous operations ----------------------------
+  # These override any earlier allow that matched the same command.
+  # Skipped from Claude Code: WebSearch (no built-in equivalent),
+  # mcp__* (MCP tools bypass permissions.yaml entirely).
+
+  # Remote code execution via pipe
+  - permission: deny
+    rule:
+      command: "curl * | bash*"
+  - permission: deny
+    rule:
+      command: "curl * | sh*"
+  - permission: deny
+    rule:
+      command: "wget * | bash*"
+  - permission: deny
+    rule:
+      command: "wget * | sh*"
+  - permission: deny
+    rule:
+      command: "* | base64 -d | bash*"
+  - permission: deny
+    rule:
+      command: "* | base64 -d | sh*"
+
+  # Network listeners
+  - permission: deny
+    rule:
+      command: "* | nc -l*"
+  - permission: deny
+    rule:
+      command: "* | netcat -l*"
+  - permission: deny
+    rule:
+      command: "* | socat*"
+
+  # Fork bombs
+  - permission: deny
+    rule:
+      command: "*:|:&*"
+  - permission: deny
+    rule:
+      command: "*fork*bomb*"
+
+  # Credential and key harvesting
+  - permission: deny
+    rule:
+      command: "*privatekey*"
+  - permission: deny
+    rule:
+      command: "*wallet.dat*"
+  - permission: deny
+    rule:
+      command: "*bitcoin-cli*"
+  - permission: deny
+    rule:
+      command: "*ethereum*"
+  - permission: deny
+    rule:
+      command: "find / -name *.key*"
+  - permission: deny
+    rule:
+      command: "find / -name *.pem*"
+  - permission: deny
+    rule:
+      command: "find / -name id_rsa*"
+  - permission: deny
+    rule:
+      command: "grep -r password /etc/*"
+  - permission: deny
+    rule:
+      command: "grep -r token /etc/*"
+  - permission: deny
+    rule:
+      command: "history | grep -i key*"
+  - permission: deny
+    rule:
+      command: "history | grep -i password*"
+  - permission: deny
+    rule:
+      command: "history | grep -i secret*"
+  - permission: deny
+    rule:
+      command: "history | grep -i token*"
+
+  # Environment exfiltration
+  - permission: deny
+    rule:
+      command: "env | base64*"
+  - permission: deny
+    rule:
+      command: "printenv | base64*"
+  - permission: deny
+    rule:
+      command: "set | base64*"
+
+  # Destructive disk operations
+  - permission: deny
+    rule:
+      command: "*> /dev/nvme*"
+  - permission: deny
+    rule:
+      command: "*> /dev/sd*"
+  - permission: deny
+    rule:
+      command: "cat /dev/urandom > *"
+  - permission: deny
+    rule:
+      command: "dd if=/dev/random of=/dev/*"
+  - permission: deny
+    rule:
+      command: "dd if=/dev/zero of=/dev/*"
+  - permission: deny
+    rule:
+      command: "fdisk *"
+  - permission: deny
+    rule:
+      command: "mkfs *"
+  - permission: deny
+    rule:
+      command: "parted *"
+
+  # Destructive filesystem operations
+  - permission: deny
+    rule:
+      command: "rm -rf /"
+  - permission: deny
+    rule:
+      command: "rm -rf /*"
+  - permission: deny
+    rule:
+      command: "rm -rf /home/*"
+  - permission: deny
+    rule:
+      command: "rm -rf /opt/*"
+  - permission: deny
+    rule:
+      command: "rm -rf /var/*"
+  - permission: deny
+    rule:
+      command: "rm -rf /var/log/*"
+  - permission: deny
+    rule:
+      command: "rm /var/log/*"
+  - permission: deny
+    rule:
+      command: "find / -type d -delete*"
+  - permission: deny
+    rule:
+      command: "find / -type f -delete*"
+
+  # Dangerous permission changes
+  - permission: deny
+    rule:
+      command: "chmod -R 777 /*"
+  - permission: deny
+    rule:
+      command: "chmod 777 /bin/*"
+  - permission: deny
+    rule:
+      command: "chmod 777 /etc/*"
+  - permission: deny
+    rule:
+      command: "chmod 777 /usr/*"
+  - permission: deny
+    rule:
+      command: "chown -R * /*"
+
+  # Log tampering
+  - permission: deny
+    rule:
+      command: "> /var/log/*"
+  - permission: deny
+    rule:
+      command: "echo > /var/log/*"
+  - permission: deny
+    rule:
+      command: "truncate -s 0 /var/log/*"
+
+  # System state changes
+  - permission: deny
+    rule:
+      command: "halt *"
+  - permission: deny
+    rule:
+      command: "kill *"
+  - permission: deny
+    rule:
+      command: "killall *"
+  - permission: deny
+    rule:
+      command: "init 0*"
+  - permission: deny
+    rule:
+      command: "init 6*"
+  - permission: deny
+    rule:
+      command: "passwd *"
+  - permission: deny
+    rule:
+      command: "poweroff *"
+  - permission: deny
+    rule:
+      command: "reboot *"
+  - permission: deny
+    rule:
+      command: "shutdown *"
+
+  # Sudo abuse
+  - permission: deny
+    rule:
+      command: "sudo > /etc/*"
+  - permission: deny
+    rule:
+      command: "sudo adduser *"
+  - permission: deny
+    rule:
+      command: "sudo chmod 777 /*"
+  - permission: deny
+    rule:
+      command: "sudo chown * /*"
+  - permission: deny
+    rule:
+      command: "sudo deluser *"
+  - permission: deny
+    rule:
+      command: "sudo groupadd *"
+  - permission: deny
+    rule:
+      command: "sudo groupdel *"
+  - permission: deny
+    rule:
+      command: "sudo passwd *"
+  - permission: deny
+    rule:
+      command: "sudo rm -rf /"
+  - permission: deny
+    rule:
+      command: "sudo rm -rf /*"
+  - permission: deny
+    rule:
+      command: "sudo rm -rf /etc/*"
+  - permission: deny
+    rule:
+      command: "sudo rm /bin/*"
+  - permission: deny
+    rule:
+      command: "sudo rm /etc/*"
+  - permission: deny
+    rule:
+      command: "sudo rm /usr/*"
+  - permission: deny
+    rule:
+      command: "sudo useradd *"
+  - permission: deny
+    rule:
+      command: "sudo userdel *"
+  - permission: deny
+    rule:
+      command: "sudo usermod *"
