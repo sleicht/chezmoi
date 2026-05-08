@@ -84,51 +84,15 @@ policies:
     rule:
       command: "rg *"
 
-  # Git
+  # Git (all non-destructive; destructive ops denied below)
   - permission: allow
     rule:
-      command: "git add *"
-  - permission: allow
-    rule:
-      command: "git branch *"
-  - permission: allow
-    rule:
-      command: "git commit *"
-  - permission: allow
-    rule:
-      command: "git diff *"
-  - permission: allow
-    rule:
-      command: "git fetch *"
-  - permission: allow
-    rule:
-      command: "git log *"
-  - permission: allow
-    rule:
-      command: "git rev-parse *"
-  - permission: allow
-    rule:
-      command: "git show *"
-  - permission: allow
-    rule:
-      command: "git status *"
-  - permission: allow
-    rule:
-      command: "git tag *"
+      command: "git *"
 
-  # GitButler
+  # GitButler (all non-destructive)
   - permission: allow
     rule:
-      command: "but commit *"
-  - permission: allow
-    rule:
-      command: "but pull *"
-  - permission: allow
-    rule:
-      command: "but stage *"
-  - permission: allow
-    rule:
-      command: "but status *"
+      command: "but *"
 
   # GitHub CLI
   - permission: allow
@@ -430,6 +394,20 @@ policies:
   - permission: deny
     rule:
       command: "truncate -s 0 /var/log/*"
+
+  # Destructive git operations
+  - permission: deny
+    rule:
+      command: "git clean *"
+  - permission: deny
+    rule:
+      command: "git push --force *"
+  - permission: deny
+    rule:
+      command: "git push -f *"
+  - permission: deny
+    rule:
+      command: "git reset --hard *"
 
   # System state changes
   - permission: deny
