@@ -27,8 +27,18 @@ echo "ZSH Smoke Test"
 echo "=============="
 echo ""
 
-# 1. oh-my-posh available
-check "oh-my-posh command available" '(( $+commands[oh-my-posh] ))'
+if [ -z "${HOMEBREW_PREFIX-}" ]; then
+  if [ -d /opt/homebrew ]; then
+    HOMEBREW_PREFIX=/opt/homebrew
+  elif [ -d /home/linuxbrew/.linuxbrew ]; then
+    HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
+  else
+    HOMEBREW_PREFIX=/usr/local
+  fi
+fi
+
+# 1. Spaceship available
+check "Spaceship prompt available" '[[ -r "$HOMEBREW_PREFIX/opt/spaceship/spaceship.zsh" ]] || (( $+commands[spaceship] ))'
 
 # 2. Prompt configured
 check "Prompt is configured" '[[ -n "$PROMPT" ]]'

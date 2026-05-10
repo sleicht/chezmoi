@@ -12,8 +12,8 @@ if [ -z "${HOMEBREW_PREFIX-}" ]; then
 fi
 
 # Prompt: must be sync (sets precmd hooks)
-if (( $+commands[oh-my-posh] )); then
-  eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh.omp.yaml)"
+if [ -r "$HOMEBREW_PREFIX/opt/spaceship/spaceship.zsh" ]; then
+  source "$HOMEBREW_PREFIX/opt/spaceship/spaceship.zsh"
 fi
 
 # Key binding load order (later wins):

@@ -17,7 +17,7 @@ Personal dotfiles for macOS, managed with [chezmoi](https://www.chezmoi.io/) and
 
 | Category      | Tools                                                                                                                                                                                                                                                                                                                                                                            |
 |---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Shell**     | ZSH · `.profile` (POSIX base env) · [Sheldon](https://sheldon.cli.rs/) (plugin manager, cached source) · [Oh My Posh](https://ohmyposh.dev/) (prompt) · [zsh-defer](https://github.com/romkatv/zsh-defer) (lazy loading) · [evalcache](https://github.com/mroth/evalcache) (cached eval inits) · `pj` (fzf project picker)                                                       |
+| **Shell**     | ZSH · `.profile` (POSIX base env) · [Sheldon](https://sheldon.cli.rs/) (plugin manager, cached source) · [Spaceship](https://spaceship-prompt.sh/) (prompt) · [zsh-defer](https://github.com/romkatv/zsh-defer) (lazy loading) · [evalcache](https://github.com/mroth/evalcache) (cached eval inits) · `pj` (fzf project picker)                                                       |
 | **Terminal**  | [Ghostty](https://ghostty.org/) · [Kitty](https://sw.kovidgoyal.net/kitty/) · [WezTerm](https://wezfurlong.org/wezterm/)                                                                                                                                                                                                                                                         |
 | **Editor**    | EditorConfig · [aider](https://aider.chat/) (AI pair programming)                                                                                                                                                                                                                                                                                                                |
 | **Git**       | [Lazygit](https://github.com/jesseduffield/lazygit) · [Gitleaks](https://gitleaks.io/) (secret scanning) · global config + hooks                                                                                                                                                                                                                                                 |
@@ -78,7 +78,7 @@ RUN apt-get update && apt-get install -y zsh curl git \
  && chsh -s "$(command -v zsh)"
 ```
 
-This deploys only shell config (zsh, sheldon plugins, oh-my-posh theme, git config) — no encrypted files, desktop apps, or package management.
+This deploys only shell config (zsh, sheldon plugins, Spaceship prompt, git config) — no encrypted files, desktop apps, or package management.
 
 ### Existing Machine
 

@@ -28,7 +28,7 @@ Confirm that the ZSH shell starts correctly with aliases, prompt rendering, and 
 
 ### Context
 
-The chezmoi-managed shell configuration uses a modular architecture: `dot_zshrc.tmpl` loads Sheldon (plugin manager), which sources `~/.zsh.d/*.zsh` modules. Plugins are split into sync (loaded immediately) and deferred (loaded via `zsh-defer` after prompt renders). The prompt is rendered by oh-my-posh. Aliases are defined in `~/.zsh.d/aliases.zsh`. If any of these fail, the shell may start but be missing functionality.
+The chezmoi-managed shell configuration uses a modular architecture: `dot_zshrc.tmpl` loads Sheldon (plugin manager), which sources `~/.zsh.d/*.zsh` modules. Plugins are split into sync (loaded immediately) and deferred (loaded via `zsh-defer` after prompt renders). The prompt is rendered by Spaceship. Aliases are defined in `~/.zsh.d/aliases.zsh`. If any of these fail, the shell may start but be missing functionality.
 
 ### Steps
 
@@ -64,11 +64,11 @@ type ll
 **4. Verify the prompt engine is running:**
 
 ```bash
-# Check oh-my-posh is the active prompt
+# Check Spaceship is the active prompt
 echo $PROMPT | head -c 50
 
-# Or check oh-my-posh is available:
-(( $+commands[oh-my-posh] )) && echo "oh-my-posh: available" || echo "oh-my-posh: MISSING"
+# Or check Spaceship is available:
+[[ -r "${HOMEBREW_PREFIX:-$(brew --prefix 2>/dev/null)}/opt/spaceship/spaceship.zsh" ]] && echo "Spaceship: available" || echo "Spaceship: MISSING"
 ```
 
 **5. Verify deferred plugins loaded:**
@@ -109,7 +109,7 @@ Shell starts cleanly, prompt renders, aliases resolve, both sync and deferred pl
 
 - **If the shell shows errors on startup:** Check `~/.zshrc` rendering with `chezmoi cat ~/.zshrc` and compare to the deployed version. Template rendering issues often cause syntax errors.
 - **If aliases are missing:** Verify `~/.zsh.d/aliases.zsh` exists and is sourced. Check `sheldon source` output for the aliases module.
-- **If oh-my-posh prompt doesn't render:** Verify `(( $+commands[oh-my-posh] ))` returns true. If missing, check `brew list | grep oh-my-posh` and reinstall if needed.
+- **If Spaceship prompt doesn't render:** Verify `~/.config/spaceship.zsh` exists and `"$HOMEBREW_PREFIX/opt/spaceship/spaceship.zsh"` is readable. If missing, check `brew list | grep spaceship` and reinstall if needed.
 - **If deferred plugins don't load:** Check that `zsh-defer` is configured in sheldon. Run `sheldon source | grep defer` to verify the deferred loading mechanism is in place.
 - **If startup time exceeds 300ms:** Profile with `ZSH_PROFILE_STARTUP=1 zsh -i -c exit` to identify the slow module. This is not a migration failure but may indicate a configuration issue.
 
@@ -266,7 +266,7 @@ If any runtime is missing, `mise install` will install it from `.mise.toml`.
 
 ```bash
 # Check core tools used by the dotfiles stack
-for tool in chezmoi mise oh-my-posh sheldon atuin zoxide fzf bat lsd git pre-commit gitleaks age; do
+for tool in chezmoi mise sheldon atuin zoxide fzf bat lsd git pre-commit gitleaks age; do
   if command -v "$tool" &>/dev/null; then
     echo "OK: $tool ($(command -v "$tool"))"
   else
@@ -350,7 +350,7 @@ Run the automated 13-check smoke test script and verify all checks pass.
 
 ### Context
 
-The smoke test script (`scripts/zsh-smoke-test`) was created in Phase 22 (v2.0 Performance milestone) and wraps 13 automated checks covering: oh-my-posh availability, prompt configuration, mise availability, completion system, Atuin keybinding, 5 critical tools (git, zoxide, fzf, bat, lsd), zsh-autosuggestions loaded, zsh-syntax-highlighting configured, and startup monitoring active. It can be run via `mise run dotfiles:smoke-test` or directly.
+The smoke test script (`scripts/zsh-smoke-test`) was created in Phase 22 (v2.0 Performance milestone) and wraps 13 automated checks covering: Spaceship availability, prompt configuration, mise availability, completion system, Atuin keybinding, 5 critical tools (git, zoxide, fzf, bat, lsd), zsh-autosuggestions loaded, zsh-syntax-highlighting configured, and startup monitoring active. It can be run via `mise run dotfiles:smoke-test` or directly.
 
 ### Steps
 
@@ -372,7 +372,7 @@ Or run directly if mise tasks are not available:
 ZSH Smoke Test
 ==============
 
-[PASS] oh-my-posh command available
+[PASS] Spaceship prompt available
 [PASS] Prompt is configured
 [PASS] mise available (command or shims)
 [PASS] Completion system initialised
@@ -396,7 +396,7 @@ All checks passed
 
 **3. If any checks fail, note which ones failed and refer to the troubleshooting section. Each failure maps to a specific subsystem:**
 
-- **Checks 1-2 (oh-my-posh, prompt):** Prompt engine issue -- see Procedure 1 troubleshooting
+- **Checks 1-2 (Spaceship, prompt):** Prompt engine issue -- see Procedure 1 troubleshooting
 - **Check 3 (mise):** Runtime manager issue -- see Procedure 3 troubleshooting
 - **Check 4 (completions):** Completion system not initialised -- check `compinit` in zshrc
 - **Check 5 (Atuin):** History search keybinding missing -- check Atuin installation and config

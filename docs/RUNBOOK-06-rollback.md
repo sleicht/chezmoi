@@ -48,7 +48,7 @@ These issues are fixable within chezmoi and do not warrant rollback:
 
 - **Individual tool missing** — e.g., `brew install <tool>` fixes it
 - **Shell plugin not loading** — Sheldon config issue, fix in `plugins.toml`
-- **Prompt not rendering** — oh-my-posh config or path issue
+- **Prompt not rendering** — Spaceship config or path issue
 - **Git identity wrong** — Fix in `.gitconfig` or `.gitconfig_local`
 - **Startup time slow** — Performance tuning, not a migration failure
 - **One or two smoke test checks failing** — Targeted fix, not systemic failure

@@ -4,7 +4,7 @@
 # zoxide, atuin, carapace
 # Does NOT track mise (directory-dependent, not cached).
 # Does NOT track intelli-shell (not available on this system).
-# oh-my-posh uses its own init cache (~/.cache/oh-my-posh/), not evalcache.
+# Prompt init is handled directly by Spaceship and is not cached by evalcache.
 # zoxide: {{ output "zoxide" "--version" | trim | sha256sum }}
 # atuin: {{ output "atuin" "--version" | trim | sha256sum }}
 {{- if eq .chezmoi.os "darwin" }}

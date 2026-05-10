@@ -22,7 +22,7 @@ packages:
       # Core — required for the shell config to function
       - "chezmoi"
       - "mise"
-      - "oh-my-posh"
+      - "spaceship"
       - "sheldon"
       - "zsh"
       # CLI essentials
@@ -52,7 +52,6 @@ packages:
       - "cj-systems/gitflow-cjs"
       - "derailed/k9s"
       - "ggozad/formulas"
-      - "jandedobbeleer/oh-my-posh"
       - "jetbrains/junie"
       - "koekeishiya/formulae"
       - "manaflow-ai/cmux"
@@ -124,7 +123,6 @@ packages:
       - "ncdu"
       - "neovim"
       - "nushell"
-      - "oh-my-posh"
       - "opencode"
       - "openssh"
       - "opentofu"
@@ -145,6 +143,7 @@ packages:
       - "sheldon"
       - "shellcheck"
       - "shfmt"
+      - "spaceship"
       - "sql-language-server"
       - "ssh-copy-id"
       - "television"
