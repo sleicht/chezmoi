@@ -368,6 +368,14 @@ packages:
       Racompass: 1538380685
 
 # Bitwarden naming convention for dotfile secrets
+monitors:
+  client:
+    primary: "DELL U3419W"
+    secondary: "Wokyis"
+  personal:
+    primary: "DELL U2725QE"
+    secondary: "Built-in Retina Display"
+
 bitwarden:
   folders:
     shared: "dotfiles/shared"
