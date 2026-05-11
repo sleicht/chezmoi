@@ -30,6 +30,17 @@ policies:
 
   # -- Commands: allow safe operations --------------------------------
 
+  # Gradle
+  - permission: allow
+    rule:
+      command: "./gradlew clean*"
+  - permission: allow
+    rule:
+      command: "./gradlew compileKotlin*"
+  - permission: allow
+    rule:
+      command: "./gradlew test*"
+
   # File tests (broader than Claude Code's per-file patterns)
   - permission: allow
     rule:
@@ -102,7 +113,7 @@ policies:
   # GitLab CLI
   - permission: allow
     rule:
-      command: "glab ci view *"
+      command: "glab ci*"
   - permission: allow
     rule:
       command: "glab issue list *"
