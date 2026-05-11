@@ -251,6 +251,10 @@
       "WebFetch(domain:errorprone.info)",
       "WebFetch(domain:github.com)",
       "mcp__ide__getDiagnostics",
+      "mcp__idea__find_files_by_name_keyword"
+      "mcp__idea__get_symbol_info",
+      "mcp__idea__list_directory_tree",
+      "mcp__idea__read_file"
 {{- if eq .machine_type "client" }}
       "mcp__sanitas-developer-tools__*",
 {{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
