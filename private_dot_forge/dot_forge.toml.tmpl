@@ -52,6 +52,8 @@ verify_todos = true
 # Deviation: enabled (default: false) — forge/muse subagent delegation
 subagents = true
 research_subagent = false
+# Deviation: enabled (default: false) — Switches patch replacement fallback from the legacy fuzzy-search range lookup to the newer text-patch gRPC API
+use_text_patch_fallback = true
 
 # ── Commit ──────────────────────────────────────────────────────────
 use_forge_committer = true
@@ -70,6 +72,15 @@ provider_id = "vertex_ai_anthropic"
 provider_id = "anthropic"
 {{- end }}
 model_id = "claude-opus-4-6"
+
+# ── Suggest ─────────────────────────────────────────────────────────
+[suggest]
+{{- if eq .machine_type "client" }}
+provider_id = "vertex_ai_anthropic"
+{{- else }}
+provider_id = "anthropic"
+{{- end }}
+model_id = "claude-sonnet-4-6"
 
 # ── Retry ───────────────────────────────────────────────────────────
 [retry]
