@@ -62,3 +62,6 @@ fi
 if [[ -n "$ZSH_PROFILE_STARTUP" ]]; then
   zprof | head -20
 fi
+
+# Must be last: ensures ~/.local/bin wins after mise and plugin PATH reconstruction
+path=("$HOME/.local/bin" "${path[@]}")

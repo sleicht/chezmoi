@@ -102,7 +102,6 @@ add_to_path "$VOLTA_HOME/bin"
 
 # Home bins
 add_to_path "$HOME/.bin"
-add_to_path "$HOME/.local/.bin"
 add_to_path "$HOME/.cargo/bin"
 add_to_path "$HOME/.opencode/bin"
 add_to_path "$HOME/.rd/bin"
@@ -110,6 +109,9 @@ add_to_path "$GEM_HOME/bin"
 
 # GPG agent
 add_to_path "/usr/local/opt/gpg-agent/bin"
+
+# Highest priority — must override Homebrew and system paths
+add_to_path "$HOME/.local/bin"
 
 export PATH
 
@@ -120,4 +122,3 @@ if [ -f "$HOME/.local/bin/env" ]; then
   # shellcheck source=/dev/null
   . "$HOME/.local/bin/env"
 fi
-
