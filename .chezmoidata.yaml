@@ -172,6 +172,7 @@ packages:
       - "mas"
       - "mole"
       - "sketchybar"
+      - "skhd"
       - "yabai"
 
     # Common casks - casks needed on all machines

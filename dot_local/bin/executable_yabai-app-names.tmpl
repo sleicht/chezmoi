@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# chezmoi source: dot_local/bin/executable_yabai-app-names.tmpl
+# target: ~/.local/bin/yabai-app-names
+# Launch your apps, then run this to see the names yabai uses in rules.
+set -euo pipefail
+
+yabai -m query --windows | jq -r '.[] | [.app, .title, (.space|tostring)] | @tsv' | sort -u

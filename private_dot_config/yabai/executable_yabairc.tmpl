@@ -1,0 +1,113 @@
+#!/usr/bin/env sh
+# ~/.config/yabai/yabairc
+# AeroSpace -> yabai starter config for Stephan
+# Notes:
+# - yabai uses native macOS Spaces, not AeroSpace workspaces.
+# - Rules match visible app names, not bundle IDs.
+# - Use: yabai -m query --windows | jq -r '.[].app' | sort -u
+#   to verify app names after launching your apps.
+
+# -----------------------------
+# Core layout
+# -----------------------------
+yabai -m config layout bsp
+yabai -m config window_placement second_child
+yabai -m config split_ratio 0.50
+yabai -m config auto_balance off
+
+# Focus / mouse behavior, close to your AeroSpace setup
+yabai -m config mouse_follows_focus off
+yabai -m config focus_follows_mouse off
+yabai -m config mouse_modifier alt
+yabai -m config mouse_action1 move
+yabai -m config mouse_action2 resize
+yabai -m config mouse_drop_action swap
+
+# Gaps based on your AeroSpace config
+yabai -m config window_gap 3
+yabai -m config top_padding 5
+yabai -m config bottom_padding 5
+yabai -m config left_padding 5
+yabai -m config right_padding 5
+
+# -----------------------------
+# Space labels, matching your old workspace intent
+# -----------------------------
+# Space 1: Terminal / dev shell
+# Space 2: IDE / editors
+# Space 3: Web
+# Space 4: Mail / calendar
+# Space 5: Chat / social
+# Space 6: spare
+# Space 7: external / small monitor
+# Space 8/9/10: optional spillover
+
+yabai -m space 1 --label term 2>/dev/null
+yabai -m space 2 --label ide 2>/dev/null
+yabai -m space 3 --label web 2>/dev/null
+yabai -m space 4 --label mail 2>/dev/null
+yabai -m space 5 --label chat 2>/dev/null
+yabai -m space 6 --label spare 2>/dev/null
+yabai -m space 7 --label external 2>/dev/null
+
+# -----------------------------
+# Default behavior
+# -----------------------------
+# AeroSpace defaulted everything to floating, then opted apps into tiling.
+# In yabai, that is too aggressive because rules use app names. We instead:
+# - keep yabai tiling by default on bsp spaces
+# - explicitly float known system/helper apps and browsers you previously floated
+# If something misbehaves, add manage=off below.
+
+# Floating / unmanaged apps from your workspace 0 and web workspace
+yabai -m rule --add app="^Finder$" manage=off space=1
+yabai -m rule --add app="^Path Finder$" manage=off space=1
+yabai -m rule --add app="^Tailscale$" manage=off space=1
+yabai -m rule --add app="^System Settings$" manage=off
+yabai -m rule --add app="^System Preferences$" manage=off
+yabai -m rule --add app="^Calculator$" manage=off
+yabai -m rule --add app="^App Store$" manage=off
+
+# Browsers you had floating on workspace 3
+yabai -m rule --add app="^Google Chrome$" manage=off space=3
+yabai -m rule --add app="^Zen$" manage=off space=3
+yabai -m rule --add app="^Vivaldi$" manage=off space=3
+yabai -m rule --add app="^Arc$" manage=off space=3
+
+# Terminal / shell tools -> Space 1
+yabai -m rule --add app="^Ghostty$" space=1
+yabai -m rule --add app="^Cmux$" space=1
+yabai -m rule --add app="^T3 Chat$" space=1
+yabai -m rule --add app="^GitButler$" space=1
+
+# IDE / editors -> Space 2
+# Verify the exact IntelliJ app name. It may be "IntelliJ IDEA", "IntelliJ IDEA Ultimate", etc.
+yabai -m rule --add app="^IntelliJ IDEA.*$" space=2
+yabai -m rule --add app="^Sublime Text$" space=2
+
+# Mail / calendar -> Space 4
+yabai -m rule --add app="^Spark$" space=4
+yabai -m rule --add app="^Fantastical$" space=4
+yabai -m rule --add app="^Microsoft Outlook$" space=4
+
+# Chat / social -> Space 5
+yabai -m rule --add app="^WhatsApp$" space=5
+yabai -m rule --add app="^Threema$" space=5
+yabai -m rule --add app="^kChat$" space=5
+yabai -m rule --add app="^Messages$" space=5
+yabai -m rule --add app="^Slack$" space=5
+yabai -m rule --add app="^Microsoft Teams$" space=5
+
+# -----------------------------
+# Signals: keep bars and layout less swampy
+# -----------------------------
+# SketchyBar hook replacement for your AeroSpace workspace-change trigger.
+# Adjust item/event names to your SketchyBar setup.
+yabai -m signal --add event=space_changed action='sketchybar --trigger yabai_space_change 2>/dev/null || true'
+yabai -m signal --add event=display_changed action='sketchybar --trigger yabai_display_change 2>/dev/null || true'
+
+# Optional: if you later configure the scripting addition, uncomment these two lines.
+# sudo yabai --load-sa
+# yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+
+echo "yabai config loaded"
