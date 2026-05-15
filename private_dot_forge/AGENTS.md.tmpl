@@ -29,3 +29,19 @@ Rules:
 ## Tool Preferences
 — Prefer `fd` over `find` for file discovery
 — Prefer `rg` (ripgrep) over `grep` for content search
+— Prefer `bat` over `cat` for file preview (syntax highlighting, line numbers)
+— Use `jq` for JSON processing, never manual string parsing
+— Use `duckdb` for ad-hoc SQL queries on CSV, Parquet, or JSON files — no Python scripts or jq chains
+— Use `mise run` for task running when a `mise.toml` exists; fall back to `just` (Justfile) over Makefile otherwise
+— Use `./gradlew` (or `./mvnw`), never system-installed build tools — but prefer `mise run`/`just` over direct Gradle/Maven commands when task definitions exist
+— Use `./gradlew dependencies` for dependency trees, not manual POM/build file reading
+— Use `semgrep --config auto` for security/correctness checks on Java/Kotlin before manual review
+— Use `shellcheck` to lint shell scripts
+— Use `git-delta` is configured as the git pager — diffs have line numbers and structured output
+— Use `watchexec` to auto-rerun commands on file changes (e.g. `watchexec -e kt,java -- mise run test`)
+— Use `httpie` (`http`/`https` commands) over `curl` for API testing
+
+## Java/Kotlin
+— Prefer Kotlin for new files unless the project is Java-only
+— Prefer Kotlin DSL (`*.gradle.kts`) for new build scripts
+— Run existing formatter (ktfmt/ktlint/spotless) before committing; match project config
