@@ -1,0 +1,11 @@
+{
+  "name": "aiup-pi",
+  "version": "1.0.0",
+  "description": "AI Unified Process for pi — spec-driven construction pipeline for Ktor/KMP projects",
+  "keywords": ["pi-package", "aiup", "spec-driven-development", "ktor", "kotlin"],
+  "license": "MIT",
+  "author": "Adapted from github.com/sleicht/ai-unified-marketplace",
+  "pi": {
+    "skills": ["./skills"]
+  }
+}
