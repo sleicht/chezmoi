@@ -1,0 +1,20 @@
+#!/bin/bash
+# One-time bootstrap for pi packages that should exist globally.
+# Pi manages its own updates via `pi update`; this just ensures first install.
+set -euo pipefail
+
+if ! command -v pi &> /dev/null; then
+  echo "==> pi CLI not found, skipping pi package installation."
+  exit 0
+fi
+
+echo "==> Checking pi packages..."
+
+if ! pi list 2>/dev/null | grep -q "pi-lens"; then
+  echo "    Installing pi-lens..."
+  pi install npm:pi-lens
+else
+  echo "    pi-lens already installed"
+fi
+
+echo "==> pi packages check complete."
