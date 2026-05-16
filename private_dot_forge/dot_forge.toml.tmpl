@@ -68,10 +68,11 @@ model_cache_ttl_secs = 604800      # 7 days
 [session]
 {{- if eq .machine_type "client" }}
 provider_id = "vertex_ai_anthropic"
-{{- else }}
-provider_id = "anthropic"
-{{- end }}
 model_id = "claude-opus-4-6"
+{{- else }}
+provider_id = "ollama"
+model_id = "kimi-k2.6:cloud"
+{{- end }}
 
 # ── Suggest ─────────────────────────────────────────────────────────
 [suggest]
