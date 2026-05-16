@@ -1,0 +1,12 @@
+#!/bin/bash
+# hash: {{ include "private_dot_pi/agent/extensions/package.json" | sha256sum }}
+# Auto-installs shared extension dependencies when package.json changes
+set -e
+
+cd "{{ .chezmoi.homeDir }}/.pi/agent/extensions"
+
+if command -v pnpm >/dev/null 2>&1; then
+  pnpm install
+else
+  npm install
+fi
