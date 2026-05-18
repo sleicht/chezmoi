@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# ktlint shim — routes pi-lens single-file Kotlin formatting to the project's ktfmt.
+#
+# pi-lens calls:  ktlint -F <file>
+# This shim:      finds the nearest mise.toml, then runs: mise run format <file>
+#
+# Projects without a mise.toml (or without a format task) are skipped silently
+# so pi-lens never hard-fails on unmanaged files.
+
+set -euo pipefail
+
+# The file to format is always the last argument (ktlint -F <file>).
+FILE="${*: -1}"
+
+# Nothing to do if no file was given or it doesn't exist.
+if [[ -z "$FILE" || ! -f "$FILE" ]]; then
+  exit 0
+fi
+
+# Resolve to an absolute path so the project-root walk works regardless of CWD.
+FILE="$(cd "$(dirname "$FILE")" && pwd)/$(basename "$FILE")"
+
+# Walk up the directory tree to find a mise project root.
+PROJECT_ROOT="$(dirname "$FILE")"
+while [[ "$PROJECT_ROOT" != "/" && ! -f "$PROJECT_ROOT/mise.toml" ]]; do
+  PROJECT_ROOT="$(dirname "$PROJECT_ROOT")"
+done
+
+# No mise project found — fall back to real ktlint if available.
+if [[ ! -f "$PROJECT_ROOT/mise.toml" ]]; then
+  SHIM_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  REAL_KTLINT="$(PATH="$(echo "$PATH" | tr ':' '\n' | grep -v "^${SHIM_DIR}$" | tr '\n' ':')" command -v ktlint 2>/dev/null || true)"
+  if [[ -n "$REAL_KTLINT" ]]; then
+    exec "$REAL_KTLINT" "$@"
+  fi
+  exit 0
+fi
+
+cd "$PROJECT_ROOT"
+exec mise run format "$FILE"

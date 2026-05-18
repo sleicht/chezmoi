@@ -26,6 +26,7 @@ All of this happens inline and is actionable:
 | `private_dot_pi-lens/config.json`            | `~/.pi-lens/config.json` | Global preferences (widget hidden, deferred formatting)       |
 | `run_once_after_install-pi-packages.sh.tmpl` | run script               | One-time `pi install npm:pi-lens` bootstrap                   |
 | `dot_profile.tmpl`                           | `~/.profile`             | Sets `PILENS_DATA_DIR` to keep per-project state out of repos |
+| `dot_local/bin/executable_ktlint`            | `~/.local/bin/ktlint`    | Shim that routes pi-lens Kotlin formatting to project's ktfmt |
 
 The install script is **idempotent** — it only installs if `pi-lens` is not already present. Updates are handled via `pi update`, not chezmoi.
 
@@ -72,19 +73,36 @@ This seeds the server so the first symbol query isn't cold.
 
 ### What Works
 
-| Capability                 | Kotlin/Ktor                                        |
-|----------------------------|----------------------------------------------------|
-| **LSP**                    | ✓ `kotlin-language-server` auto-detected/installed |
-| **Linting**                | `ktlint` (auto-installed from GitHub releases)     |
-| **Formatting**             | `ktlint`                                           |
-| **Secrets guard**          | ✓ (language-agnostic)                              |
-| **Read-before-edit guard** | ✓ (file-level & line-range tracking)               |
+| Capability                 | Kotlin/Ktor                                           |
+|----------------------------|-------------------------------------------------------|
+| **LSP**                    | ✓ `kotlin-language-server` auto-detected/installed    |
+| **Linting**                | `ktlint` (auto-installed from GitHub releases)        |
+| **Formatting**             | `ktfmt` via `mise run format` (see shim below)        |
+| **Secrets guard**          | ✓ (language-agnostic)                                 |
+| **Read-before-edit guard** | ✓ (file-level & line-range tracking)                  |
+
+### Kotlin Formatter Shim (`ktlint` → `ktfmt`)
+
+pi-lens hardcodes `ktlint` as the Kotlin formatter with no project-level override.
+Projects that use `ktfmt` (e.g. via the `com.ncorti.ktfmt.gradle` Gradle plugin) would
+otherwise get "N failed" at `agent_end` because `ktlint` is not installed.
+
+The shim at `~/.local/bin/ktlint` intercepts pi-lens's `ktlint -F <file>` call and
+routes it to the project's own formatter:
+
+1. Extracts the file path from the arguments (always the last arg).
+2. Walks up the directory tree to find the nearest `mise.toml`.
+3. `cd`s to that project root and runs `mise run format <file>`.
+
+Projects without a `mise.toml`, or without a `format` task, are skipped silently.
+Projects that do have the task get single-file `ktfmt` formatting via the JAR cached
+in `.tools/ktfmt.jar` (lazy-downloaded on first use, gitignored by `*.jar`).
 
 ### Limitations
 
 - **No tree-sitter rules** for Kotlin. TypeScript/Python/Go have blocking structural rules (e.g. SQL injection guards); Kotlin does not.
 - **No symbol expansion** on read. For Kotlin, line-range tracking is literal; you must have read the target lines.
-- **Nothing Ktor-specific** — `ktlint` + Kotlin LSP are general-purpose; Ktor `Routing`, `Application`, or server config get no special treatment.
+- **Nothing Ktor-specific** — Kotlin LSP is general-purpose; Ktor `Routing`, `Application`, or server config get no special treatment.
 - **Read-guard on Ktor routing** — when you edit a `Routing` block in a large file, pi-lens checks you've read those lines. Use `/lens-allow-edit <path>` for a one-off override if needed.
 
 ### Ktor Project Setup Checklist
