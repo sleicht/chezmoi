@@ -130,6 +130,7 @@ packages:
       - "opentofu"
       - "p7zip"
       - "phantom"
+      - "pi-coding-agent"
       - "pigz"
       - "pkg-config"
       - "podman"
@@ -183,6 +184,7 @@ packages:
     # Common casks - casks needed on all machines
     common_casks:
       - "aerospace"
+      - "agentsview"
       - "arc"
       - "bartender"
       - "beyond-compare"
@@ -287,7 +289,6 @@ packages:
       - "hledger"
       - "jetbrains/junie/junie"
       - "neurosnap/tap/zmx"
-      - "pi-coding-agent"
       # rbenv removed - mise manages ruby
       # rust removed - mise manages rust via stable channel
       - "tailscale"
