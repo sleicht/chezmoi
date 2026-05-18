@@ -1,0 +1,25 @@
+{
+{{- if eq .machine_type "client" }}
+  "defaultProvider": "anthropic-vertex",
+  "defaultModel": "claude-opus-4-6",
+{{- end }}
+  "packages": [
+    "npm:pi-lens"
+{{- if eq .machine_type "client" }}
+    ,"npm:@twogiants/pi-anthropic-vertex"
+{{- end }}
+  ],
+  "lastChangelogVersion": "0.75.1",
+  "terminal": {
+    "showTerminalProgress": true
+  },
+  "theme": "dracula",
+  "defaultThinkingLevel": "high",
+{{- if eq .machine_type "client" }}
+  "enabledModels": [
+    "anthropic-vertex/claude-haiku-4-5",
+    "anthropic-vertex/claude-opus-4-6",
+    "anthropic-vertex/claude-sonnet-4-6"
+  ]
+{{- end }}
+}
