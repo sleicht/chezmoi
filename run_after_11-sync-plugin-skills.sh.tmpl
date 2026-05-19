@@ -1,9 +1,10 @@
 #!/bin/bash
-# Copy skills from Claude Code plugins cache and ~/.claude/skills/
-# into ~/forge/skills/ so Forge Code can discover them.
+# Sync skills from Claude Code plugins cache and ~/.claude/skills/
+# into ~/.agents/skills/ so Forge Code can discover them.
 #
 # Forge does not follow symlinks when scanning for skills, so we
-# rsync the contents instead.
+# rsync the contents instead.  Skills removed from all sources are
+# moved to ~/.agents/skills/.archive/ for manual review.
 #
 # Runs after every chezmoi apply.
 
@@ -14,6 +15,7 @@ exit 0
 {{ end -}}
 
 FORGE_SKILLS_DIR="${HOME}/.agents/skills"
+ARCHIVE_DIR="${FORGE_SKILLS_DIR}/.archive"
 CLAUDE_SKILLS_DIR="${HOME}/.claude/skills"
 PLUGINS_CACHE="${HOME}/.claude/plugins/cache"
 INSTALLED_JSON="${HOME}/.claude/plugins/installed_plugins.json"
@@ -23,6 +25,10 @@ mkdir -p "$FORGE_SKILLS_DIR"
 created=0
 updated=0
 skipped=0
+archived=0
+
+# Track which skill names are synced from sources (newline-separated list)
+expected_skills=""
 
 # ---------------------------------------------------------------------------
 # Helper: sync a skill directory into FORGE_SKILLS_DIR
@@ -37,6 +43,8 @@ sync_skill() {
   if [[ ! -f "$source/SKILL.md" ]]; then
     return
   fi
+
+  expected_skills="${expected_skills}${skill_name}\n"
 
   if [[ -d "$target" ]]; then
     # Update: rsync and check if anything changed
@@ -96,4 +104,19 @@ for entries in data.get('plugins', {}).values():
 ")
 fi
 
-echo "Forge skill sync: ${created} created, ${updated} updated, ${skipped} skipped"
+# ---------------------------------------------------------------------------
+# Phase 3: Archive orphaned skills no longer present in any source
+# ---------------------------------------------------------------------------
+for target_dir in "$FORGE_SKILLS_DIR"/*/; do
+  [[ -d "$target_dir" ]] || continue
+  skill_name=$(basename "$target_dir")
+  if ! printf '%b' "$expected_skills" | grep -qxF "$skill_name"; then
+    mkdir -p "$ARCHIVE_DIR"
+    # Overwrite any previously archived version
+    rm -rf "${ARCHIVE_DIR:?}/$skill_name"
+    mv "$target_dir" "$ARCHIVE_DIR/$skill_name"
+    archived=$((archived + 1))
+  fi
+done
+
+echo "Forge skill sync: ${created} created, ${updated} updated, ${archived} archived, ${skipped} skipped"
