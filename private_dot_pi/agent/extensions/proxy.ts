@@ -14,7 +14,7 @@ import { ProxyAgent } from "undici";
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { homedir } from "node:os";
-import type { ExtensionAPI } from "@anthropic-ai/pi";
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 // ─── Types ──────────────────────────────────────────────
 type Action = "direct" | "proxy" | "fallback";

@@ -1,22 +1,19 @@
 {
 {{- if eq .machine_type "client" }}
   "defaultThinkingLevel": "high",
-  "defaultProvider": "anthropic-vertex",
+  "defaultProvider": "vertex",
   "defaultModel": "claude-opus-4-6",
   "enabledModels": [
-    "anthropic-vertex/claude-haiku-4-5",
-    "anthropic-vertex/claude-opus-4-6",
-    "anthropic-vertex/claude-sonnet-4-6"
-  ]
+    "vertex/claude-haiku-4-5",
+    "vertex/claude-sonnet-4-6",
+    "vertex/claude-opus-4-6"
+  ],
 {{- else }}
   "defaultThinkingLevel": "low",
 {{- end }}
   "enableInstallTelemetry": false,
   "lastChangelogVersion": "0.75.3",
   "packages": [
-{{- if eq .machine_type "client" }}
-    "npm:@twogiants/pi-anthropic-vertex",
-{{- end }}
     "npm:pi-lens",
     "npm:@dkmnx/pi-clarify",
     "npm:@vanillagreen/pi-caveman"
