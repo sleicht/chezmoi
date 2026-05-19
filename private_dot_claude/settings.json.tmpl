@@ -7,21 +7,14 @@
     "andrej-karpathy-skills@karpathy-skills": true,
     "caveman@caveman": true,
     "ck@cavekit-marketplace": true,
-    "claude-code-setup@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true,
     "explanatory-output-style@claude-plugins-official": true,
-    "feature-dev@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
-    "fullstack-dev-skills@fullstack-dev-skills": true,
     "jdtls-lsp@claude-plugins-official": true,
     "kotlin-lsp@claude-plugins-official": true,
     "learning-output-style@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true,
-    "plugin-dev@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true,
 {{- if eq .machine_type "client" }}
 {{- range splitList "\n" (rbw "claude-client-config" "--folder" "dotfiles/client").notes }}
 {{- if ne . "" }}
