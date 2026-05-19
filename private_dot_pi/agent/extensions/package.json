@@ -4,11 +4,12 @@
   "type": "module",
   "packageManager": "pnpm@10.33.0",
   "dependencies": {
-    "@mendable/firecrawl-js": "^4.23.0",
-    "typebox": "^1.1.38"
+    "@mendable/firecrawl-js": "^4.24.2",
+    "typebox": "^1.1.38",
+    "undici": "^7.25.0"
   },
   "devDependencies": {
-    "@types/node": "^25.8.0",
+    "@types/node": "^25.9.0",
     "typescript": "^6.0.3"
   }
 }
