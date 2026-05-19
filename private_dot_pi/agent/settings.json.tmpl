@@ -1,25 +1,37 @@
 {
 {{- if eq .machine_type "client" }}
+  "defaultThinkingLevel": "high",
   "defaultProvider": "anthropic-vertex",
   "defaultModel": "claude-opus-4-6",
-{{- end }}
-  "packages": [
-    "npm:pi-lens"
-{{- if eq .machine_type "client" }}
-    ,"npm:@twogiants/pi-anthropic-vertex"
-{{- end }}
-  ],
-  "lastChangelogVersion": "0.75.1",
-  "terminal": {
-    "showTerminalProgress": true
-  },
-  "theme": "dracula",
-  "defaultThinkingLevel": "high",
-{{- if eq .machine_type "client" }}
   "enabledModels": [
     "anthropic-vertex/claude-haiku-4-5",
     "anthropic-vertex/claude-opus-4-6",
     "anthropic-vertex/claude-sonnet-4-6"
   ]
+{{- else }}
+  "defaultThinkingLevel": "low",
 {{- end }}
+  "enableInstallTelemetry": false,
+  "lastChangelogVersion": "0.75.3",
+  "packages": [
+{{- if eq .machine_type "client" }}
+    "npm:@twogiants/pi-anthropic-vertex",
+{{- end }}
+    "npm:pi-lens",
+    "npm:@dkmnx/pi-clarify",
+    "npm:@vanillagreen/pi-caveman"
+  ],
+  "terminal": {
+    "showTerminalProgress": true
+  },
+  "theme": "dracula",
+  "vstack": {
+    "extensionManager": {
+      "config": {
+        "@vanillagreen/pi-caveman": {
+          "mode": "full"
+        }
+      }
+    }
+  }
 }
