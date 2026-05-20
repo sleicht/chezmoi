@@ -1,0 +1,13 @@
+#!/bin/bash
+# hash: {{ include "private_dot_pi/agent/extensions/pi-provider-litellm/package.json" | sha256sum }}
+# Installs and builds pi-provider-litellm when package.json changes
+set -e
+
+DIR="{{ .chezmoi.homeDir }}/.pi/agent/extensions/pi-provider-litellm"
+
+cd "$DIR"
+echo "pi-provider-litellm: installing dependencies…"
+npm install
+echo "pi-provider-litellm: building…"
+npm run build
+echo "pi-provider-litellm: done"
