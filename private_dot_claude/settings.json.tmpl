@@ -41,10 +41,7 @@
   },
   "env": {
 {{- if eq .machine_type "client" }}
-    "CLAUDE_CODE_USE_VERTEX": "1",
-    "ANTHROPIC_VERTEX_PROJECT_ID": "{{ (rbwFields "claude-vertex-config" "--folder" "dotfiles/client").project_id.value }}",
-    "CLOUD_ML_REGION": "{{ (rbwFields "claude-vertex-config" "--folder" "dotfiles/client").region.value }}",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5@20251001",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5",
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-6",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6"
 {{- else if eq .machine_type "personal" }}
