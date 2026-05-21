@@ -10,11 +10,19 @@ fi
 
 echo "==> Checking pi packages..."
 
-if ! pi list 2>/dev/null | grep -q "pi-lens"; then
-  echo "    Installing pi-lens..."
-  pi install npm:pi-lens
-else
-  echo "    pi-lens already installed"
-fi
+ensure_pi_package() {
+  local package_name="$1"
+  local package_source="$2"
+
+  if ! pi list 2>/dev/null | grep -q "$package_name"; then
+    echo "    Installing $package_source..."
+    pi install "$package_source"
+  else
+    echo "    $package_name already installed"
+  fi
+}
+
+ensure_pi_package "pi-lens" "npm:pi-lens"
+ensure_pi_package "pi-mcp-adapter" "npm:pi-mcp-adapter@2.6.1"
 
 echo "==> pi packages check complete."

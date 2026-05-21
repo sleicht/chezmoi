@@ -1,0 +1,14 @@
+{
+  "settings": {
+    "toolPrefix": "server",
+    "directTools": false
+  },
+  "mcpServers": {
+    "intellij": {
+      "url": "http://127.0.0.1:64342/stream",
+      "lifecycle": "lazy",
+      "idleTimeout": 10,
+      "exposeResources": true
+    }
+  }
+}
