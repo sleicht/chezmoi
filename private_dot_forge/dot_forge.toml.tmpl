@@ -54,10 +54,20 @@ subagents = true
 research_subagent = false
 # Deviation: enabled (default: false) — Switches patch replacement fallback from the legacy fuzzy-search range lookup to the newer text-patch gRPC API
 use_text_patch_fallback = true
+merge_system_messages = false
 
 # ── Commit ──────────────────────────────────────────────────────────
 use_forge_committer = true
 max_commit_count = 20
+
+[commit]
+{{- if eq .machine_type "client" }}
+provider_id = "openai_compatible"
+model_id = "claude-sonnet-4-6"
+{{- else }}
+provider_id = "ollama"
+model_id = "kimi-k2.6:cloud"
+{{- end }}
 
 # ── Display ─────────────────────────────────────────────────────────
 currency_symbol = ""
@@ -67,8 +77,8 @@ model_cache_ttl_secs = 604800      # 7 days
 # ── Session (provider + model) ──────────────────────────────────────
 [session]
 {{- if eq .machine_type "client" }}
-provider_id = "vertex_ai_anthropic"
-model_id = "claude-opus-4-6"
+provider_id = "openai_compatible"
+model_id = "gpt-5-5"
 {{- else }}
 provider_id = "ollama"
 model_id = "kimi-k2.6:cloud"
@@ -77,11 +87,12 @@ model_id = "kimi-k2.6:cloud"
 # ── Suggest ─────────────────────────────────────────────────────────
 [suggest]
 {{- if eq .machine_type "client" }}
-provider_id = "vertex_ai_anthropic"
-{{- else }}
-provider_id = "anthropic"
-{{- end }}
+provider_id = "openai_compatible"
 model_id = "claude-sonnet-4-6"
+{{- else }}
+provider_id = "ollama"
+model_id = "kimi-k2.6:cloud"
+{{- end }}
 
 # ── Retry ───────────────────────────────────────────────────────────
 [retry]
@@ -122,7 +133,6 @@ message_threshold = 200
 on_turn_end = false
 
 # ── Reasoning ───────────────────────────────────────────────────────
-# Deviation: high effort (default: medium)
 [reasoning]
-effort = "high"
+effort = "medium"
 enabled = true
