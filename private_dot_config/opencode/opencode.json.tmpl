@@ -31,6 +31,12 @@
           "limit": {
             "context": 200000,
             "output": 32000
+          },
+          "variants": {
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" },
+            "max": { "reasoningEffort": "max" }
           }
         },
         "claude-sonnet-4-6": {
@@ -38,6 +44,12 @@
           "limit": {
             "context": 200000,
             "output": 16000
+          },
+          "variants": {
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" },
+            "max": { "reasoningEffort": "max" }
           }
         },
         "claude-haiku-4-5": {
@@ -52,6 +64,13 @@
           "limit": {
             "context": 200000,
             "output": 32000
+          },
+          "variants": {
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" },
+            "xhigh": { "reasoningEffort": "xhigh" },
+            "max": { "reasoningEffort": "max" }
           }
         },
         "gemini-3.1-flash-lite": {
@@ -59,6 +78,23 @@
           "limit": {
             "context": 1000000,
             "output": 8192
+          },
+          "variants": {
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" }
+          }
+        },
+        "gemini-3.5-flash": {
+          "name": "Gemini 3.5 Flash",
+          "limit": {
+            "context": 1000000,
+            "output": 65536
+          },
+          "variants": {
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" }
           }
         },
         "gpt-5-5": {
@@ -66,6 +102,13 @@
           "limit": {
             "context": 128000,
             "output": 16384
+          },
+          "variants": {
+            "none": { "reasoningEffort": "none" },
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" },
+            "xhigh": { "reasoningEffort": "xhigh" }
           }
         }
       }
