@@ -4,9 +4,7 @@
   "type": "module",
   "packageManager": "pnpm@10.33.0",
   "dependencies": {
-    "@google/genai": "^2.4.0",
     "@mendable/firecrawl-js": "^4.24.2",
-    "google-auth-library": "^10.6.2",
     "typebox": "^1.1.38",
     "undici": "^7.25.0"
   },
