@@ -203,6 +203,7 @@ packages:
       - "jetbrains-toolbox"
       - "jordanbaird-ice"
       - "karabiner-elements"
+      - "kotlin-lsp"
       - "manaflow-ai/cmux/cmux"
       - "obsidian"
       - "opencode-desktop"
