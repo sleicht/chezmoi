@@ -1,0 +1,79 @@
+{{- if and (eq .machine_type "client") (eq .chezmoi.os "darwin") -}}
+#!/bin/bash
+# Compile and install LiteLlmBudgetOverlay when Swift source or API key changes
+# budget-overlay.swift hash: {{ include "dot_local/bin/budget-overlay.swift.tmpl" | sha256sum }}
+{{- $key := output "sh" "-c" (printf "chezmoi secret keyring get --service=litellm --user=%s 2>/dev/null || echo" .chezmoi.username) | trim }}
+# litellm-key hash: {{ $key | sha256sum }}
+set -eufo pipefail
+
+LABEL="litellm-budget-overlay"
+APP_DIR="${HOME}/.local/bin/LiteLlmBudgetOverlay.app"
+BINARY_PATH="${APP_DIR}/Contents/MacOS/budget-overlay"
+SOURCE="${HOME}/.local/bin/budget-overlay.swift"
+PLIST_PATH="${HOME}/Library/LaunchAgents/${LABEL}.plist"
+LITELLM_KEY={{ $key | squote }}
+
+if [ -z "${LITELLM_KEY}" ]; then
+    echo "WARNING: LITELLM_KEY not found in keychain. Budget overlay will show 'NO KEY'."
+    echo "  Set it with: chezmoi secret keyring set --service=litellm --user=${USER}"
+fi
+
+if ! command -v swiftc > /dev/null 2>&1; then
+    echo "WARNING: swiftc not found, skipping budget-overlay build"
+    echo "  Install Xcode Command Line Tools: xcode-select --install"
+    exit 0
+fi
+
+echo "==> Building budget-overlay..."
+
+# Stop running instance and unload agent
+pkill -f "LiteLlmBudgetOverlay.app/Contents/MacOS/budget-overlay" 2>/dev/null || true
+launchctl bootout "gui/$(id -u)/${LABEL}" 2>/dev/null || true
+
+# Compile
+swiftc "${SOURCE}" -o /tmp/budget-overlay-bin -framework AppKit
+echo "  Compiled successfully."
+
+# Create .app bundle
+mkdir -p "${APP_DIR}/Contents/MacOS"
+mv /tmp/budget-overlay-bin "${BINARY_PATH}"
+
+# Generate Info.plist with API key baked in via LSEnvironment
+cat > "${APP_DIR}/Contents/Info.plist" << 'INFOPLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>LSUIElement</key>
+  <true/>
+  <key>CFBundleExecutable</key>
+  <string>budget-overlay</string>
+  <key>CFBundleIdentifier</key>
+  <string>litellm-budget-overlay</string>
+  <key>LSEnvironment</key>
+  <dict>
+    <key>LITELLM_KEY</key>
+    <string>{{ $key }}</string>
+  </dict>
+</dict>
+</plist>
+INFOPLIST
+
+chmod 600 "${APP_DIR}/Contents/Info.plist"
+
+# Ad-hoc code sign
+codesign --force --sign - "${BINARY_PATH}"
+echo "  App bundle created and signed."
+
+# Bootstrap LaunchAgent and start
+if [ -f "${PLIST_PATH}" ]; then
+    launchctl bootstrap "gui/$(id -u)" "${PLIST_PATH}"
+    echo "  LaunchAgent registered."
+fi
+
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "${APP_DIR}"
+open -a "${APP_DIR}"
+
+echo "==> Budget overlay installed and running."
+{{- end }}

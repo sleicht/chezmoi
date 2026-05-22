@@ -91,6 +91,8 @@ Brewfile_Personal
 .config/sketchybar/**
 Library
 Library/**
+.local/bin/budget-overlay.swift
+run_onchange_after_07-budget-overlay.sh
 .config/karabiner
 .config/karabiner/**
 .finicky.js
@@ -119,6 +121,9 @@ run_once_before_macos-defaults.sh
 {{- if ne .machine_type "client" }}
 .ssh/config_client
 Library/LaunchAgents/com.client.claude-vertex-env.plist
+Library/LaunchAgents/com.sanitas.litellm-budget-overlay.plist
+.local/bin/budget-overlay.swift
+run_onchange_after_07-budget-overlay.sh
 {{- end }}
 {{- if ne .machine_type "server" }}
 .ssh/config_server
