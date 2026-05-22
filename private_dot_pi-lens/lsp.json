@@ -1,0 +1,12 @@
+{
+  "disabledServers": ["kotlin"],
+  "servers": {
+    "kotlin-jb": {
+      "name": "Kotlin Language Server (JetBrains)",
+      "extensions": [".kt", ".kts"],
+      "command": "/opt/homebrew/bin/kotlin-lsp",
+      "args": ["--stdio"],
+      "rootMarkers": ["settings.gradle.kts"]
+    }
+  }
+}
