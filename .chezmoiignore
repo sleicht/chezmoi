@@ -120,6 +120,7 @@ run_once_before_macos-defaults.sh
 {{- end }}
 {{- if ne .machine_type "client" }}
 .ssh/config_client
+.pi/proxy.json
 Library/LaunchAgents/com.client.claude-vertex-env.plist
 Library/LaunchAgents/com.sanitas.litellm-budget-overlay.plist
 .local/bin/budget-overlay.swift
