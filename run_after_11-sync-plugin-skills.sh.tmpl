@@ -27,28 +27,80 @@ updated=0
 skipped=0
 archived=0
 
-# Track which skill names are synced from sources (newline-separated list)
-expected_skills=""
+# Track which top-level entries are synced from sources (newline-separated list)
+expected_entries=""
+skill_names=()
+skill_sources=()
+shared_names=()
+shared_sources=()
 
 # ---------------------------------------------------------------------------
-# Helper: sync a skill directory into FORGE_SKILLS_DIR
-# Usage: sync_skill <skill_name> <source_dir>
+# Helper: register a skill source. Later sources with the same name win.
+# Usage: register_skill <skill_name> <source_dir>
 # ---------------------------------------------------------------------------
-sync_skill() {
+register_skill() {
   local skill_name="$1"
   local source="$2"
-  local target="$FORGE_SKILLS_DIR/$skill_name"
+  local i
 
   # Source must contain a SKILL.md
   if [[ ! -f "$source/SKILL.md" ]]; then
     return
   fi
 
-  expected_skills="${expected_skills}${skill_name}\n"
+  for ((i = 0; i < ${#skill_names[@]}; i++)); do
+    if [[ "${skill_names[$i]}" == "$skill_name" ]]; then
+      skill_sources[i]="$source"
+      return
+    fi
+  done
+
+  skill_names+=("$skill_name")
+  skill_sources+=("$source")
+  expected_entries="${expected_entries}${skill_name}\n"
+}
+
+# ---------------------------------------------------------------------------
+# Helper: register a shared resource directory. Later sources with the same name win.
+# Usage: register_shared_dir <dir_name> <source_dir>
+# ---------------------------------------------------------------------------
+register_shared_dir() {
+  local dir_name="$1"
+  local source="$2"
+  local i
+
+  if [[ ! -d "$source" ]]; then
+    return
+  fi
+
+  for ((i = 0; i < ${#shared_names[@]}; i++)); do
+    if [[ "${shared_names[$i]}" == "$dir_name" ]]; then
+      shared_sources[i]="$source"
+      return
+    fi
+  done
+
+  shared_names+=("$dir_name")
+  shared_sources+=("$source")
+  expected_entries="${expected_entries}${dir_name}\n"
+}
+
+# ---------------------------------------------------------------------------
+# Helper: sync a directory into FORGE_SKILLS_DIR
+# Usage: sync_dir <entry_name> <source_dir>
+# ---------------------------------------------------------------------------
+sync_dir() {
+  local entry_name="$1"
+  local source="$2"
+  local target="$FORGE_SKILLS_DIR/$entry_name"
+
+  if [[ ! -d "$source" ]]; then
+    return
+  fi
 
   if [[ -d "$target" ]]; then
     # Update: rsync and check if anything changed
-    if rsync -a --delete --checksum --dry-run "$source/" "$target/" 2>/dev/null | grep -q .; then
+    if rsync -a --delete --checksum --dry-run --itemize-changes "$source/" "$target/" 2>/dev/null | grep -q .; then
       rsync -a --delete --checksum "$source/" "$target/"
       updated=$((updated + 1))
     fi
@@ -74,7 +126,11 @@ if [[ -d "$CLAUDE_SKILLS_DIR" ]]; then
       source="${skill_dir%/}"
     fi
 
-    sync_skill "$skill_name" "$source"
+    if [[ -f "$source/SKILL.md" ]]; then
+      register_skill "$skill_name" "$source"
+    elif [[ "$skill_name" == _* ]]; then
+      register_shared_dir "$skill_name" "$source"
+    fi
   done
 fi
 
@@ -88,7 +144,14 @@ if [[ -d "$PLUGINS_CACHE" ]] && [[ -f "$INSTALLED_JSON" ]]; then
 
     for skill_dir in "$skills_root"/*/; do
       [[ -d "$skill_dir" ]] || continue
-      sync_skill "$(basename "$skill_dir")" "${skill_dir%/}"
+      skill_name=$(basename "$skill_dir")
+      source="${skill_dir%/}"
+
+      if [[ -f "$source/SKILL.md" ]]; then
+        register_skill "$skill_name" "$source"
+      elif [[ "$skill_name" == _* ]]; then
+        register_shared_dir "$skill_name" "$source"
+      fi
     done
   done < <(python3 -c "
 import json
@@ -105,12 +168,23 @@ for entries in data.get('plugins', {}).values():
 fi
 
 # ---------------------------------------------------------------------------
-# Phase 3: Archive orphaned skills no longer present in any source
+# Phase 3: Sync the final source selected for each top-level entry
+# ---------------------------------------------------------------------------
+for ((i = 0; i < ${#skill_names[@]}; i++)); do
+  sync_dir "${skill_names[$i]}" "${skill_sources[$i]}"
+done
+
+for ((i = 0; i < ${#shared_names[@]}; i++)); do
+  sync_dir "${shared_names[$i]}" "${shared_sources[$i]}"
+done
+
+# ---------------------------------------------------------------------------
+# Phase 4: Archive orphaned top-level entries no longer present in any source
 # ---------------------------------------------------------------------------
 for target_dir in "$FORGE_SKILLS_DIR"/*/; do
   [[ -d "$target_dir" ]] || continue
   skill_name=$(basename "$target_dir")
-  if ! printf '%b' "$expected_skills" | grep -qxF "$skill_name"; then
+  if ! printf '%b' "$expected_entries" | grep -qxF "$skill_name"; then
     mkdir -p "$ARCHIVE_DIR"
     # Overwrite any previously archived version
     rm -rf "${ARCHIVE_DIR:?}/$skill_name"
