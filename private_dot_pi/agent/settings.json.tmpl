@@ -19,12 +19,21 @@
     "npm:pi-mcp-adapter@2.7.0",
     "npm:@dkmnx/pi-clarify@0.1.9",
     "npm:@vanillagreen/pi-caveman@1.2.3",
-    "npm:@gotgenes/pi-subagents@6.18.0"
+    "npm:@gotgenes/pi-subagents@6.18.0",
+{{- if eq .machine_type "personal" }}
+    "npm:@ollama/pi-web-search",
+{{- end }}
+    "npm:pi-ghostty-notifier@0.1.3"
   ],
   "terminal": {
     "showTerminalProgress": true
   },
   "theme": "dracula",
+  "pi-ghostty-notifier": {
+    "level": "medium",
+    "includeSummary": true,
+    "bell": "actionable"
+  },
   "vstack": {
     "extensionManager": {
       "config": {
