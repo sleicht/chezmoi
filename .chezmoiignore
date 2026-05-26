@@ -173,6 +173,7 @@ Library/**
 .claude/skills/gitbutler/**
 .claude/skills/glab
 .claude/skills/glab/**
+.pi/agent/extensions/firecrawl-search.ts
 {{- end }}
 
 # -----------------------------------------------------------------------------
