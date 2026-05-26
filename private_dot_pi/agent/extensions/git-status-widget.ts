@@ -1,4 +1,7 @@
-import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import type {
+	ExtensionAPI,
+	ExtensionContext,
+} from "@earendil-works/pi-coding-agent";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 
@@ -34,53 +37,91 @@ function countUnstagedFiles(statusOutput: string) {
 }
 
 async function getUnstagedCount(cwd: string) {
-	const status = await runGit(["status", "--porcelain", "--untracked-files=normal"], cwd);
+	const status = await runGit(
+		["status", "--porcelain", "--untracked-files=normal"],
+		cwd,
+	);
 	return countUnstagedFiles(status);
 }
 
-async function updateWidget(ctx: ExtensionContext) {
-	if (!ctx.hasUI) return;
+type SessionState = { closed: boolean };
+
+function setWidget(
+	ctx: ExtensionContext,
+	state: SessionState,
+	lines: string[] | undefined,
+) {
+	if (state.closed) return;
 
 	try {
-		await runGit(["rev-parse", "--is-inside-work-tree"], ctx.cwd);
+		if (ctx.hasUI) ctx.ui.setWidget(WIDGET_ID, lines);
+	} catch {
+		// Context may become stale during session replacement/reload.
+	}
+}
+
+async function updateWidget(ctx: ExtensionContext, state: SessionState) {
+	if (state.closed) return;
+
+	let cwd: string;
+	try {
+		if (!ctx.hasUI) return;
+		cwd = ctx.cwd;
+	} catch {
+		return;
+	}
+
+	try {
+		await runGit(["rev-parse", "--is-inside-work-tree"], cwd);
+		if (state.closed) return;
+
 		const [branch, unstagedCount] = await Promise.all([
-			getBranch(ctx.cwd),
-			getUnstagedCount(ctx.cwd),
+			getBranch(cwd),
+			getUnstagedCount(cwd),
 		]);
+		if (state.closed) return;
 
 		const fileLabel = unstagedCount === 1 ? "file" : "files";
-		ctx.ui.setWidget(WIDGET_ID, [` ${branch} · ${unstagedCount} unstaged ${fileLabel}`]);
+		setWidget(ctx, state, [
+			` ${branch} · ${unstagedCount} unstaged ${fileLabel}`,
+		]);
 	} catch {
-		ctx.ui.setWidget(WIDGET_ID, undefined);
+		setWidget(ctx, state, undefined);
 	}
 }
 
 export default function (pi: ExtensionAPI) {
 	let interval: NodeJS.Timeout | undefined;
+	let state: SessionState = { closed: true };
 
 	pi.on("session_start", async (_event, ctx) => {
 		if (interval) clearInterval(interval);
+		state.closed = true;
 
-		await updateWidget(ctx);
+		const currentState: SessionState = { closed: false };
+		state = currentState;
+
+		await updateWidget(ctx, currentState);
 		interval = setInterval(() => {
-			void updateWidget(ctx);
+			void updateWidget(ctx, currentState);
 		}, UPDATE_INTERVAL_MS);
 	});
 
 	pi.on("input", async (_event, ctx) => {
-		await updateWidget(ctx);
+		await updateWidget(ctx, state);
 		return { action: "continue" };
 	});
 
 	pi.on("tool_execution_end", async (_event, ctx) => {
-		await updateWidget(ctx);
+		await updateWidget(ctx, state);
 	});
 
 	pi.on("session_shutdown", async (_event, ctx) => {
+		state.closed = true;
 		if (interval) {
 			clearInterval(interval);
 			interval = undefined;
 		}
-		if (ctx.hasUI) ctx.ui.setWidget(WIDGET_ID, undefined);
+		setWidget(ctx, { closed: false }, undefined);
 	});
 }
