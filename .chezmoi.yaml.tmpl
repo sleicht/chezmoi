@@ -35,16 +35,16 @@ diff:
   command: "idea"
   args:
     - "diff"
-    - "{{ .Destination }}"
-    - "{{ .Target }}"
+    - "{{ `{{ .Destination }}` }}"
+    - "{{ `{{ .Target }}` }}"
 
 merge:
   command: "idea"
   args:
     - "merge"
-    - "{{ .Destination }}"
-    - "{{ .Source }}"
-    - "{{ .Target }}"
+    - "{{ `{{ .Destination }}` }}"
+    - "{{ `{{ .Source }}` }}"
+    - "{{ `{{ .Target }}` }}"
 
 {{- if ne $machineType "container" }}
 encryption: "age"
