@@ -70,8 +70,8 @@ model_id = "kimi-k2.6:cloud"
 {{- end }}
 
 # ── Display ─────────────────────────────────────────────────────────
-currency_symbol = ""
-currency_conversion_rate = 0.0
+currency_symbol = "$"
+currency_conversion_rate = 1.0
 model_cache_ttl_secs = 604800      # 7 days
 
 # ── Session (provider + model) ──────────────────────────────────────
@@ -134,5 +134,5 @@ on_turn_end = false
 
 # ── Reasoning ───────────────────────────────────────────────────────
 [reasoning]
-effort = "medium"
+effort = "low"
 enabled = true
