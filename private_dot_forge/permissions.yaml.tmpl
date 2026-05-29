@@ -155,6 +155,9 @@ policies:
   # Build tools
   - permission: allow
     rule:
+      command: "./mvnw dependency:tree*"
+  - permission: allow
+    rule:
       command: "just compile *"
   - permission: allow
     rule:
@@ -179,10 +182,19 @@ policies:
       command: "just unit *"
   - permission: allow
     rule:
+      command: "mise exec*"
+  - permission: allow
+    rule:
       command: "mise run*"
   - permission: allow
     rule:
       command: "mvn dependency:tree *"
+  - permission: allow
+    rule:
+      command: "semgrep --config*"
+  - permission: allow
+    rule:
+      command: "shellcheck mvnw*"
 
   # Utilities
   - permission: allow
@@ -196,9 +208,15 @@ policies:
       command: "echo *"
   - permission: allow
     rule:
+      command: "javap -classpath*"
+  - permission: allow
+    rule:
       command: "which *"
 
   # -- URLs: allow specific domains -----------------------------------
+  - permission: allow
+    rule:
+      url: "*"
   - permission: allow
     rule:
       url: "https://api.github.com/*"
