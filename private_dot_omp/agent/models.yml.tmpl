@@ -1,0 +1,48 @@
+# Managed by chezmoi. Deployed to ~/.omp/agent/models.yml.
+# Credentials are intentionally not committed. For LiteLLM, set LITELLM_BASE_URL
+# and LITELLM_API_KEY locally, or authenticate through `omp` so credentials live
+# in ~/.omp/agent/agent.db.
+
+{{- if eq .machine_type "client" }}
+providers:
+  litellm:
+    name: LiteLLM
+    baseUrl: $LITELLM_BASE_URL
+    apiKey: $LITELLM_API_KEY
+    api: openai-completions
+    compat:
+      supportsDeveloperRole: false
+      supportsReasoningEffort: false
+      supportsStore: false
+    models:
+      - id: claude-haiku-4-5
+        name: Claude Haiku 4.5 via LiteLLM
+        input:
+          - text
+        contextWindow: 200000
+        maxTokens: 32000
+      - id: claude-sonnet-4-6
+        name: Claude Sonnet 4.6 via LiteLLM
+        input:
+          - text
+          - image
+        contextWindow: 200000
+        maxTokens: 64000
+      - id: claude-opus-4-6
+        name: Claude Opus 4.6 via LiteLLM
+        input:
+          - text
+          - image
+        contextWindow: 200000
+        maxTokens: 64000
+      - id: gpt-5-5
+        name: GPT-5.5 via LiteLLM
+        input:
+          - text
+          - image
+        contextWindow: 400000
+        maxTokens: 128000
+{{- else }}
+# Personal machines currently rely on `omp` built-in providers and local auth.
+providers: {}
+{{- end }}

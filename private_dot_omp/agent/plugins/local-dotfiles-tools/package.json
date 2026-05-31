@@ -1,0 +1,11 @@
+{
+  "name": "local-dotfiles-tools",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "omp": {
+    "hooks": [
+      "./hooks/mise-just-enforcer.ts"
+    ]
+  }
+}

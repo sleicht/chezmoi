@@ -1,0 +1,32 @@
+# Managed by chezmoi. Deployed to ~/.omp/agent/config.yml.
+# Keep secrets in the local auth database or environment, not in this file.
+
+theme: dracula
+thinkingLevel: low
+enableInstallTelemetry: false
+
+terminal:
+  showTerminalProgress: true
+
+extensions:
+  - ./plugins/local-dotfiles-tools
+
+{{- if eq .machine_type "client" }}
+defaultModel: litellm/gpt-5-5:low
+modelRoles:
+  default: litellm/gpt-5-5:low
+  smol: litellm/claude-haiku-4-5:low
+  slow: litellm/claude-opus-4-6:low
+  plan: litellm/claude-sonnet-4-6:low
+  task: litellm/claude-sonnet-4-6:low
+modelProviderOrder:
+  - litellm
+{{- else }}
+modelRoles:
+  default: pi/default:low
+  smol: pi/smol:low
+  plan: pi/plan:low
+{{- end }}
+
+# Native `omp` MCP support reads ~/.omp/agent/mcp.json.
+# Pi-specific packages remain configured separately under ~/.pi during the parallel rollout.

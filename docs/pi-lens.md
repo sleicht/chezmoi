@@ -3,6 +3,10 @@
 > Real-time inline code feedback for `pi` (AI coding agent).
 > Installed via chezmoi dotfiles — managed globally, useful across all local projects.
 
+> **Migration note:** `pi-lens` remains Pi-only during the parallel `omp` rollout. See
+> [`omp-migration.md`](omp-migration.md) for the current migration status, validation
+> steps, and rollback plan.
+
 ## What It Does
 
 `pi-lens` hooks into every `read`/`write`/`edit` tool call during a `pi` session and runs a language-aware pipeline:

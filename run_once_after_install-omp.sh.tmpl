@@ -1,0 +1,25 @@
+#!/bin/bash
+# One-time bootstrap for the parallel omp CLI during the Pi migration.
+# The package is installed globally with mise-managed Bun as documented by oh-my-pi.
+set -euo pipefail
+
+if command -v omp &> /dev/null; then
+  echo "==> omp CLI already installed."
+  exit 0
+fi
+
+if command -v bun &> /dev/null; then
+  bun_cmd=(bun)
+elif command -v mise &> /dev/null; then
+  bun_cmd=(mise exec bun -- bun)
+else
+  cat <<'EOF'
+==> bun CLI not found; cannot install omp automatically.
+    Install or activate mise-managed bun from private_dot_config/mise/config.toml.tmpl, then re-run chezmoi apply.
+EOF
+  exit 0
+fi
+
+echo "==> Installing omp CLI with Bun..."
+"${bun_cmd[@]}" install -g @oh-my-pi/pi-coding-agent
+echo "==> omp CLI installation complete."

@@ -1,0 +1,8 @@
+{
+  "name": "local-dotfiles-tools",
+  "version": "1.0.0",
+  "description": "Local omp hooks and tools managed by chezmoi.",
+  "hooks": {
+    "preTool": ["./hooks/mise-just-enforcer.ts"]
+  }
+}
