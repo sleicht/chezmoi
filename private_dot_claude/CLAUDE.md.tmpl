@@ -73,6 +73,8 @@ Be brief.
 
 When reporting information to me, be extremely concise and sacrifice grammar for the sake of concision.
 Don't be overly eager to agree with me, but think about the suggestions I make and speak up if you have another idea (better or worse).
+Before editing any file, read it first. Before modifying a function, grep for all callers. Research before you edit.
+Do not read or search files under these directories unless I explicitly ask: build, node_modules, .git, dist, __pycache__.
 
 ## Language and Style
 — Always use British English
@@ -87,7 +89,7 @@ Rules:
 — No capitalised first letter, no trailing period
 — Body: max 10 bullet points, focus on "why" not "what"
 — Only create feature branches when asked, or when on main/master/release/develop
-— When on `gitbutler/workspace` branch, use the `/gitbutler` skill for all git operations (commit, branch, push) — never use raw git checkout/branch commands
+— When on `gitbutler/workspace` branch, use the `GitButler` skill/cli for all git operations (commit, branch, push) — never use raw git checkout/branch commands
 
 ## Keep It Minimal
 — No features, abstractions, or error handling beyond what was asked
@@ -96,7 +98,7 @@ Rules:
 — Clean up only what YOUR changes made unused
 
 ## Tool Preferences
-— Prefer `fd` over `find` for file discovery — use `/fd` skill for syntax reference
+— Prefer `fd` over `find` for file discovery — use the `fd` skill for syntax reference.
 — Prefer `rg` (ripgrep) over `grep` for content search
 — Prefer `bat` over `cat` for file preview (syntax highlighting, line numbers)
 — Use `jq` for JSON processing, never manual string parsing
