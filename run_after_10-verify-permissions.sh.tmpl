@@ -27,6 +27,10 @@ SENSITIVE_FILES=(
     "${HOME}/.netrc:600"
     "${HOME}/.git-credentials:600"
     "${HOME}/.gitconfig_local:600"
+{{- if eq .machine_type "client" }}
+    "${HOME}/.tls:700"
+    "${HOME}/.tls/*:600"
+{{- end }}
 )
 
 # Platform-specific stat function

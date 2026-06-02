@@ -1,0 +1,72 @@
+{{- if eq .machine_type "client" -}}
+#!/bin/bash
+# Fetch TLS certificates from DSC GitLab repository
+# Runs on every apply; skips network fetch if all certs are still fresh
+
+set -euo pipefail
+
+CERT_DIR="$HOME/.tls"
+REPO="git@gitlab.sanet17.ch:security/desired-state-configuration.git"
+EXPIRY_THRESHOLD_DAYS=30
+
+umask 077
+mkdir -p "$CERT_DIR"
+chmod 700 "$CERT_DIR"
+
+CERTS=(
+    "SwisscomRootCore.pem"
+    "SwisscomRootCore.crt"
+    "SwisscomDatacenterCore.crt"
+    "Swisscom Proxy Sub CA for Sanitas Grundversicherungen AG.crt"
+    "ca-bundle.trust.crt"
+)
+
+needs_refresh=false
+for cert in "${CERTS[@]}"; do
+    dst="$CERT_DIR/$cert"
+    if [[ ! -f "$dst" ]] || ! openssl x509 -checkend $((EXPIRY_THRESHOLD_DAYS * 86400)) -noout -in "$dst" 2>/dev/null; then
+        needs_refresh=true
+        break
+    fi
+done
+
+if [[ "$needs_refresh" == "false" ]]; then
+    echo "==> All certificates valid for >${EXPIRY_THRESHOLD_DAYS} days, skipping fetch"
+    exit 0
+fi
+
+echo "==> Fetching TLS certificates from DSC repository via SSH..."
+
+TMPDIR=$(mktemp -d)
+trap 'rm -rf "$TMPDIR"' EXIT
+
+git clone --depth 1 --branch master "$REPO" "$TMPDIR"
+
+failed=0
+for cert in "${CERTS[@]}"; do
+    src="$TMPDIR/static/$cert"
+    dst="$CERT_DIR/$cert"
+    if [[ ! -f "$src" ]]; then
+        echo "  MISSING: $cert not found in repository"
+        ((++failed))
+        continue
+    fi
+    if ! openssl x509 -checkend $((EXPIRY_THRESHOLD_DAYS * 86400)) -noout -in "$src" >/dev/null 2>&1; then
+        echo "  INVALID: $cert (not a certificate, or expires within ${EXPIRY_THRESHOLD_DAYS} days)"
+        echo "  Ask #guild-security to update security/desired-state-configuration/static/$cert"
+        ((++failed))
+        continue
+    fi
+    cp "$src" "$dst"
+    chmod 600 "$dst"
+    echo "  OK: $cert"
+done
+
+if [[ $failed -gt 0 ]]; then
+    echo "WARNING: $failed certificate(s) failed"
+    echo "You may need to fetch them manually from the DSC repository"
+    exit 1
+fi
+
+echo "==> All certificates fetched to $CERT_DIR"
+{{- end }}

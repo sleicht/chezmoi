@@ -1,0 +1,12 @@
+# Managed by chezmoi - edit in ~/.local/share/chezmoi/dot_zsh.d/
+#!/usr/bin/env zsh
+
+{{- if eq .machine_type "client" }}
+# TLS certificate paths
+export SSL_CERT_DIR="$HOME/.tls"
+export SSL_CERT_FILE="$HOME/.tls/ca-bundle.trust.crt"
+export SSL_CA_FILE="$HOME/.tls/SwisscomRootCore.pem"
+export REQUESTS_CA_BUNDLE="$SSL_CERT_FILE"
+export NODE_EXTRA_CA_CERTS="$SSL_CERT_FILE"
+export PIP_CERT="$SSL_CERT_FILE"
+{{- end }}

@@ -62,7 +62,7 @@ apply = ["defer"]
 
 [plugins.dotfiles-sync]
 local = "~/.zsh.d"
-use = ["prompt.zsh", "external-sync.zsh", "completions-sync.zsh", "aliases.zsh", "functions.zsh", "variables.zsh", "keybinds.zsh", "forge.zsh"]
+use = ["prompt.zsh", "external-sync.zsh", "completions-sync.zsh", "aliases.zsh", "functions.zsh", "variables.zsh", {{- if eq .machine_type "client" }} "tls.zsh", {{- end }} "keybinds.zsh", "forge.zsh"]
 apply = ["source"]
 
 [plugins.dotfiles-private]
