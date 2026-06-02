@@ -218,6 +218,7 @@ packages:
       - "thebrowsercompany-dia"
       - "tolaria"
       - "uhk-agent"
+      - "whatcable"
       - "wezterm"
       - "wooshy"
       - "zen"
@@ -328,6 +329,7 @@ packages:
       - "logi-options+"
       - "logseq"
       - "macpulse"
+      - "mirai"
       - "mouseless@preview"
       - "ngrok"
       - "nvidia-geforce-now"
@@ -372,6 +374,9 @@ packages:
       "Numbers": 409203825
       "Phiewer PRO": 1270923434
       "Tailscale": 1475387142
+      "TestFlight": 899247664
+      "Panels": 1236567663
+      "Prime Video": 545519333
 
     # Client MAS apps
     client_mas:
