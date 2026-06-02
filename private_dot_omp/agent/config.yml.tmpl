@@ -31,8 +31,18 @@ modelRoles:
   plan: pi/plan:low
 {{- end }}
 
-providers:
-  webSearch: auto
+web_search:
+  provider: searxng
+
+exa:
+  enabled: false
+  enableSearch: false
+  enableResearcher: false
+  enableWebsets: false
+
+searxng:
+  endpoint: http://localhost:3939/
+
 setupVersion: 1
 symbolPreset: nerd
 colorBlindMode: false
@@ -54,5 +64,6 @@ clearOnShrink: false
 task:
   showResolvedModelBadge: false
 
+lastChangelogVersion: 15.7.6
 # Native `omp` MCP support reads ~/.omp/agent/mcp.json.
 # Pi-specific packages remain configured separately under ~/.pi during the parallel rollout.
