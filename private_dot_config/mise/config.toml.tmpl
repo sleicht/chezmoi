@@ -21,6 +21,9 @@ rust = "1.93.1"
 terraform = "1.9"
 
 [settings]
+# Hooks are experimental in mise.
+experimental = true
+
 # Enable reading .nvmrc, .python-version, etc.
 idiomatic_version_file_enable_tools = ["node", "python"]
 
@@ -40,3 +43,122 @@ yes = false
 # Project-specific env vars can override via mise.toml [env] section
 # Example: NODE_ENV = "development"
 # Add global env vars here as needed
+{{ if eq .machine_type "client" }}
+SSL_CERT_DIR = "{{ .chezmoi.homeDir }}/.tls"
+{{- if ne .chezmoi.os "windows" }}
+
+[[hooks.postinstall]]
+shell = "bash -c"
+run = '''
+set -euo pipefail
+
+if [ -n "${WSL_DISTRO_NAME:-}" ]; then
+  echo "We are on Windows → skipping bash posthook"
+  exit 0
+fi
+
+if echo "${MISE_INSTALLED_TOOLS:-[]}" | jq -e 'any(.[]; .name == "java")' >/dev/null; then
+  echo "Installing Swisscom TLS certificates"
+
+  echo "${MISE_INSTALLED_TOOLS:-[]}" | jq -r '.[] | select(.name == "java") | .version' | while IFS= read -r java_version; do
+    java_home=$(mise where "java@$java_version")
+    keytool="$java_home/bin/keytool"
+    cacerts="$java_home/lib/security/cacerts"
+
+    import_cert() {
+      cert_file="$SSL_CERT_DIR/$1.crt"
+      alias="$2"
+
+      if [ ! -x "$keytool" ]; then
+        echo "keytool missing or not executable: $keytool" >&2
+        exit 1
+      fi
+
+      if [ ! -r "$cacerts" ]; then
+        echo "cacerts missing or unreadable: $cacerts" >&2
+        exit 1
+      fi
+
+      if [ ! -r "$cert_file" ]; then
+        echo "Certificate '$cert_file' missing or unreadable." >&2
+        exit 1
+      fi
+
+      if "$keytool" -list -alias "$alias" -keystore "$cacerts" -storepass changeit -noprompt >/dev/null 2>&1; then
+        echo "Certificate '$alias' already in cacerts, skipping."
+      else
+        "$keytool" -importcert -noprompt -trustcacerts -alias "$alias" -file "$cert_file" -keystore "$cacerts" -storepass changeit
+        echo "Certificate '$alias' added to cacerts."
+      fi
+    }
+
+    import_cert "SwisscomRootCore" "SwisscomRootCore"
+    import_cert "SwisscomDatacenterCore" "SwisscomDatacenterCore"
+    import_cert "Swisscom Proxy Sub CA for Sanitas Grundversicherungen AG" "Swisscom_Proxy_Sub_CA_for_Sanitas_Grundversicherungen_AG"
+  done
+
+  echo "Installed Swisscom TLS certificates"
+fi
+'''
+{{- else }}
+
+[[hooks.postinstall]]
+shell = "pwsh -Command"
+run = '''
+if (-not $IsWindows) {
+  Write-Host "We are not on Windows → skipping PS posthook"
+  exit 0
+}
+
+$installedTools = $env:MISE_INSTALLED_TOOLS | ConvertFrom-Json
+$javaTools = @($installedTools | Where-Object { $_.name -eq "java" })
+
+if ($javaTools.Count -gt 0) {
+  Write-Host "Installing Swisscom TLS certificates"
+
+  foreach ($javaTool in $javaTools) {
+    $javaHome = (mise where "java@$($javaTool.version)").Trim()
+    $keytool = Join-Path $javaHome "bin/keytool.exe"
+    $cacerts = Join-Path $javaHome "lib/security/cacerts"
+
+    function Import-CertIfNeeded($certName, $alias) {
+      $certFile = Join-Path $env:SSL_CERT_DIR "$certName.crt"
+
+      if (-not (Test-Path -LiteralPath $keytool -PathType Leaf)) {
+        Write-Error "keytool missing or not executable: $keytool"
+        exit 1
+      }
+
+      if (-not (Test-Path -LiteralPath $cacerts -PathType Leaf)) {
+        Write-Error "cacerts missing or unreadable: $cacerts"
+        exit 1
+      }
+
+      if (-not (Test-Path -LiteralPath $certFile -PathType Leaf)) {
+        Write-Error "Certificate '$certFile' missing or unreadable."
+        exit 1
+      }
+
+      $null = & $keytool -list -alias $alias -keystore $cacerts -storepass changeit -noprompt 2>&1
+      if ($LASTEXITCODE -eq 0) {
+        Write-Host "Certificate '$alias' already in cacerts, skipping."
+      } else {
+        & $keytool -importcert -noprompt -trustcacerts -alias $alias -file $certFile -keystore $cacerts -storepass changeit
+        if ($LASTEXITCODE -ne 0) {
+          Write-Error "Failed to add certificate '$alias' to cacerts."
+          exit 1
+        }
+        Write-Host "Certificate '$alias' added to cacerts."
+      }
+    }
+
+    Import-CertIfNeeded "SwisscomRootCore" "SwisscomRootCore"
+    Import-CertIfNeeded "SwisscomDatacenterCore" "SwisscomDatacenterCore"
+    Import-CertIfNeeded "Swisscom Proxy Sub CA for Sanitas Grundversicherungen AG" "Swisscom_Proxy_Sub_CA_for_Sanitas_Grundversicherungen_AG"
+  }
+
+  Write-Host "Installed Swisscom TLS certificates"
+}
+'''
+{{- end }}
+{{- end }}
