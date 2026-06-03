@@ -4,6 +4,7 @@
 theme:
   dark: dracula
   light: light-cyberpunk
+defaultThinkingLevel: auto
 thinkingLevel: low
 enableInstallTelemetry: false
 
@@ -64,6 +65,16 @@ clearOnShrink: false
 task:
   showResolvedModelBadge: false
 
-lastChangelogVersion: 15.7.6
+compaction:
+  enabled: true              # master switch for automatic paths
+  strategy: handoff          # "context-full" | "handoff" | "off"
+  reserveTokens: 16384       # headroom kept under the context window
+  keepRecentTokens: 20000    # target size of the verbatim tail
+  autoContinue: true         # schedule continuation after threshold compaction
+  idleEnabled: true          # run maintenance while idle
+  thresholdPercent: -1       # explicit % override; -1 = auto
+  thresholdTokens: -1        # explicit token override; -1 = auto
+
+lastChangelogVersion: 15.8.0
 # Native `omp` MCP support reads ~/.omp/agent/mcp.json.
 # Pi-specific packages remain configured separately under ~/.pi during the parallel rollout.
