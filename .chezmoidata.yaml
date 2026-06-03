@@ -53,6 +53,8 @@ packages:
       - "derailed/k9s"
       - "ggozad/formulas"
       - "jetbrains/junie"
+      - name: "jundot/omlx"
+        url: "https://github.com/jundot/omlx"
       - "koekeishiya/formulae"
       - "manaflow-ai/cmux"
       - "mediosz/tap"
@@ -293,6 +295,7 @@ packages:
       - "firebase-cli"
       - "hledger"
       - "jetbrains/junie/junie"
+      - "jundot/omlx/omlx"
       - "neurosnap/tap/zmx"
       # rbenv removed - mise manages ruby
       # rust removed - mise manages rust via stable channel
@@ -377,6 +380,7 @@ packages:
       "TestFlight": 899247664
       "Panels": 1236567663
       "Prime Video": 545519333
+      "WhatsApp Messenger": 310633997
 
     # Client MAS apps
     client_mas:

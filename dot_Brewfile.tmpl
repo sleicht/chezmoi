@@ -4,7 +4,11 @@
 
 # Taps
 {{ range .packages.darwin.taps -}}
+{{ if kindIs "map" . -}}
+tap {{ index . "name" | quote }}{{ with index . "url" }}, {{ . | quote }}{{ end }}
+{{ else -}}
 tap {{ . | quote }}
+{{ end -}}
 {{ end }}
 # Formulae (cross-platform)
 {{ range .packages.darwin.cross_platform_brews -}}
