@@ -43,7 +43,7 @@ workspace (gitbutler/workspace)
 
 ## CLI IDs: Short Identifiers
 
-Every object gets a short, human-readable CLI ID shown in `but status`. IDs are generated per-session and are unique across all entity types (no two objects share an ID) — always read them from `but status --json`.
+Every object gets a short, human-readable CLI ID shown in `but status`. IDs are generated per-session and are unique across all entity types (no two objects share an ID) — always read them from `but status`.
 
 ```
 Commits:    1b, 8f, c2     (short hex prefixes of the SHA, long enough to be unique)
@@ -60,7 +60,7 @@ Stacks:     m0, n0          (auto-generated, 2–3 chars)
 
 ```bash
 but commit <branch-id> -m "message"      # Commit to branch
-but stage <file-id> <branch-id>          # Stage file to branch
+but stage <file-or-hunk-id> <branch-id>  # Stage file or hunk to branch
 but rub <commit-id> <commit-id>          # Squash commits
 ```
 
@@ -85,7 +85,7 @@ Example: Adding a new API endpoint and updating button styles are independent.
 
 ### Stacked Branches (Dependent Work)
 
-**To stack an existing branch** on top of another: `but branch move <child-branch-name> <parent-branch-name>` — this is the primary way to stack branches.
+**To stack an existing branch** on top of another: `but move <child-branch-name> <parent-branch-name>`.
 
 **To create a new stacked branch** from scratch: `but branch new <name> -a <anchor>` — only use this when the child branch doesn't exist yet.
 
@@ -102,10 +102,16 @@ Use when:
 
 Example: User profile page needs authentication to be implemented first.
 
-**Stacking two existing branches:** If both branches already exist and you need to make one depend on the other, use `but branch move`:
+**Stacking two existing branches:** If both branches already exist and you need to make one depend on the other, use top-level `move`:
 ```bash
-but branch move feature/frontend feature/backend
+but move feature/frontend feature/backend
 # Now frontend is stacked on top of backend — both in the same stack
+```
+
+To tear off a branch from a stack:
+
+```bash
+but move feature/frontend zz
 ```
 
 **Dependency tracking:** GitButler automatically tracks which changes depend on which commits. You can't stage dependent changes to the wrong branch.
@@ -129,7 +135,7 @@ but commit api-branch -m "..."   # Commit from api-branch's staging area
 but commit ui-branch -m "..."    # Commit from ui-branch's staging area
 ```
 
-**Unstaged changes:** Files not staged to any branch yet. Use `but status` to see them, then `but stage` to assign them.
+**Unassigned changes:** Files not assigned to any branch yet. Use `but status` to see them, then `but stage` to assign them.
 
 **Auto-assignment:** If only one branch is applied, changes may auto-assign to it.
 
@@ -156,24 +162,24 @@ File-in-Commit       │ Uncommit        │ Move       │ Uncommit & assign �
 
 **Common examples:**
 
-| Source | Target | Operation | Example |
-|--------|--------|-----------|---------|
-| File | Branch | Stage file to branch | `but rub a1 bu` |
-| File | Commit | Amend file into commit | `but rub a1 c3` |
-| Commit | Commit | Squash commits | `but rub c2 c3` |
-| Commit | Branch | Move commit to branch | `but rub c2 bu` |
-| File | `zz` | Unstage file | `but rub a1 zz` |
-| Commit | `zz` | Undo commit | `but rub c2 zz` |
-| `zz` | Branch | Stage all unassigned | `but rub zz bu` |
+| Source | Target | Operation              | Example         |
+| ------ | ------ | ---------------------- | --------------- |
+| File   | Branch | Stage file to branch   | `but rub a1 bu` |
+| File   | Commit | Amend file into commit | `but rub a1 c3` |
+| Commit | Commit | Squash commits         | `but rub c2 c3` |
+| Commit | Branch | Move commit to branch  | `but rub c2 bu` |
+| File   | `zz`   | Unstage file           | `but rub a1 zz` |
+| Commit | `zz`   | Undo commit            | `but rub c2 zz` |
+| `zz`   | Branch | Stage all unassigned   | `but rub zz bu` |
 
 ### Higher-Level Conveniences
 
 These commands are wrappers around `but rub`:
 
-- `but stage <file> <branch>` = `but rub <file> <branch>`
+- `but stage <file-or-hunk> <branch>` = `but rub <file-or-hunk> <branch>`
 - `but amend <file> <commit>` = `but rub <file> <commit>`
 - `but squash` = Multiple `but rub <commit> <commit>` operations
-- `but move` = `but rub <commit> <target>` with position control
+- `but move` = commit move/reorder with position control, plus branch stack/tear-off (`<branch> <target-branch>` and `<branch> zz`)
 
 **Why this design?** One powerful primitive is easier to understand and maintain than many specialized commands. Once you understand `but rub`, you understand the editing model.
 
@@ -223,7 +229,8 @@ but commit empty --after c3
 Example workflow:
 
 ```bash
-but commit empty -m "TODO: Add error handling" --before c5
+but commit empty --before c5
+but reword <empty-commit-id> -m "TODO: Add error handling"
 but mark <empty-commit-id>
 # Now work on error handling, changes auto-amend into the placeholder
 ```
@@ -238,7 +245,7 @@ Set a "mark" on a branch or commit to automatically organize new changes.
 but mark <branch-id>
 ```
 
-New unstaged changes automatically stage to this branch. Useful when focused on one feature.
+New unassigned changes automatically stage to this branch. Useful when focused on one feature.
 
 ### Mark a Commit
 
@@ -281,6 +288,10 @@ Every operation in GitButler is recorded in the oplog (operation log).
 ```bash
 but oplog                      # View history
 but undo                       # Undo last operation
+but redo                       # Redo last undone operation
+but oplog list --since <snapshot-id>
+but oplog list --snapshot
+but oplog snapshot -m "known good"
 but oplog restore <snapshot-id>  # Restore to specific point
 ```
 
@@ -309,7 +320,7 @@ Branches can be in two states:
 ### Controlling State
 
 ```bash
-but apply <id>             # Make branch active
+but apply <branch-name>    # Make branch active
 but unapply <id>           # Make branch inactive
 ```
 
@@ -345,7 +356,7 @@ Git commands that don't modify state are safe to use:
 **Safe (read-only):**
 
 - `git log` - View history
-- `git diff` - See changes (but prefer `but diff` — it supports CLI IDs and `--json`)
+- `git diff` - See changes (but prefer `but diff` — it supports CLI IDs)
 - `git show` - View commits
 - `git blame` - See line history
 - `git reflog` - View reference log
