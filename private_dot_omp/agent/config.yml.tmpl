@@ -9,6 +9,7 @@ enableInstallTelemetry: false
 
 terminal:
   showTerminalProgress: true
+  showImages: true
 
 extensions:
   - ./plugins/local-dotfiles-tools
@@ -25,7 +26,7 @@ modelProviderOrder:
   - litellm
 {{- else }}
 modelRoles:
-  default: pi/default:low
+  default: openai-codex/gpt-5.5:xhigh
   smol: pi/smol:low
   plan: pi/plan:low
 {{- end }}
@@ -34,14 +35,24 @@ providers:
   webSearch: auto
 setupVersion: 1
 symbolPreset: nerd
+colorBlindMode: false
 statusLine:
   preset: nerd
   separator: powerline-thin
+  sessionAccent: true
+  showHookStatus: true
+images:
+  autoResize: true
+  blockImages: false
 tui:
   hyperlinks: auto
 display:
   shimmer: kitt
   showTokenUsage: true
+showHardwareCursor: true
+clearOnShrink: false
+task:
+  showResolvedModelBadge: false
 
 # Native `omp` MCP support reads ~/.omp/agent/mcp.json.
 # Pi-specific packages remain configured separately under ~/.pi during the parallel rollout.
