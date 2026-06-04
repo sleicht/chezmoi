@@ -6,15 +6,14 @@
 {{- if eq .machine_type "client" }}
 {{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
 providers:
-  litellm:
-    name: LiteLLM
+  # Claude models use the native Anthropic-messages wire so omp injects cache_control breakpoints.
+  # The openai-completions transport only injects cache_control for OpenRouter (maybeAddOpenRouterAnthropicCacheControl),
+  # so Claude models on litellm would get zero prompt caching via that transport.
+  litellm-anthropic:
+    name: LiteLLM (Anthropic)
     baseUrl: {{ $cc.litellm_url.value }}
     apiKey: LITELLM_API_KEY
-    api: openai-completions
-    compat:
-      supportsDeveloperRole: false
-      supportsReasoningEffort: false
-      supportsStore: false
+    api: anthropic-messages
     models:
       - id: claude-haiku-4-5
         name: Claude Haiku 4.5 via LiteLLM
@@ -31,7 +30,8 @@ providers:
         maxTokens: 8192
         compat:
           supportsStore: false
-          cacheControlFormat: anthropic
+          disableStrictTools: true
+          disableAdaptiveThinking: true
       - id: claude-sonnet-4-6
         name: Claude Sonnet 4.6 via LiteLLM
         reasoning: true
@@ -47,7 +47,8 @@ providers:
         maxTokens: 64000
         compat:
           supportsStore: false
-          cacheControlFormat: anthropic
+          disableStrictTools: true
+          disableAdaptiveThinking: true
       - id: claude-opus-4-6
         name: Claude Opus 4.6 via LiteLLM
         reasoning: true
@@ -63,7 +64,8 @@ providers:
         maxTokens: 128000
         compat:
           supportsStore: false
-          cacheControlFormat: anthropic
+          disableStrictTools: true
+          disableAdaptiveThinking: true
       - id: claude-opus-4-8
         name: Claude Opus 4.8 via LiteLLM
         reasoning: true
@@ -79,7 +81,8 @@ providers:
         maxTokens: 32000
         compat:
           supportsStore: false
-          cacheControlFormat: anthropic
+          disableStrictTools: true
+          disableAdaptiveThinking: true
       - id: claude-opus-4-7
         name: Claude Opus 4.7 via LiteLLM
         reasoning: true
@@ -95,7 +98,18 @@ providers:
         maxTokens: 128000
         compat:
           supportsStore: false
-          cacheControlFormat: anthropic
+          disableStrictTools: true
+          disableAdaptiveThinking: true
+  litellm:
+    name: LiteLLM
+    baseUrl: {{ $cc.litellm_url.value }}
+    apiKey: LITELLM_API_KEY
+    api: openai-completions
+    compat:
+      supportsDeveloperRole: false
+      supportsReasoningEffort: false
+      supportsStore: false
+    models:
       - id: gemini-3.1-flash-lite
         name: Gemini 3.1 Flash Lite via LiteLLM
         reasoning: false
