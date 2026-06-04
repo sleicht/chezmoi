@@ -45,3 +45,5 @@ Thumbs.db
 
 # Springboot
 .reloadtrigger
+
+**/.claude/settings.local.json
