@@ -60,9 +60,30 @@ merge_system_messages = false
 use_forge_committer = true
 max_commit_count = 20
 
+# ── Providers ───────────────────────────────────────────────────────
+# Deviation: adds litellm_anthropic so Claude models use the Anthropic
+# messages wire and Forge injects cache_control breakpoints.
+# Without this, Claude on openai_compatible gets zero prompt caching
+# (OpenAI wire never emits cache_control; Anthropic caching is client-driven).
+{{- if eq .machine_type "client" }}
+[[providers]]
+id            = "litellm_anthropic"
+url           = "{{ "{{LITELLM_BASE_URL}}" }}/v1/messages"
+response_type = "Anthropic"
+api_key_var   = "LITELLM_API_KEY"
+auth_methods  = ["api_key"]
+url_param_vars = [{ name = "LITELLM_BASE_URL" }]
+models = [
+  { id = "claude-haiku-4-5",  name = "Claude Haiku 4.5 (cached)",  context_length = 200000,  supports_reasoning = true, tools_supported = true },
+  { id = "claude-sonnet-4-6", name = "Claude Sonnet 4.6 (cached)", context_length = 1000000, supports_reasoning = true, tools_supported = true },
+  { id = "claude-opus-4-6",   name = "Claude Opus 4.6 (cached)",   context_length = 1000000, supports_reasoning = true, tools_supported = true },
+  { id = "claude-opus-4-8",   name = "Claude Opus 4.8 (cached)",   context_length = 1000000, supports_reasoning = true, tools_supported = true },
+]
+{{- end }}
+
 [commit]
 {{- if eq .machine_type "client" }}
-provider_id = "openai_compatible"
+provider_id = "litellm_anthropic"
 model_id = "claude-sonnet-4-6"
 {{- else }}
 provider_id = "ollama"
@@ -77,8 +98,8 @@ model_cache_ttl_secs = 604800      # 7 days
 # ── Session (provider + model) ──────────────────────────────────────
 [session]
 {{- if eq .machine_type "client" }}
-provider_id = "openai_compatible"
-model_id = "gpt-5-5"
+provider_id = "litellm_anthropic"
+model_id = "claude-opus-4-8"
 {{- else }}
 provider_id = "ollama"
 model_id = "kimi-k2.6:cloud"
@@ -87,7 +108,7 @@ model_id = "kimi-k2.6:cloud"
 # ── Suggest ─────────────────────────────────────────────────────────
 [suggest]
 {{- if eq .machine_type "client" }}
-provider_id = "openai_compatible"
+provider_id = "litellm_anthropic"
 model_id = "claude-sonnet-4-6"
 {{- else }}
 provider_id = "ollama"
