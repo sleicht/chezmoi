@@ -248,10 +248,12 @@
   gitbutlerCommitter = 0
   aiModelProvider = openai
   aiOpenAIKeyOption = bringYourOwn
-  aiAnthropicKeyOption = bringYourOwn
-  aiAnthropicModelName = claude-sonnet-4-0
-  aiOllamaEndpoint = http://127.0.0.1:11434
-  aiOllamaModelName = llama3.2:3b
+{{- else if eq .machine_type "client" }}
+[gitbutler]
+  gitbutlerCommitter = 0
+  aiModelProvider = ollama
+  aiOllamaEndpoint = http://127.0.0.1:11435
+  aiOllamaModelName = claude-sonnet-4-6
 {{- end }}
 
 # Allow local customizations in the .gitconfig_local file
