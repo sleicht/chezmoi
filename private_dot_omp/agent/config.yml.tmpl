@@ -16,20 +16,20 @@ extensions:
   - ./plugins/local-dotfiles-tools
 
 {{- if eq .machine_type "client" }}
-defaultModel: litellm/gpt-5-5:low
+defaultModel: litellm/gpt-5-5:xhigh
 modelRoles:
-  default: litellm/gpt-5-5:low
+  default: litellm/gpt-5-5:xhigh
   smol: litellm/claude-haiku-4-5:low
   slow: litellm/claude-opus-4-8:high
-  plan: litellm/claude-opus-4-8:medium
-  task: litellm/claude-sonnet-4-6:low
+  plan: litellm/claude-opus-4-8:high
+  task: litellm/claude-sonnet-4-6:medium
 modelProviderOrder:
   - litellm
 {{- else }}
 modelRoles:
   default: openai-codex/gpt-5.5:xhigh
-  smol: pi/smol:low
-  plan: pi/plan:low
+  smol: pi/smol:high
+  plan: pi/plan:high
 {{- end }}
 
 web_search:
