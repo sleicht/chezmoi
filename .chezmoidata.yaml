@@ -250,6 +250,7 @@ packages:
       - "patat"
       - "pinentry-mac"
       - "pipx"
+      - "protobuf"
       - "witr"
       # rbenv removed - mise manages ruby
       # rust removed - mise manages rust via stable channel
@@ -421,4 +422,4 @@ tools:
         - node
         - python
   sheldon:
-    # Plugin list goes here when needed
+  # Plugin list goes here when needed
