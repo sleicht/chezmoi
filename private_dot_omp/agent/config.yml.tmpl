@@ -19,12 +19,11 @@ extensions:
 defaultModel: litellm/gpt-5-5:low
 modelRoles:
   default: litellm/gpt-5-5:low
-  smol: litellm-anthropic/claude-haiku-4-5:low
-  slow: litellm-anthropic/claude-opus-4-8:high
-  plan: litellm-anthropic/claude-opus-4-8:medium
-  task: litellm-anthropic/claude-sonnet-4-6:low
+  smol: litellm/claude-haiku-4-5:low
+  slow: litellm/claude-opus-4-8:high
+  plan: litellm/claude-opus-4-8:medium
+  task: litellm/claude-sonnet-4-6:low
 modelProviderOrder:
-  - litellm-anthropic
   - litellm
 {{- else }}
 modelRoles:
@@ -76,6 +75,6 @@ compaction:
   thresholdPercent: -1       # explicit % override; -1 = auto
   thresholdTokens: -1        # explicit token override; -1 = auto
 
-lastChangelogVersion: 15.9.0
+lastChangelogVersion: 15.9.1
 # Native `omp` MCP support reads ~/.omp/agent/mcp.json.
 # Pi-specific packages remain configured separately under ~/.pi during the parallel rollout.
