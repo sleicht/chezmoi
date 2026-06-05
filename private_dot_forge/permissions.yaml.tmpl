@@ -158,6 +158,12 @@ policies:
       command: "./mvnw dependency:tree*"
   - permission: allow
     rule:
+      command: "docker-compose config*"
+  - permission: allow
+    rule:
+      command: "docker-compose ps*"
+  - permission: allow
+    rule:
       command: "just compile *"
   - permission: allow
     rule:
