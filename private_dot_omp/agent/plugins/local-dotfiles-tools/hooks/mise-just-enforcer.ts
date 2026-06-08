@@ -1,7 +1,7 @@
 /**
  * Blocks direct gradle/gradlew calls when a project-level task runner exists.
  *
- * Ported from the Pi `mise-just-enforcer.ts` extension to an `omp` pre-tool hook.
+ * Ported from the Pi `mise-just-enforcer.ts` extension to an `omp` extension.
  */
 import { existsSync } from "node:fs";
 import { join } from "node:path";
@@ -14,29 +14,28 @@ const GRADLE_PATTERN = /(?:^|[;&|]\s*|\n\s*)(?:\.\/)?gradlew?(?:\s|$)/m;
 
 interface ToolCallEvent {
   toolName?: string;
-  tool?: string;
-  name?: string;
   input?: {
     command?: unknown;
   };
 }
 
-interface HookContext {
+interface ExtensionContext {
   cwd?: string;
-  workingDirectory?: string;
+}
+
+interface ExtensionAPI {
+  on(
+    event: "tool_call",
+    handler: (
+      event: ToolCallEvent,
+      context: ExtensionContext,
+    ) => Promise<{ block: true; reason: string } | undefined> | { block: true; reason: string } | undefined,
+  ): void;
 }
 
 interface TaskRunners {
   mise: string[] | null;
   just: string[] | null;
-}
-
-function toolName(event: ToolCallEvent) {
-  return event.toolName ?? event.tool ?? event.name;
-}
-
-function commandInput(event: ToolCallEvent) {
-  return typeof event.input?.command === "string" ? event.input.command : undefined;
 }
 
 async function listMiseTasks(cwd: string) {
@@ -111,21 +110,20 @@ function blockReason(command: string, { mise, just }: TaskRunners) {
   return lines.join("\n");
 }
 
-export async function preTool(event: ToolCallEvent, context: HookContext = {}) {
-  if (toolName(event) !== "bash") return undefined;
+export default function miseJustEnforcer(pi: ExtensionAPI): void {
+  pi.on("tool_call", async (event, context) => {
+    if (event.toolName !== "bash") return undefined;
 
-  const command = commandInput(event);
-  if (!command || !GRADLE_PATTERN.test(command)) return undefined;
+    const command = typeof event.input?.command === "string" ? event.input.command : undefined;
+    if (!command || !GRADLE_PATTERN.test(command)) return undefined;
 
-  const cwd = context.cwd ?? context.workingDirectory ?? process.cwd();
-  const runners = await detectTaskRunners(cwd);
+    const runners = await detectTaskRunners(context.cwd ?? process.cwd());
 
-  if (runners.mise === null && runners.just === null) return undefined;
+    if (runners.mise === null && runners.just === null) return undefined;
 
-  return {
-    block: true,
-    reason: blockReason(command, runners),
-  };
+    return {
+      block: true,
+      reason: blockReason(command, runners),
+    };
+  });
 }
-
-export default preTool;
