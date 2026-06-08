@@ -6,10 +6,9 @@
     ]
   },
   "featureFlags": {
-    "apply3": true,
+    "irc": false,
     "rules": true,
-    "ws3": true,
-    "irc": false
+    "ws3": true
   },
   "onboardingComplete": true,
   "telemetry": {
@@ -22,5 +21,10 @@
     "useConfiguredModel": true,
     "notifyOnCompletion": true,
     "notifyOnPermissionRequest": true
+  },
+  "fetch": {
+    "autoFetchIntervalMinutes": {
+      "$serde_json::private::Number": "5"
+    }
   }
 }
