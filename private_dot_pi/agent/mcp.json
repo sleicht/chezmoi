@@ -9,6 +9,10 @@
       "lifecycle": "lazy",
       "idleTimeout": 10,
       "exposeResources": true
+    },
+    "agent-search": {
+      "command": "sh",
+      "args": ["-c", "python $HOME/git/stuff/agent-search/mcp-server/server.py"]
     }
   }
 }

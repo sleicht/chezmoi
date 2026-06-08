@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "intellij": {
+      "url": "http://127.0.0.1:64342/stream",
+      "disable": false
+    },
+    "agent-search": {
+      "command": "sh",
+      "args": ["-c", "python $HOME/git/stuff/agent-search/mcp-server/server.py"],
+      "disable": false
+    }
+  }
+}
