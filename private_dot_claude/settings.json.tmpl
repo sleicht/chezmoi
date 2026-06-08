@@ -4,7 +4,6 @@
   "autoUpdatesChannel": "latest",
   "enableAllProjectMcpServers": false,
   "enabledPlugins": {
-    "andrej-karpathy-skills@karpathy-skills": true,
     "caveman@caveman": true,
     "ck@cavekit-marketplace": true,
     "code-review@claude-plugins-official": true,
@@ -43,9 +42,9 @@
     "ENABLE_LSP_TOOLS": "1",
     "CLAUDE_CODE_NO_FLICKER": "1",
 {{- if eq .machine_type "client" }}
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6[1m]",
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-8[1m]",
-    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5",
     "ANTROPHIC_DEFAULT_MODEL": "opusplan"
 {{- else if eq .machine_type "personal" }}
     "BRAVE_SEARCH_API_KEY": "{{ (rbwFields "claude-settings" "--folder" "dotfiles/personal").brave_search_api_key.value }}",
@@ -68,12 +67,6 @@
     "fullstack-dev-skills": {
       "source": {
         "repo": "jeffallan/claude-skills",
-        "source": "github"
-      }
-    },
-    "karpathy-skills": {
-      "source": {
-        "repo": "forrestchang/andrej-karpathy-skills",
         "source": "github"
       }
     },

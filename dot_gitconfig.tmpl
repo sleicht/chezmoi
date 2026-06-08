@@ -243,18 +243,10 @@
 {{- if eq .machine_type "personal" }}
 [coderabbit]
   machineId = cli/c5985749616c41408fea7bdd07bd190e
+{{- end }}
 
 [gitbutler]
   gitbutlerCommitter = 0
-  aiModelProvider = openai
-  aiOpenAIKeyOption = bringYourOwn
-{{- else if eq .machine_type "client" }}
-[gitbutler]
-  gitbutlerCommitter = 0
-  aiModelProvider = ollama
-  aiOllamaEndpoint = http://127.0.0.1:11435
-  aiOllamaModelName = claude-sonnet-4-6
-{{- end }}
 
 # Allow local customizations in the .gitconfig_local file
 [include]
