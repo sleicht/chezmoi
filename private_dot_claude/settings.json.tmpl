@@ -124,7 +124,7 @@
       {
         "hooks": [
           {
-            "command": "node \"/Users/stephanlv_fanaka/.claude/hooks/gitnexus/gitnexus-hook.cjs\"",
+            "command": "node \"{{ .chezmoi.homeDir }}/.claude/hooks/gitnexus/gitnexus-hook.cjs\"",
             "statusMessage": "Checking GitNexus index freshness...",
             "timeout": 10,
             "type": "command"
@@ -141,7 +141,7 @@
       {
         "hooks": [
           {
-            "command": "node \"/Users/stephanlv_fanaka/.claude/hooks/gitnexus/gitnexus-hook.cjs\"",
+            "command": "node \"{{ .chezmoi.homeDir }}/.claude/hooks/gitnexus/gitnexus-hook.cjs\"",
             "statusMessage": "Enriching with GitNexus graph context...",
             "timeout": 10,
             "type": "command"
@@ -173,9 +173,9 @@
   },
   "includeCoAuthoredBy": false,
 {{- if eq .machine_type "client" }}
-  "model": "opusplan",
+  "model": "opus",
 {{- else }}
-  "model": "opusplan",
+  "model": "opus",
 {{- end }}
   "outputStyle": "Learning",
   "permissions": {

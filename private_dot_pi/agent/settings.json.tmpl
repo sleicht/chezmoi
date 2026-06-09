@@ -45,4 +45,8 @@
       }
     }
   }
+{{- if eq .machine_type "personal" }}
+  ,"defaultProvider": "omlx",
+  "defaultModel": "Qwen3.6-35B-A3B-UD-MLX-4bit"
+{{- end }}
 }
