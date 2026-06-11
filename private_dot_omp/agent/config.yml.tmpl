@@ -14,6 +14,7 @@ terminal:
 
 extensions:
   - ./plugins/local-dotfiles-tools
+  - ./extensions/llm-permission-checker.ts
 
 {{- if eq .machine_type "client" }}
 defaultModel: litellm/gpt-5-5:xhigh
