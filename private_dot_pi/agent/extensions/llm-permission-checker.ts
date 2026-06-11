@@ -17,6 +17,17 @@ const REVIEWED_TOOLS: Record<string, true> = {
 
 const DEFAULT_MODEL = "claude-haiku-4-5";
 const TIMEOUT_MS = 10_000;
+const DIRECT_QUESTION_PATTERN = /ask[_-]?user|AskUserQuestion/i;
+
+function isDirectQuestionToUser(event: { toolName?: string; input?: unknown }): boolean {
+	if (event.toolName !== undefined && DIRECT_QUESTION_PATTERN.test(event.toolName)) return true;
+
+	try {
+		return DIRECT_QUESTION_PATTERN.test(JSON.stringify(event.input));
+	} catch {
+		return false;
+	}
+}
 
 function parseDecision(content: string): {
 	decision: PermissionDecision;
@@ -101,6 +112,12 @@ async function reviewToolCall(
 
 export default function llmPermissionChecker(pi: ExtensionAPI): void {
 	pi.on("tool_call", async (event, context) => {
+		if (isDirectQuestionToUser(event)) {
+			return {
+				block: true,
+				reason: "LLM permission checker requires human approval for direct questions",
+			};
+		}
 		if (
 			event.toolName === undefined ||
 			(REVIEWED_TOOLS[event.toolName] !== true &&

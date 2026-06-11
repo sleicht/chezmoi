@@ -18,6 +18,17 @@ const REVIEWED_TOOLS: Record<string, true> = {
 
 const DEFAULT_MODEL = "claude-haiku-4-5";
 const TIMEOUT_MS = 10_000;
+const DIRECT_QUESTION_PATTERN = /ask[_-]?user|AskUserQuestion/i;
+
+function isDirectQuestionToUser(event: { toolName?: string; input?: unknown }): boolean {
+	if (event.toolName !== undefined && DIRECT_QUESTION_PATTERN.test(event.toolName)) return true;
+
+	try {
+		return DIRECT_QUESTION_PATTERN.test(JSON.stringify(event.input));
+	} catch {
+		return false;
+	}
+}
 
 function parseDecision(content: string): {
 	decision: PermissionDecision;
@@ -107,16 +118,19 @@ export const LlmPermissionChecker = async () => ({
 		input: ToolExecuteInput,
 		output: ToolExecuteOutput,
 	) => {
+		const event = { toolName: input.tool, input: output.args };
+		if (isDirectQuestionToUser(event)) {
+			throw new Error(
+				"LLM permission checker requires human approval for direct questions",
+			);
+		}
 		if (!shouldReview(input.tool)) return;
 
 		const controller = new AbortController();
 		const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
 		try {
-			const result = await reviewToolCall(
-				{ toolName: input.tool, input: output.args },
-				controller.signal,
-			);
+			const result = await reviewToolCall(event, controller.signal);
 			if (result.decision === "deny") {
 				throw new Error(
 					`LLM permission checker denied tool call: ${result.reason}`,
