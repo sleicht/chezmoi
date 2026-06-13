@@ -1,0 +1,142 @@
+#!/usr/bin/env sh
+# ~/.config/yabai/yabairc
+# AeroSpace -> yabai starter config for Stephan
+# Notes:
+# - yabai uses native macOS Spaces, not AeroSpace workspaces.
+# - Rules match visible app names, not bundle IDs.
+# - Use: yabai -m query --windows | jq -r '.[].app' | sort -u
+#   to verify app names after launching your apps.
+
+# Stephan's yabai config
+# AeroSpace migration: workspaces 0-7 mapped to macOS Spaces 1-8.
+# Space 1 = old workspace 0
+# Space 2 = old workspace 1
+# etc.
+
+sudo /opt/homebrew/bin/yabai --load-sa
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+
+# -----------------------------
+# Core layout
+# -----------------------------
+yabai -m config layout bsp
+yabai -m config window_placement second_child
+yabai -m config split_ratio 0.50
+yabai -m config auto_balance off
+yabai -m config window_zoom_persist on
+
+# Focus / mouse behavior, close to your AeroSpace setup
+yabai -m config mouse_follows_focus off
+yabai -m config focus_follows_mouse off
+yabai -m config window_origin_display cursor
+
+# Mouse modifiers
+yabai -m config mouse_modifier alt
+yabai -m config mouse_action1 move
+yabai -m config mouse_action2 resize
+yabai -m config mouse_drop_action swap
+
+# Gaps based on your AeroSpace config
+yabai -m config window_gap 3
+yabai -m config top_padding 5
+yabai -m config bottom_padding 5
+yabai -m config left_padding 5
+yabai -m config right_padding 5
+
+# -----------------------------
+# Space labels, matching your old workspace intent
+# -----------------------------
+# Space 1: utility / floating-ish
+# Space 2: terminal / dev tools
+# Space 3: editors / IDE
+# Space 4: browsers (floating)
+# Space 5: mail / calendar
+# Space 6: messaging
+# Space 7: scratch / AI chat
+# Space 8: external / overflow
+
+yabai -m space 1 --label utility 2>/dev/null
+yabai -m space 2 --label term    2>/dev/null
+yabai -m space 3 --label ide     2>/dev/null
+yabai -m space 4 --label web     2>/dev/null
+yabai -m space 5 --label mail    2>/dev/null
+yabai -m space 6 --label chat    2>/dev/null
+yabai -m space 7 --label scratch 2>/dev/null
+yabai -m space 8 --label external 2>/dev/null
+
+# -----------------------------
+# Floating / unmanaged apps
+# -----------------------------
+yabai -m rule --add app="^(System Settings|System Preferences)$" manage=off
+yabai -m rule --add app="^Activity Monitor$" manage=off
+yabai -m rule --add app="^Calculator$" manage=off
+yabai -m rule --add app="^ColorSync Utility$" manage=off
+yabai -m rule --add app="^Digital Colou?r Meter$" manage=off
+yabai -m rule --add app="^Finder$" manage=off
+yabai -m rule --add app="^Path Finder$" space=1 manage=off
+yabai -m rule --add app="^Photos$" manage=off
+yabai -m rule --add app="^Stickies$" manage=off
+yabai -m rule --add app="^Tailscale$" space=1 manage=off
+yabai -m rule --add app="^kDrive_client$" space=1 manage=off
+
+# Dialogs / popups
+yabai -m rule --add title="^(Preferences|Settings|About|Info|Open|Save|Export|Import|Print)$" manage=off
+yabai -m rule --add title=".*(Preferences|Settings|About).*" manage=off
+
+# -----------------------------
+# Workspace routing
+# -----------------------------
+# Space 2: terminal / dev tools
+yabai -m rule --add app="^Ghostty$" space=2
+yabai -m rule --add app="^cmux$" space=2
+yabai -m rule --add app="^GitButler$" space=2
+yabai -m rule --add app="^T3 Chat$" space=2
+
+# Space 3: IDE / editors
+yabai -m rule --add app="^IntelliJ IDEA$" space=3
+yabai -m rule --add app="^IntelliJ IDEA$" title="^(Welcome|Open|Save|Preferences|Settings|Commit|Push|Pull|Merge|Rebase|Find|Replace).*" manage=off
+yabai -m rule --add app="^Sublime Text$" space=3 manage=off
+
+# Space 4: browsers (keep floating)
+yabai -m rule --add app="^Google Chrome$" space=4 manage=off
+yabai -m rule --add app="^Vivaldi$" space=4 manage=off
+yabai -m rule --add app="^Zen$" space=4 manage=off
+yabai -m rule --add app="^Arc$" space=4 manage=off
+
+# Space 5: mail / calendar
+yabai -m rule --add app="^Spark Desktop$" space=5
+yabai -m rule --add app="^Fantastical$" space=5
+yabai -m rule --add app="^Fantastical$" title=".*(Mini|Preferences|Settings).*" manage=off
+yabai -m rule --add app="^Microsoft Outlook$" space=5
+
+# Space 6: messaging
+yabai -m rule --add app="^WhatsApp$" space=6
+yabai -m rule --add app="^Threema Beta$" space=6
+yabai -m rule --add app="^Threema$" space=6
+yabai -m rule --add app="^kChat$" space=6
+yabai -m rule --add app="^Messages$" space=6
+yabai -m rule --add app="^Slack$" space=6
+yabai -m rule --add app="^Microsoft Teams$" space=6
+
+# Space 7: AI chat / scratch
+yabai -m rule --add app="^ChatGPT$" space=7
+yabai -m rule --add app="^Claude$" space=7
+
+# Space 8: external / presentation / overflow
+# Leave mostly manual.
+
+# Startup repair: re-apply rules to existing windows.
+# Small delay lets macOS finish rebuilding windows after login/wake.
+(
+sleep 10
+yabai -m rule --apply
+) &
+
+# Optional SketchyBar hooks, harmless if sketchybar is missing.
+yabai -m signal --add event=space_changed action='command -v sketchybar >/dev/null 2>&1 && sketchybar --trigger yabai_space_changed'
+yabai -m signal --add event=display_changed action='command -v sketchybar >/dev/null 2>&1 && sketchybar --trigger yabai_display_changed'
+
+# Wake/display repair. This is the anti-gremlin broom.
+yabai -m signal --add event=display_added action='yabai -m rule --apply'
+yabai -m signal --add event=display_removed action='yabai -m rule --apply'
+yabai -m signal --add event=display_changed action='yabai -m rule --apply'
