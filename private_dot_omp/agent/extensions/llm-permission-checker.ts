@@ -7,6 +7,11 @@ interface ToolCallEvent {
 
 interface ExtensionContext {
   cwd?: string;
+  hasUI?: boolean;
+  ui?: {
+    notify(message: string, level?: string): void;
+    setStatus?(key: string, value: string): void;
+  };
 }
 
 interface ExtensionAPI {
@@ -16,6 +21,13 @@ interface ExtensionAPI {
       event: ToolCallEvent,
       context: ExtensionContext,
     ) => Promise<{ block: true; reason: string } | undefined> | { block: true; reason: string } | undefined,
+  ): void;
+  registerCommand?(
+    name: string,
+    command: {
+      description: string;
+      handler: (args: string | undefined, context: ExtensionContext) => Promise<void> | void;
+    },
   ): void;
 }
 
@@ -69,6 +81,43 @@ const MAX_CACHE_SIZE = 500;
 const DIRECT_QUESTION_PATTERN = new RegExp("ask[_-]?user|Ask" + "User" + "Question", "i");
 
 const decisionCache = new Map<string, CacheEntry>();
+
+let enabled = true;
+
+function updateStatus(context: ExtensionContext): void {
+  if (!context.hasUI) return;
+  context.ui?.setStatus?.("auto-mode", `auto-mode: ${enabled ? "on" : "off"}`);
+}
+
+function notifyStatus(context: ExtensionContext): void {
+  if (!context.hasUI) return;
+  context.ui?.notify(`auto-mode: ${enabled ? "on" : "off"}`, "info");
+}
+
+function setEnabled(value: boolean, context: ExtensionContext): void {
+  enabled = value;
+  updateStatus(context);
+  notifyStatus(context);
+}
+
+function handleAutoModeCommand(args: string | undefined, context: ExtensionContext): void {
+  const command = args?.trim().toLowerCase();
+  if (command === "on") {
+    setEnabled(true, context);
+    return;
+  }
+  if (command === "off") {
+    setEnabled(false, context);
+    return;
+  }
+  if (command === "status") {
+    updateStatus(context);
+    notifyStatus(context);
+    return;
+  }
+
+  setEnabled(!enabled, context);
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -202,7 +251,14 @@ function blockForDecision(result: DecisionResult): { block: true; reason: string
 }
 
 export default function llmPermissionChecker(pi: ExtensionAPI): void {
+  enabled = true;
+  pi.registerCommand?.("auto-mode", {
+    description: "Toggle LLM permission checker auto-mode",
+    handler: handleAutoModeCommand,
+  });
+
   pi.on("tool_call", async (event, context) => {
+    if (!enabled) return;
     if (isDirectQuestionToUser(event)) {
       return { block: true, reason: "LLM permission checker requires human approval for direct questions" };
     }
