@@ -4,16 +4,14 @@
   "autoUpdatesChannel": "latest",
   "enableAllProjectMcpServers": false,
   "enabledPlugins": {
+    "ai-maestro-visual-communicator-plugin@ai-maestro-plugins": true,
     "caveman@caveman": true,
     "ck@cavekit-marketplace": true,
     "code-review@claude-plugins-official": true,
     "code-simplifier@claude-plugins-official": true,
-    "explanatory-output-style@claude-plugins-official": true,
     "jdtls-lsp@claude-plugins-official": true,
     "kotlin-lsp@claude-plugins-official": true,
-    "learning-output-style@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true,
 {{- if eq .machine_type "client" }}
 {{- range splitList "\n" (rbw "claude-client-config" "--folder" "dotfiles/client").notes }}
 {{- if ne . "" }}
@@ -36,22 +34,28 @@
     "oh-my-claudecode@omc": true,
     "stripe@claude-plugins-official": true,
 {{- end }}
-    "worktrunk@worktrunk": true
-  },
+    "skill-creator@claude-plugins-official": true
+    },
   "env": {
-    "ENABLE_LSP_TOOLS": "1",
-    "CLAUDE_CODE_NO_FLICKER": "1",
 {{- if eq .machine_type "client" }}
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6[1m]",
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-8[1m]",
-    "ANTROPHIC_DEFAULT_MODEL": "opusplan"
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6[1m]",
+    "ANTROPHIC_DEFAULT_MODEL": "opusplan",
 {{- else if eq .machine_type "personal" }}
     "BRAVE_SEARCH_API_KEY": "{{ (rbwFields "claude-settings" "--folder" "dotfiles/personal").brave_search_api_key.value }}",
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
 {{- end }}
+    "CLAUDE_CODE_NO_FLICKER": "1",
+    "ENABLE_LSP_TOOLS": "1"
   },
   "extraKnownMarketplaces": {
+    "ai-maestro-plugins": {
+      "source": {
+        "repo": "Emasoft/ai-maestro-plugins",
+        "source": "github"
+      }
+    },
     "cavekit-marketplace": {
       "source": {
         "repo": "JuliusBrussee/cavekit",
@@ -61,18 +65,6 @@
     "caveman": {
       "source": {
         "repo": "JuliusBrussee/caveman",
-        "source": "github"
-      }
-    },
-    "fullstack-dev-skills": {
-      "source": {
-        "repo": "jeffallan/claude-skills",
-        "source": "github"
-      }
-    },
-    "worktrunk": {
-      "source": {
-        "repo": "max-sixty/worktrunk",
         "source": "github"
       }
     },
@@ -173,7 +165,7 @@
   },
   "includeCoAuthoredBy": false,
 {{- if eq .machine_type "client" }}
-  "model": "opus",
+  "model": "opusplan",
 {{- else }}
   "model": "opus",
 {{- end }}

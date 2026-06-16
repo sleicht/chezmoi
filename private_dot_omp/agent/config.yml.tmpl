@@ -62,19 +62,68 @@ display:
   shimmer: kitt
   showTokenUsage: true
 showHardwareCursor: true
-task:
-  showResolvedModelBadge: false
+task: 
+  showResolvedModelBadge: true
 
-compaction:
+compaction: 
   enabled: true              # master switch for automatic paths
   strategy: handoff          # "context-full" | "handoff" | "off"
   reserveTokens: 16384       # headroom kept under the context window
   keepRecentTokens: 20000    # target size of the verbatim tail
   autoContinue: true         # schedule continuation after threshold compaction
+
   idleEnabled: true          # run maintenance while idle
   thresholdPercent: -1       # explicit % override; -1 = auto
   thresholdTokens: -1        # explicit token override; -1 = auto
+  handoffSaveToDisk: true
+stt: 
+  modelName: parakeet
+  enabled: true
+personality: pragmatic
+advisor: 
+  enabled: true
+  subagents: false
+  syncBacklog: "3"
+steeringMode: one-at-a-time
+followUpMode: one-at-a-time
+interruptMode: immediate
+tools: 
+  approvalMode: yolo
+magicKeywords: 
+  enabled: true
+  ultrathink: true
+marketplace: 
+  autoUpdate: notify
+collapseChangelog: false
+memory: 
+  backend: hindsight
+providers: 
+  memoryModel: online
+autolearn: 
+  enabled: true
+mnemopi: 
+  dbPath: ""
+  bank: ""
+  scoping: per-project-tagged
+  embeddingVariant: multilingual
+  llmMode: smol
+  llmBaseUrl: ""
+edit: 
+  mode: hashline
+readLineNumbers: true
+read: 
+  summarize: 
+    prose: true
+lsp: 
+  formatOnWrite: true
+bash: 
+  enabled: true
+  autoBackground: 
+    enabled: true
+renderMermaid: 
+  enabled: true
+inspect_image: 
+  enabled: true
 
-lastChangelogVersion: 15.10.11
 # Native `omp` MCP support reads ~/.omp/agent/mcp.json.
 # Pi-specific packages remain configured separately under ~/.pi during the parallel rollout.
