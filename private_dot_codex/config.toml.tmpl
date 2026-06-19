@@ -1,10 +1,11 @@
 {{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
 notify = ["{{ .chezmoi.homeDir }}/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
 model = "gpt-5-5"
-model_provider = "litellm"
 model_reasoning_effort = "xhigh"
 
 {{- if eq .machine_type "client" }}
+model_provider = "litellm"
+
 [model_providers.litellm]
 name = "LiteLLM"
 base_url = "{{ $cc.litellm_url.value }}/v1"
