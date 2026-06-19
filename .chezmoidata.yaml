@@ -49,9 +49,12 @@ packages:
   darwin:
     # Taps - merged from all sources, deduplicated
     taps:
+      - "barutsrb/tap"
       - "cj-systems/gitflow-cjs"
       - "derailed/k9s"
+      - "FelixKratz/formulae"
       - "ggozad/formulas"
+      - "jackielii/tap"
       - "jetbrains/junie"
       - name: "jundot/omlx"
         url: "https://github.com/jundot/omlx"
@@ -60,8 +63,6 @@ packages:
       - "mediosz/tap"
       - "neurosnap/tap"
       - "nikitabobko/tap"
-      - "barutsrb/tap"
-      - "FelixKratz/formulae"
       - "olets/tap"
       - "rcmdnk/file"
       - "vet-run/vet"
@@ -179,7 +180,6 @@ packages:
       - "mas"
       - "mole"
       - "sketchybar"
-      - "skhd"
       - "yabai"
 
     # Common casks - casks needed on all machines
@@ -227,6 +227,7 @@ packages:
       - "borgbackup"
       - "btop"
       - "derailed/k9s/k9s"
+      - "devpod"
       - "diffoci"
       - "dive"
       - "docker-credential-helper"
@@ -333,6 +334,7 @@ packages:
       - "path-finder"
       - "readdle-spark"
       - "roon"
+      - "skhd-zig"
       - "slack"
       - "stats"
       - "steam"
