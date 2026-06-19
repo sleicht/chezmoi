@@ -86,7 +86,6 @@ packages:
       - "coreutils"
       - "curl"
       - "docker"
-      - "docker-completion"
       - "docker-compose"
       - "docker-language-server"
       - "dockerfile-language-server"
