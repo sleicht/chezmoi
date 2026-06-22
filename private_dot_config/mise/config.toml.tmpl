@@ -38,6 +38,12 @@ verbose = false
 # Prompt for confirmations on destructive operations
 yes = false
 
+# Inline shells used for hook `run` / `run_windows` scripts.
+# mise picks the inline shell per OS, so the postinstall hook below stays a
+# single cross-platform block instead of two OS-gated copies.
+unix_default_inline_shell_args = "bash -c"
+windows_default_inline_shell_args = "pwsh -Command"
+
 [env]
 # Global environment variables (MISE-02: env var management)
 # Project-specific env vars can override via mise.toml [env] section
@@ -45,10 +51,10 @@ yes = false
 # Add global env vars here as needed
 {{ if eq .machine_type "client" }}
 SSL_CERT_DIR = "{{ .chezmoi.homeDir }}/.tls"
-{{- if ne .chezmoi.os "windows" }}
 
+# Import Swisscom TLS certificates into freshly installed JDK truststores.
+# mise runs `run` on Unix/macOS and `run_windows` on Windows.
 [[hooks.postinstall]]
-shell = "bash -c"
 run = '''
 set -euo pipefail
 
@@ -100,16 +106,7 @@ if echo "${MISE_INSTALLED_TOOLS:-[]}" | jq -e 'any(.[]; .name == "java")' >/dev/
   echo "Installed Swisscom TLS certificates"
 fi
 '''
-{{- else }}
-
-[[hooks.postinstall]]
-shell = "pwsh -Command"
-run = '''
-if (-not $IsWindows) {
-  Write-Host "We are not on Windows → skipping PS posthook"
-  exit 0
-}
-
+run_windows = '''
 $installedTools = $env:MISE_INSTALLED_TOOLS | ConvertFrom-Json
 $javaTools = @($installedTools | Where-Object { $_.name -eq "java" })
 
@@ -160,5 +157,4 @@ if ($javaTools.Count -gt 0) {
   Write-Host "Installed Swisscom TLS certificates"
 }
 '''
-{{- end }}
 {{- end }}
