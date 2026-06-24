@@ -50,6 +50,7 @@ packages:
     # Taps - merged from all sources, deduplicated
     taps:
       - "barutsrb/tap"
+      - "can1357/tap"
       - "cj-systems/gitflow-cjs"
       - "derailed/k9s"
       - "FelixKratz/formulae"
@@ -127,6 +128,7 @@ packages:
       - "ncdu"
       - "neovim"
       - "nushell"
+      - "omp"
       - "opencode"
       - "openssh"
       - "opentofu"
@@ -211,6 +213,7 @@ packages:
       - "raindropio"
       - "raycast"
       - "sublime-text"
+      - "supacode"
       - "supasidebar"
       - "t3-code"
       - "thaw@beta"
