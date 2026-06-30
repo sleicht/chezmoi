@@ -1,129 +1,130 @@
 # Managed by chezmoi. Deployed to ~/.omp/agent/config.yml.
 # Keep secrets in the local auth database or environment, not in this file.
 
-theme:
-  dark: dracula
-  light: light-cyberpunk
+advisor:
+  enabled: true
+  subagents: false
+  syncBacklog: "3"
+autolearn:
+  enabled: true
+bash:
+  enabled: true
+  autoBackground:
+    enabled: true
+collapseChangelog: false
+commands:
+  enableOpencodeUser: false
+  enableOpencodeProject: false
+compaction:
+  enabled: true # master switch for automatic paths
+  strategy: handoff # "context-full" | "handoff" | "off"
+  reserveTokens: 16384 # headroom kept under the context window
+  keepRecentTokens: 20000 # target size of the verbatim tail
+  autoContinue: true # schedule continuation after threshold compaction
+  idleEnabled: true # run maintenance while idle
+  thresholdPercent: -1 # explicit % override; -1 = auto
+  thresholdTokens: -1 # explicit token override; -1 = auto
+  handoffSaveToDisk: true
+contextPromotion:
+  enabled: false
 defaultThinkingLevel: auto
-thinkingLevel: low
+display:
+  shimmer: kitt
+  showTokenUsage: true
+edit:
+  mode: hashline
 enableInstallTelemetry: false
-
-terminal:
-  showTerminalProgress: true
-  showImages: true
-
-extensions:
-  - ./plugins/local-dotfiles-tools
-  - ./extensions/llm-permission-checker.ts
-
-{{- if eq .machine_type "client" }}
-defaultModel: litellm/gpt-5-5:xhigh
-modelRoles:
-  default: litellm/gpt-5-5:xhigh
-  smol: litellm/claude-haiku-4-5:low
-  slow: litellm/claude-opus-4-8:high
-  plan: litellm/claude-opus-4-8:high
-  task: litellm/claude-sonnet-4-6:medium
-modelProviderOrder:
-  - litellm
-{{- else }}
-modelRoles:
-  default: openai-codex/gpt-5.5:xhigh
-  smol: pi/smol:high
-  plan: pi/plan:high
-{{- end }}
-
-web_search:
-  provider: searxng
-
 exa:
   enabled: false
   enableSearch: false
   enableResearcher: false
   enableWebsets: false
-
-searxng:
-  endpoint: http://localhost:3939/
-
-setupVersion: 1
-symbolPreset: nerd
-colorBlindMode: false
-statusLine:
-  preset: nerd
-  separator: powerline-thin
-  sessionAccent: true
-  showHookStatus: true
+extensions:
+  - ./plugins/local-dotfiles-tools
+  - ./extensions/llm-permission-checker.ts
+followUpMode: one-at-a-time
+goal:
+  enabled: true
 images:
   autoResize: true
   blockImages: false
-tui:
-  hyperlinks: auto
-display:
-  shimmer: kitt
-  showTokenUsage: true
-showHardwareCursor: true
-task: 
-  showResolvedModelBadge: true
-
-compaction: 
-  enabled: true              # master switch for automatic paths
-  strategy: handoff          # "context-full" | "handoff" | "off"
-  reserveTokens: 16384       # headroom kept under the context window
-  keepRecentTokens: 20000    # target size of the verbatim tail
-  autoContinue: true         # schedule continuation after threshold compaction
-
-  idleEnabled: true          # run maintenance while idle
-  thresholdPercent: -1       # explicit % override; -1 = auto
-  thresholdTokens: -1        # explicit token override; -1 = auto
-  handoffSaveToDisk: true
-stt: 
-  modelName: parakeet
+inspect_image:
   enabled: true
-personality: pragmatic
-advisor: 
-  enabled: true
-  subagents: false
-  syncBacklog: "3"
-steeringMode: one-at-a-time
-followUpMode: one-at-a-time
 interruptMode: immediate
-tools: 
-  approvalMode: yolo
-magicKeywords: 
+lsp:
+  formatOnWrite: true
+magicKeywords:
   enabled: true
   ultrathink: true
-marketplace: 
+marketplace:
   autoUpdate: notify
-collapseChangelog: false
-memory: 
+mcp:
+  discoveryMode: true
+memory:
   backend: hindsight
-providers: 
-  memoryModel: online
-autolearn: 
-  enabled: true
-mnemopi: 
+mnemopi:
   dbPath: ""
   bank: ""
   scoping: per-project-tagged
   embeddingVariant: multilingual
   llmMode: smol
   llmBaseUrl: ""
-edit: 
-  mode: hashline
-readLineNumbers: true
-read: 
-  summarize: 
+  {{- if eq .machine_type "client" }}
+defaultModel: litellm/gpt-5-5:xhigh
+modelProviderOrder:
+  - litellm
+modelRoles:
+  default: litellm/gpt-5-5:xhigh
+  smol: litellm/claude-haiku-4-5:low
+  slow: litellm/claude-opus-4-8:high
+  plan: litellm/claude-opus-4-8:high
+  task: litellm/claude-sonnet-4-6:medium
+  {{- else }}
+modelRoles:
+  default: openai-codex/gpt-5.5:xhigh
+  smol: pi/smol:high
+  plan: pi/plan:high
+  {{- end }}
+personality: pragmatic
+plan:
+  enabled: true
+providers:
+  memoryModel: online
+  webSearch: auto
+read:
+  summarize:
     prose: true
-lsp: 
-  formatOnWrite: true
-bash: 
+readLineNumbers: true
+renderMermaid:
   enabled: true
-  autoBackground: 
-    enabled: true
-renderMermaid: 
+searxng:
+  endpoint: http://localhost:3939/
+setupVersion: 1
+showHardwareCursor: true
+statusLine:
+  preset: nerd
+  separator: powerline-thin
+  sessionAccent: true
+  showHookStatus: true
+  transparent: true
+steeringMode: one-at-a-time
+symbolPreset: nerd
+task:
+  showResolvedModelBadge: true
+terminal:
+  showTerminalProgress: true
+  showImages: true
+theme:
+  dark: dracula
+  light: light-cyberpunk
+thinkingLevel: low
+tools:
+  approvalMode: yolo
+tui:
+  hyperlinks: auto
+  textSizing: false
+web_search:
   enabled: true
-inspect_image: 
-  enabled: true
-
+  provider: searxng
 # Native `omp` MCP support reads ~/.omp/agent/mcp.json.
 # Pi-specific packages remain configured separately under ~/.pi during the parallel rollout.

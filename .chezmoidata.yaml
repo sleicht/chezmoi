@@ -50,7 +50,6 @@ packages:
     # Taps - merged from all sources, deduplicated
     taps:
       - "barutsrb/tap"
-      - "can1357/tap"
       - "cj-systems/gitflow-cjs"
       - "derailed/k9s"
       - "FelixKratz/formulae"
@@ -59,13 +58,13 @@ packages:
       - "jetbrains/junie"
       - name: "jundot/omlx"
         url: "https://github.com/jundot/omlx"
-      - "koekeishiya/formulae"
       - "manaflow-ai/cmux"
       - "mediosz/tap"
       - "neurosnap/tap"
       - "nikitabobko/tap"
       - "olets/tap"
       - "rcmdnk/file"
+      - "slp/krunkit"
       - "vet-run/vet"
 
     # Cross-platform formulae — installed on both macOS and Linux
@@ -128,7 +127,6 @@ packages:
       - "ncdu"
       - "neovim"
       - "nushell"
-      - "omp"
       - "opencode"
       - "openssh"
       - "opentofu"
@@ -170,6 +168,7 @@ packages:
       - "woff2"
       - "worktrunk"
       - "yaml-language-server"
+      - "yq"
       - "zoxide"
       - "zsh"
       - "olets/tap/zsh-abbr"
@@ -182,7 +181,13 @@ packages:
       - "mas"
       - "mole"
       - "sketchybar"
-      - "yabai"
+      - "asmvik/formulae/yabai"
+      # krunkit for podman desktop
+      - "krunkit"
+#      - "slp/krun/gvproxy"
+#      - "slp/krun/libkrunfw"
+#      - "slp/krun/virglrenderer"
+#      - "slp/krun/libkrun"
 
     # Common casks - casks needed on all machines
     common_casks:

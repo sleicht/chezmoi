@@ -17,20 +17,23 @@ wire_api = "responses"
 url = "http://127.0.0.1:64342/stream"
 
 [mcp_servers.node_repl]
-command = "/Applications/Codex.app/Contents/Resources/node_repl"
-startup_timeout_sec = 120.0
+args = []
+command = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node_repl"
+startup_timeout_sec = 120
 
 [mcp_servers.node_repl.env]
-BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
-BROWSER_USE_MARKETPLACE_NAME = "openai-bundled"
-CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
 CODEX_HOME = "{{ .chezmoi.homeDir }}/.codex"
 NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
-NODE_REPL_NODE_MODULE_DIRS = ""
-NODE_REPL_NODE_PATH = "/Applications/Codex.app/Contents/Resources/node"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "167fdf579477181fba1773c1efb067b00c5a64fe85dafb50a2001bde198dc739"
+NODE_REPL_NODE_MODULE_DIRS = "/Applications/Codex.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node"
 NODE_REPL_TRUSTED_CODE_PATHS = "{{ .chezmoi.homeDir }}/.codex"
-NODE_REPL_UNTRUSTED_ENV_ALLOWLIST = "BROWSER_USE_MARKETPLACE_NAME"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "59e7bb81812ddd5f102e1d580335166e552c91686b5726218a985b59b4f89ca1"
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.623.42026"
+CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
 
 {{- if eq .machine_type "personal" }}
 [mcp_servers.gitnexus]
@@ -39,7 +42,7 @@ args = ["mcp"]
 {{- end }}
 
 [marketplaces.openai-bundled]
-last_updated = "2026-05-28T15:47:33Z"
+last_updated = "2026-06-29T07:02:30Z"
 source_type = "local"
 source = "{{ .chezmoi.homeDir }}/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
@@ -49,6 +52,7 @@ js_repl = false
 [desktop]
 conversationDetailMode = "STEPS_COMMANDS"
 ambient-suggestions-enabled = false
+followUpQueueMode = "queue"
 
 [desktop.open-in-target-preferences]
 global = "intellij"
