@@ -2,7 +2,7 @@
 # Keep secrets in the local auth database or environment, not in this file.
 
 advisor:
-  enabled: true
+  enabled: false
   subagents: false
   syncBacklog: "3"
 autolearn:
@@ -78,7 +78,7 @@ modelRoles:
   smol: litellm/claude-haiku-4-5:low
   slow: litellm/claude-opus-4-8:high
   plan: litellm/claude-opus-4-8:high
-  task: litellm/claude-sonnet-4-6:medium
+  task: litellm/claude-sonnet-5:medium
   {{- else }}
 modelRoles:
   default: openai-codex/gpt-5.5:xhigh

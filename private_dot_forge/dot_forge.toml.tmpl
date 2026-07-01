@@ -77,6 +77,7 @@ url_param_vars = [{ name = "LITELLM_BASE_URL" }]
 models = [
   { id = "claude-haiku-4-5",  name = "Claude Haiku 4.5 (cached)",  context_length = 200000,  supports_reasoning = true, tools_supported = true, input_modalities = ["text"] },
   { id = "claude-sonnet-4-6", name = "Claude Sonnet 4.6 (cached)", context_length = 1000000, supports_reasoning = true, tools_supported = true, input_modalities = ["text"] },
+  { id = "claude-sonnet-5", name = "Claude Sonnet 5 (cached)", context_length = 1000000, supports_reasoning = true, tools_supported = true, input_modalities = ["text"] },
   { id = "claude-opus-4-6",   name = "Claude Opus 4.6 (cached)",   context_length = 1000000, supports_reasoning = true, tools_supported = true, input_modalities = ["text"] },
   { id = "claude-opus-4-8",   name = "Claude Opus 4.8 (cached)",   context_length = 1000000, supports_reasoning = true, tools_supported = true, input_modalities = ["text"] },
 ]
@@ -85,7 +86,7 @@ models = [
 [commit]
 {{- if eq .machine_type "client" }}
 provider_id = "litellm_anthropic"
-model_id = "claude-sonnet-4-6"
+model_id = "claude-sonnet-5"
 {{- else }}
 provider_id = "ollama"
 model_id = "kimi-k2.6:cloud"
@@ -110,7 +111,7 @@ model_id = "kimi-k2.6:cloud"
 [suggest]
 {{- if eq .machine_type "client" }}
 provider_id = "litellm_anthropic"
-model_id = "claude-sonnet-4-6"
+model_id = "claude-sonnet-5"
 {{- else }}
 provider_id = "ollama"
 model_id = "kimi-k2.6:cloud"
