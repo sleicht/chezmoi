@@ -18,15 +18,15 @@ mise run git:pr           # create PR/MR (auto-detects gh/glab)
 
 ## Chezmoi Naming Conventions
 
-| Prefix | Effect | Example |
-|--------|--------|---------|
-| `dot_` | Becomes `.` | `dot_zshrc` → `~/.zshrc` |
-| `private_dot_` | Hidden + restricted perms | `private_dot_config/` → `~/.config/` |
-| `executable_` | Sets +x | `executable_pre-commit` |
-| `.tmpl` suffix | Go template processing | `path.zsh.tmpl` |
-| `run_once_` | Runs once ever | `run_once_before_install-homebrew.sh.tmpl` |
+| Prefix          | Effect                         | Example                                          |
+|-----------------|--------------------------------|--------------------------------------------------|
+| `dot_`          | Becomes `.`                    | `dot_zshrc` → `~/.zshrc`                         |
+| `private_dot_`  | Hidden + restricted perms      | `private_dot_config/` → `~/.config/`             |
+| `executable_`   | Sets +x                        | `executable_pre-commit`                          |
+| `.tmpl` suffix  | Go template processing         | `path.zsh.tmpl`                                  |
+| `run_once_`     | Runs once ever                 | `run_once_before_install-homebrew.sh.tmpl`       |
 | `run_onchange_` | Runs when content hash changes | `run_onchange_after_01-install-packages.sh.tmpl` |
-| `run_after_` | Runs on every apply | `run_after_10-verify-permissions.sh.tmpl` |
+| `run_after_`    | Runs on every apply            | `run_after_10-verify-permissions.sh.tmpl`        |
 
 ## Templates
 
