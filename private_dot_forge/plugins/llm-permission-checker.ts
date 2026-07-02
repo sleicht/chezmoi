@@ -44,7 +44,6 @@ const HARD_BLOCK_PATTERNS: Record<string, Array<{ pattern: RegExp; reason: strin
 		{ pattern: /\bdd\s+.*of=\/dev\//i, reason: "Direct disk writes are not allowed" },
 		{ pattern: /\b(chmod|chown)\b.*777/i, reason: "Overly permissive file permissions" },
 		{ pattern: /\bchown\b.*\/(etc|usr|var|sys|proc)/i, reason: "Cannot change ownership of system directories" },
-		{ pattern: /\b(curl|wget|ssh|scp)\b/i, reason: "External network access requires approval" },
 		{ pattern: /\bkill\s+-9\b.*(init|systemd|1\b)/i, reason: "Cannot kill system processes" },
 	],
 	write: [{ pattern: /(\/etc\/|\/usr\/|\/var\/|\/sys\/|\/proc\/)/i, reason: "Cannot write to system directories" }],
