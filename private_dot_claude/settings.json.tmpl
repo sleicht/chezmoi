@@ -310,6 +310,7 @@
 {{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
       "WebFetch(domain:{{ $cc.gitlab_domain.value }})",
       "WebFetch(domain:{{ $cc.jira_domain.value }})",
+      "WebFetch(domain:{{ $cc.wiki_domain.value }})",
 {{- end }}
       "WebFetch(domain:openapiprocessor.io)",
       "WebSearch"
