@@ -260,6 +260,7 @@ packages:
 
     # Client-specific casks
     client_casks:
+      - "android-commandlinetools"
       - "apache-directory-studio"
       - "atuin-desktop"
       - "bruno"
