@@ -26,4 +26,9 @@ if [[ $exit_code -ne 0 ]]; then
   exit 1
 fi
 
+# Delegate to sonarqube-cli hook if it exists
+if [[ -x .sonar/sonarqube-cli/hooks/pre-push ]]; then
+  exec .sonar/sonarqube-cli/hooks/pre-push "$@"
+fi
+
 exit 0

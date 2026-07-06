@@ -37,7 +37,7 @@
     "stripe@claude-plugins-official": true,
 {{- end }}
     "skill-creator@claude-plugins-official": true
-    },
+  },
   "env": {
 {{- if eq .machine_type "client" }}
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5",
@@ -182,6 +182,16 @@
           }
         ],
         "matcher": "AskUserQuestion|ExitPlanMode"
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/c803964/.claude/hooks/sonar-secrets/build-scripts/pretool-secrets.sh",
+            "timeout": 60
+          }
+        ]
       }
     ],
     "SessionEnd": [
@@ -235,6 +245,16 @@
             "command": "[ -n \"${SUPACODE_SURFACE_ID:-}\" ] && { __tty=$(ps -o tty= -p \"$PPID\" 2>/dev/null | tr -d '[:space:]'); case \"$__tty\" in *[0-9]*) __tty=\"/dev/${__tty#/dev/}\";; *) __tty=\"/dev/tty\";; esac; __sp=\"\"; [ -n \"${SUPACODE_SOCKET_PATH:-}\" ] && __sp=\";pid=$PPID\"; printf '\\033]3008;start=claude;event=busy%s\\033\\\\' \"$__sp\" > \"$__tty\"; } >/dev/null 2>&1 || true # supacode-managed-hook",
             "timeout": 10,
             "type": "command"
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/c803964/.claude/hooks/sonar-secrets/build-scripts/prompt-secrets.sh",
+            "timeout": 60
           }
         ]
       }

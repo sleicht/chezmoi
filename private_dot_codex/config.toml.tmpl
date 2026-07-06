@@ -40,6 +40,11 @@ CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
 command = "{{ .chezmoi.homeDir }}/.npm-global/bin/gitnexus"
 args = ["mcp"]
 {{- end }}
+{{- if eq .machine_type "client" }}
+[mcp_servers.sonarqube]
+command = "sonar"
+args = [ "run", "mcp" ]
+{{- end }}
 
 [marketplaces.openai-bundled]
 last_updated = "2026-06-29T07:02:30Z"
@@ -65,3 +70,4 @@ enabled = true
 
 [projects."{{ .chezmoi.homeDir }}/.local/share/chezmoi"]
 trust_level = "trusted"
+
