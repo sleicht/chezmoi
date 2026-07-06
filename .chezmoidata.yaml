@@ -217,6 +217,7 @@ packages:
       - "opencode-desktop"
       - "raindropio"
       - "raycast"
+      - "sonarqube-cli"
       - "sublime-text"
       - "supacode"
       - "supasidebar"
