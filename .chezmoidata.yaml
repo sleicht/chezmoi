@@ -343,6 +343,7 @@ packages:
       - "openusage"
       - "orbstack"
       - "path-finder"
+      - "raycast-glaze"
       - "readdle-spark"
       - "roon"
       - "skhd-zig"

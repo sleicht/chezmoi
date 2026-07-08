@@ -1,7 +1,9 @@
 {{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
 notify = ["{{ .chezmoi.homeDir }}/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
 model = "gpt-5-5"
+service_tier = "fast"
 model_reasoning_effort = "xhigh"
+approvals_reviewer = "auto_review"
 
 {{- if eq .machine_type "client" }}
 model_provider = "litellm"
@@ -19,7 +21,7 @@ url = "http://127.0.0.1:64342/stream"
 [mcp_servers.node_repl]
 args = []
 command = "/Applications/Codex.app/Contents/Resources/cua_node/bin/node_repl"
-startup_timeout_sec = 120
+startup_timeout_sec = 120.0
 
 [mcp_servers.node_repl.env]
 CODEX_HOME = "{{ .chezmoi.homeDir }}/.codex"
@@ -34,12 +36,6 @@ NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunct
 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
 BROWSER_USE_CODEX_APP_VERSION = "26.623.42026"
 CODEX_CLI_PATH = "/Applications/Codex.app/Contents/Resources/codex"
-
-{{- if eq .machine_type "personal" }}
-[mcp_servers.gitnexus]
-command = "{{ .chezmoi.homeDir }}/.npm-global/bin/gitnexus"
-args = ["mcp"]
-{{- end }}
 {{- if eq .machine_type "client" }}
 [mcp_servers.sonarqube]
 command = "sonar"
@@ -71,3 +67,26 @@ enabled = true
 [projects."{{ .chezmoi.homeDir }}/.local/share/chezmoi"]
 trust_level = "trusted"
 
+{{- if eq .machine_type "personal" }}
+[mcp_servers.gitnexus]
+command = "{{ .chezmoi.homeDir }}/.npm-global/bin/gitnexus"
+args = ["mcp"]
+
+[plugins."coderabbit@openai-curated"]
+enabled = true
+
+[marketplaces.open-code-review]
+last_updated = "2026-07-08T16:04:18Z"
+last_revision = "e2d75b732adb026faee65a754d4e7234c800aade"
+source_type = "git"
+source = "https://github.com/alibaba/open-code-review.git"
+
+# BEGIN OMC MANAGED MCP REGISTRY
+
+[mcp_servers.tolaria]
+command = "node"
+args = ["/Applications/Tolaria.app/Contents/Resources/mcp-server/index.js"]
+env = { VAULT_PATH = "{{ .chezmoi.homeDir }}/Documents/Getting Started" }
+
+# END OMC MANAGED MCP REGISTRY
+{{- end }}

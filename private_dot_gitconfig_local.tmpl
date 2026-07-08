@@ -5,4 +5,6 @@
 
 {{- if eq .machine_type "client" }}
 {{ (rbw "git-config-includes" "--folder" "dotfiles/client").notes }}
+{{- else if eq .machine_type "personal" }}
+{{ (rbw "git-config-includes" "--folder" "dotfiles/personal").notes }}
 {{- end }}

@@ -2,29 +2,30 @@
 # Keep secrets in the local auth database or environment, not in this file.
 
 advisor:
-  enabled: false
+  enabled: true
   subagents: false
   syncBacklog: "3"
 autolearn:
   enabled: true
 bash:
-  enabled: true
   autoBackground:
     enabled: true
+  enabled: true
 collapseChangelog: false
+colorBlindMode: false
 commands:
   enableOpencodeUser: false
   enableOpencodeProject: false
 compaction:
   enabled: true # master switch for automatic paths
-  strategy: handoff # "context-full" | "handoff" | "off"
-  reserveTokens: 16384 # headroom kept under the context window
-  keepRecentTokens: 20000 # target size of the verbatim tail
   autoContinue: true # schedule continuation after threshold compaction
+  handoffSaveToDisk: true
   idleEnabled: true # run maintenance while idle
+  keepRecentTokens: 20000 # target size of the verbatim tail
+  reserveTokens: 16384 # headroom kept under the context window
+  strategy: handoff # "context-full" | "handoff" | "off"
   thresholdPercent: -1 # explicit % override; -1 = auto
   thresholdTokens: -1 # explicit token override; -1 = auto
-  handoffSaveToDisk: true
 contextPromotion:
   enabled: false
 defaultThinkingLevel: auto
@@ -35,10 +36,10 @@ edit:
   mode: hashline
 enableInstallTelemetry: false
 exa:
-  enabled: false
-  enableSearch: false
   enableResearcher: false
+  enableSearch: false
   enableWebsets: false
+  enabled: false
 extensions:
   - ./plugins/local-dotfiles-tools
 followUpMode: one-at-a-time
@@ -64,29 +65,29 @@ mcp:
 memory:
   backend: hindsight
 mnemopi:
-  dbPath: ""
   bank: ""
-  scoping: per-project-tagged
+  dbPath: ""
   embeddingVariant: multilingual
-  llmMode: smol
   llmBaseUrl: ""
+  llmMode: smol
+  scoping: per-project-tagged
 {{- if eq .machine_type "client" }}
 defaultModel: litellm/gpt-5-5:xhigh
 modelProviderOrder:
   - litellm
 modelRoles:
   default: litellm/gpt-5-5:xhigh
+  advisor: litellm/claude-sonnet-5
+  plan: litellm/claude-opus-4-8:high
   smol: litellm/claude-haiku-4-5:low
   slow: litellm/claude-opus-4-8:high
-  plan: litellm/claude-opus-4-8:high
   task: litellm/claude-sonnet-5:medium
-  advisor: litellm/claude-sonnet-5
-  {{- else }}
+{{- else }}
 modelRoles:
   default: openai-codex/gpt-5.5:xhigh
-  smol: pi/smol:high
   plan: pi/plan:high
-  {{- end }}
+  smol: pi/smol:high
+{{- end }}
 personality: pragmatic
 plan:
   enabled: true
@@ -118,8 +119,8 @@ task:
     merge: branch
     commits: ai
 terminal:
-  showTerminalProgress: true
   showImages: true
+  showTerminalProgress: true
 theme:
   dark: dracula
   light: light-cyberpunk
