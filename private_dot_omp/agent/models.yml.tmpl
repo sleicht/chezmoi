@@ -96,8 +96,8 @@ providers:
         compat:
           supportsStore: false
           cacheControlFormat: anthropic
-      - id: claude-opus-4-7
-        name: Claude Opus 4.7 via LiteLLM
+      - id: claude-opus-4-6
+        name: Claude Opus 4.6 via LiteLLM
         reasoning: true
         input:
           - text
@@ -150,8 +150,8 @@ providers:
           output: 33
           cacheRead: 0
           cacheWrite: 0
-        contextWindow: 128000
-        maxTokens: 16384
+        contextWindow: 1000000
+        maxTokens: 128000
         compat:
           supportsStore: false
 {{- else }}

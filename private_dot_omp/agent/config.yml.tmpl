@@ -41,7 +41,6 @@ exa:
   enableWebsets: false
 extensions:
   - ./plugins/local-dotfiles-tools
-  - ./extensions/llm-permission-checker.ts
 followUpMode: one-at-a-time
 goal:
   enabled: true
@@ -51,6 +50,8 @@ images:
 inspect_image:
   enabled: true
 interruptMode: immediate
+loop:
+  mode: prompt
 lsp:
   formatOnWrite: true
 magicKeywords:
@@ -69,7 +70,7 @@ mnemopi:
   embeddingVariant: multilingual
   llmMode: smol
   llmBaseUrl: ""
-  {{- if eq .machine_type "client" }}
+{{- if eq .machine_type "client" }}
 defaultModel: litellm/gpt-5-5:xhigh
 modelProviderOrder:
   - litellm
@@ -112,13 +113,16 @@ steeringMode: one-at-a-time
 symbolPreset: nerd
 task:
   showResolvedModelBadge: true
+  isolation:
+    mode: auto
+    merge: branch
+    commits: ai
 terminal:
   showTerminalProgress: true
   showImages: true
 theme:
   dark: dracula
   light: light-cyberpunk
-thinkingLevel: low
 tools:
   approvalMode: yolo
 tui:
@@ -127,5 +131,7 @@ tui:
 web_search:
   enabled: true
   provider: searxng
+worktree:
+  base: .git/wt
 # Native `omp` MCP support reads ~/.omp/agent/mcp.json.
 # Pi-specific packages remain configured separately under ~/.pi during the parallel rollout.

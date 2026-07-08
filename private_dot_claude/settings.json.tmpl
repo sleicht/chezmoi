@@ -15,6 +15,7 @@
     "jdtls-lsp@claude-plugins-official": true,
     "kotlin-lsp@claude-plugins-official": true,
     "lua-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
 {{- if eq .machine_type "client" }}
 {{- range splitList "\n" (rbw "claude-client-config" "--folder" "dotfiles/client").notes }}
 {{- if ne . "" }}
@@ -42,7 +43,7 @@
 {{- if eq .machine_type "client" }}
     "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5",
     "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-8[1m]",
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-5[1m]",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6[1m]",
     "ANTROPHIC_DEFAULT_MODEL": "opusplan",
 {{- else if eq .machine_type "personal" }}
     "BRAVE_SEARCH_API_KEY": "{{ (rbwFields "claude-settings" "--folder" "dotfiles/personal").brave_search_api_key.value }}",
@@ -184,14 +185,14 @@
         "matcher": "AskUserQuestion|ExitPlanMode"
       },
       {
-        "matcher": "Read",
         "hooks": [
           {
-            "type": "command",
             "command": "/Users/c803964/.claude/hooks/sonar-secrets/build-scripts/pretool-secrets.sh",
-            "timeout": 60
+            "timeout": 60,
+            "type": "command"
           }
-        ]
+        ],
+        "matcher": "Read"
       }
     ],
     "SessionEnd": [
@@ -249,20 +250,19 @@
         ]
       },
       {
-        "matcher": "*",
         "hooks": [
           {
-            "type": "command",
             "command": "/Users/c803964/.claude/hooks/sonar-secrets/build-scripts/prompt-secrets.sh",
-            "timeout": 60
+            "timeout": 60,
+            "type": "command"
           }
-        ]
+        ],
+        "matcher": "*"
       }
     ]
   },
   "includeCoAuthoredBy": false,
-  "model": "opus",
-  "outputStyle": "Learning",
+  "outputStyle": "Explanatory",
   "permissions": {
     "allow": [
       "Bash([ -f .commit-message.txt ])",
