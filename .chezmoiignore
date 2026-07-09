@@ -294,6 +294,5 @@ zgenom/**
 *~
 .DS_Store
 firebase-debug.log
-.omc
 
 private_dot_claude/settings_s.json

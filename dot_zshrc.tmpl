@@ -65,3 +65,11 @@ fi
 
 # Must be last: ensures ~/.local/bin wins after mise and plugin PATH reconstruction
 path=("$HOME/.local/bin" "${path[@]}")
+{{- if eq .machine_type "personal" }}
+# oMLX: CLI shim path begin
+case ":$PATH:" in
+  *":$HOME/.omlx/bin:"*) ;;
+  *) export PATH="$HOME/.omlx/bin:$PATH" ;;
+esac
+# oMLX: CLI shim path end
+{{- end }}

@@ -247,6 +247,10 @@
 
 [gitbutler]
   gitbutlerCommitter = 0
+{{- if eq .machine_type "personal" }}
+  aiOpenAIKeyOption = butlerAPI
+  aiModelProvider = anthropic
+{{- end }}
 {{- if eq .machine_type "client" }}
   aiModelProvider = ollama
   aiOllamaEndpoint = http://127.0.0.1:11435
