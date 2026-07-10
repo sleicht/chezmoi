@@ -1,75 +1,46 @@
 # Managed by chezmoi. Deployed to ~/.omp/agent/config.yml.
 # Keep secrets in the local auth database or environment, not in this file.
+# Only non-default values are listed (verified against omp 16.3.15 schema).
 
 advisor:
   enabled: true
-  subagents: false
   syncBacklog: "3"
 autolearn:
   enabled: true
 bash:
   autoBackground:
     enabled: true
-  enabled: true
-collapseChangelog: false
-colorBlindMode: false
 commands:
   enableOpencodeUser: false
   enableOpencodeProject: false
 compaction:
-  enabled: true # master switch for automatic paths
-  autoContinue: true # schedule continuation after threshold compaction
   handoffSaveToDisk: true
   idleEnabled: true # run maintenance while idle
-  keepRecentTokens: 20000 # target size of the verbatim tail
   reserveTokens: 16384 # headroom kept under the context window
-  strategy: handoff # "context-full" | "handoff" | "off"
-  thresholdPercent: -1 # explicit % override; -1 = auto
-  thresholdTokens: -1 # explicit token override; -1 = auto
-contextPromotion:
-  enabled: false
+  strategy: snapcompact # "context-full" | "handoff" | "shake" | "snapcompact" | "off"
 defaultThinkingLevel: auto
+dev:
+  autoqa:
+    consent: granted
 display:
   shimmer: kitt
   showTokenUsage: true
-edit:
-  mode: hashline
-enableInstallTelemetry: false
 exa:
-  enableResearcher: false
   enableSearch: false
-  enableWebsets: false
   enabled: false
 extensions:
   - ./plugins/local-dotfiles-tools
-followUpMode: one-at-a-time
-goal:
-  enabled: true
-images:
-  autoResize: true
-  blockImages: false
 inspect_image:
   enabled: true
-interruptMode: immediate
-loop:
-  mode: prompt
 lsp:
   formatOnWrite: true
-magicKeywords:
-  enabled: true
-  ultrathink: true
-marketplace:
-  autoUpdate: notify
 mcp:
   discoveryMode: true
 memory:
   backend: hindsight
 mnemopi:
-  bank: ""
-  dbPath: ""
+  # inactive while memory.backend is hindsight; kept for a possible backend switch
   embeddingVariant: multilingual
-  llmBaseUrl: ""
-  llmMode: smol
   scoping: per-project-tagged
 {{- if eq .machine_type "client" }}
 defaultModel: litellm/gpt-5-5:xhigh
@@ -87,30 +58,22 @@ modelRoles:
   default: openai-codex/gpt-5.6-terra:high
   plan: openai-codex/gpt-5.6-sol
   smol: openai-codex/gpt-5.6-luna
+  slow: openai-codex/gpt-5.6-terra:xhigh
+  commit: openai-codex/gpt-5.6-luna
 {{- end }}
 personality: pragmatic
-plan:
-  enabled: true
 providers:
-  memoryModel: online
-  webSearch: auto
+  webSearch: searxng
 read:
   summarize:
     prose: true
 readLineNumbers: true
-renderMermaid:
-  enabled: true
 searxng:
   endpoint: http://localhost:3939/
 setupVersion: 1
-showHardwareCursor: true
 statusLine:
   preset: nerd
-  separator: powerline-thin
-  sessionAccent: true
-  showHookStatus: true
   transparent: true
-steeringMode: one-at-a-time
 symbolPreset: nerd
 task:
   showResolvedModelBadge: true
@@ -119,19 +82,10 @@ task:
     merge: branch
     commits: ai
 terminal:
-  showImages: true
-  showTerminalProgress: true
+  showProgress: true
 theme:
   dark: dracula
   light: light-cyberpunk
-tools:
-  approvalMode: yolo
-tui:
-  hyperlinks: auto
-  textSizing: false
-web_search:
-  enabled: true
-  provider: searxng
 worktree:
   base: .git/wt
 # Native `omp` MCP support reads ~/.omp/agent/mcp.json.
