@@ -1,0 +1,27 @@
+# Managed by chezmoi. Deployed to ~/.config/omp-servers/docker-compose.yml.
+# Helper servers for omp: hindsight (memory backend) + searxng (web search).
+# Start/stop via `mise run omp:servers up|down|status|logs`.
+
+services:
+  hindsight:
+    image: ghcr.io/vectorize-io/hindsight:latest
+    ports:
+      - "127.0.0.1:8888:8888" # API + MCP (omp's hindsight.apiUrl)
+      - "127.0.0.1:9999:9999" # admin UI for browsing memories
+    env_file: .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # reach host ollama on linux too
+    volumes:
+      - hindsight-data:/home/hindsight/.pg0
+    restart: unless-stopped
+
+  searxng:
+    image: searxng/searxng:latest
+    ports:
+      - "127.0.0.1:3939:8080" # matches searxng.endpoint in omp config
+    volumes:
+      - ./searxng:/etc/searxng:rw
+    restart: unless-stopped
+
+volumes:
+  hindsight-data:

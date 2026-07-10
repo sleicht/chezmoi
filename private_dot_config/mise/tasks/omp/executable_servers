@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+#MISE description="Manage omp helper servers (hindsight + searxng)"
+
+set -euo pipefail
+
+cd "$HOME/.config/omp-servers"
+
+case "${1:-up}" in
+  up)
+    docker compose up -d
+    echo ""
+    echo "hindsight: http://localhost:8888 (admin UI: http://localhost:9999)"
+    echo "searxng:   http://localhost:3939"
+    ;;
+  down)
+    docker compose down
+    ;;
+  status)
+    docker compose ps
+    ;;
+  logs)
+    docker compose logs -f
+    ;;
+  *)
+    echo "usage: mise run omp:servers [up|down|status|logs]" >&2
+    exit 1
+    ;;
+esac

@@ -1,0 +1,9 @@
+# Managed by chezmoi. Deployed to ~/.config/omp-servers/.env.
+# Hindsight LLM via the host's ollama service — no API key required.
+# Cloud models (":cloud" suffix) proxy through the same local daemon after
+# `ollama signin`; local models run fully offline.
+HINDSIGHT_API_LLM_PROVIDER=ollama
+HINDSIGHT_API_LLM_BASE_URL=http://host.docker.internal:11434/v1
+HINDSIGHT_API_LLM_MODEL=minimax-m2.5:cloud
+# Fully local alternative (weaker fact extraction):
+# HINDSIGHT_API_LLM_MODEL=llama3.2:3b

@@ -1,0 +1,10 @@
+# Managed by chezmoi. Deployed to ~/.config/omp-servers/searxng/settings.yml.
+use_default_settings: true
+server:
+  # Loopback-only instance; key only signs sessions, derived per machine.
+  secret_key: "{{ sha256sum (printf "searxng-%s" .chezmoi.hostname) }}"
+  limiter: false
+search:
+  formats:
+    - html
+    - json # required: omp queries ?format=json (403 without this)
