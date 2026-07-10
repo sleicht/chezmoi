@@ -241,7 +241,6 @@ Library/**
 .claude/history.jsonl
 .claude/__store.db
 .claude/stats-cache.json
-.claude/gsd-file-manifest.json
 
 # User-generated content (local)
 .claude/plans
