@@ -174,6 +174,8 @@ Library/**
 .claude/skills/glab
 .claude/skills/glab/**
 .pi/agent/extensions/firecrawl-search.ts
+.claude/skills/use-spark
+.claude/skills/use-spark/**
 {{- end }}
 
 # -----------------------------------------------------------------------------
