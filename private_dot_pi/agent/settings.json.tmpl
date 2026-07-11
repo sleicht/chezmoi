@@ -16,7 +16,7 @@
   "defaultThinkingLevel": "low",
 {{- end }}
   "enableInstallTelemetry": false,
-  "lastChangelogVersion": "0.79.1",
+  "lastChangelogVersion": "0.80.6",
   "packages": [
     "npm:pi-lens@3.8.53",
     "npm:pi-mcp-adapter@2.10.0",
@@ -26,7 +26,8 @@
 {{- if eq .machine_type "personal" }}
     "npm:@ollama/pi-web-search",
 {{- end }}
-    "npm:pi-ghostty-notifier@0.1.3"
+    "npm:pi-ghostty-notifier@0.1.3",
+    "npm:@plannotator/pi-extension"
   ],
   "terminal": {
     "showTerminalProgress": true
@@ -47,7 +48,7 @@
     }
   }
 {{- if eq .machine_type "personal" }}
-  ,"defaultProvider": "omlx",
-  "defaultModel": "Qwen3.6-35B-A3B-UD-MLX-4bit"
+ ,"defaultProvider": "openai-codex",
+  "defaultModel": "gpt-5.6-sol"
 {{- end }}
 }

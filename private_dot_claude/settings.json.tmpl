@@ -33,6 +33,7 @@
     "gitlab@claude-plugins-official": true,
     "glab-cli@dotfiles-marketplace": true,
     "jdtls-lombok@dotfiles-marketplace": true,
+    "plannotator@plannotator": true,
     "stripe@claude-plugins-official": true,
 {{- end }}
     "skill-creator@claude-plugins-official": true
@@ -85,6 +86,12 @@
         "repo": "openai/codex-plugin-cc",
         "source": "github"
       }
+    },
+    "plannotator": {
+      "source": {
+        "repo": "backnotprop/plannotator",
+        "source": "github"
+      }
     }
 {{- end }}
   },
@@ -100,6 +107,16 @@
         ],
         "matcher": ""
       }
+{{- if eq .machine_type "personal" }}
+      ,{
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Waiting # notchbar-agents-claude-hook",
+            "type": "command"
+          }
+        ]
+      }
+{{- end }}
     ],
     "PostToolUse": [
       {
@@ -123,10 +140,29 @@
           }
         ],
         "matcher": "Bash"
+      },
+      {
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Auto # notchbar-agents-claude-hook",
+            "type": "command"
+          }
+        ]
       }
 {{- end }}
     ],
-    "PostToolUseFailure": [],
+    "PostToolUseFailure": [
+{{- if eq .machine_type "personal" }}
+      {
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' ToolFail # notchbar-agents-claude-hook",
+            "type": "command"
+          }
+        ]
+      }
+{{- end }}
+    ],
     "PreCompact": [],
     "PreToolUse": [
 {{- if eq .machine_type "personal" }}
@@ -165,13 +201,23 @@
       {
         "hooks": [
           {
-            "command": "/Users/c803964/.claude/hooks/sonar-secrets/build-scripts/pretool-secrets.sh",
+            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/sonar-secrets/build-scripts/pretool-secrets.sh",
             "timeout": 60,
             "type": "command"
           }
         ],
         "matcher": "Read"
       }
+{{- if eq .machine_type "personal" }}
+      ,{
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Working # notchbar-agents-claude-hook",
+            "type": "command"
+          }
+        ]
+      }
+{{- end }}
     ],
     "SessionEnd": [
       {
@@ -184,6 +230,16 @@
         ],
         "matcher": ""
       }
+{{- if eq .machine_type "personal" }}
+      ,{
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Ended # notchbar-agents-claude-hook",
+            "type": "command"
+          }
+        ]
+      }
+{{- end }}
     ],
     "SessionStart": [
       {
@@ -195,6 +251,16 @@
           }
         ]
       }
+{{- if eq .machine_type "personal" }}
+      ,{
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Idle # notchbar-agents-claude-hook",
+            "type": "command"
+          }
+        ]
+      }
+{{- end }}
     ],
     "Stop": [
       {
@@ -206,6 +272,16 @@
           }
         ]
       }
+{{- if eq .machine_type "personal" }}
+      ,{
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Idle # notchbar-agents-claude-hook",
+            "type": "command"
+          }
+        ]
+      }
+{{- end }}
     ],
     "UserPromptSubmit": [
       {
@@ -220,17 +296,26 @@
       {
         "hooks": [
           {
-            "command": "/Users/c803964/.claude/hooks/sonar-secrets/build-scripts/prompt-secrets.sh",
+            "command": "{{ .chezmoi.homeDir }}/.claude/hooks/sonar-secrets/build-scripts/prompt-secrets.sh",
             "timeout": 60,
             "type": "command"
           }
         ],
         "matcher": "*"
       }
+{{- if eq .machine_type "personal" }}
+      ,{
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Working # notchbar-agents-claude-hook",
+            "type": "command"
+          }
+        ]
+      }
+{{- end }}
     ]
   },
   "includeCoAuthoredBy": false,
-  "model": "claude-fable-5[1m]",
   "outputStyle": "Explanatory",
   "permissions": {
     "allow": [
