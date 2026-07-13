@@ -46,7 +46,7 @@ export async function resolveCredentials(): Promise<ResolvedCredentials> {
   const rawBase = authBase || envBase;
   return {
     baseUrl: rawBase ? normalizeBaseUrl(rawBase) : undefined,
-    apiKey: authKey || envKey || undefined,
+    apiKey: envKey || authKey || undefined,
   };
 }
 
