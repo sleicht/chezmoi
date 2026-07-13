@@ -181,7 +181,6 @@ packages:
       - "mas"
       - "mole"
       - "sketchybar"
-      - "asmvik/formulae/yabai"
       # krunkit for podman desktop
       - "krunkit"
 #      - "slp/krun/gvproxy"
@@ -346,7 +345,6 @@ packages:
       - "raycast-glaze"
       - "readdle-spark"
       - "roon"
-      - "skhd-zig"
       - "slack"
       - "stats"
       - "steam"
