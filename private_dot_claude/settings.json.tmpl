@@ -250,17 +250,27 @@
             "type": "command"
           }
         ]
-      }
+      },
 {{- if eq .machine_type "personal" }}
-      ,{
+      {
         "hooks": [
           {
             "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Idle # notchbar-agents-claude-hook",
             "type": "command"
           }
         ]
-      }
+      },
 {{- end }}
+      {
+        "hooks": [
+          {
+            "command": "bash '/Users/stephanlv_fanaka/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10,
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
     ],
     "Stop": [
       {
