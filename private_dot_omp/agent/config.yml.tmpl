@@ -43,23 +43,25 @@ mnemopi:
   embeddingVariant: multilingual
   scoping: per-project-tagged
 {{- if eq .machine_type "client" }}
-defaultModel: litellm/gpt-5-5:xhigh
+defaultModel: litellm/gpt-5.6-sol:high
 modelProviderOrder:
   - litellm
 modelRoles:
-  default: litellm/gpt-5-5:xhigh
-  advisor: litellm/claude-sonnet-5
-  plan: litellm/claude-opus-4-8:high
-  smol: litellm/claude-haiku-4-5:low
-  slow: litellm/claude-opus-4-8:high
-  task: litellm/claude-sonnet-5:medium
+  default: litellm/gpt-5.6-terra
+  advisor: litellm/gpt-5.6-terra
+  plan:    litellm/gpt-5.6-sol
+  smol:    litellm/gpt-5.6-luna
+  slow:    litellm/gpt-5.6-sol:high
+  task:    litellm/gpt-5.6-terra
+  commit:  openai-codex/gpt-5.6-luna
 {{- else }}
 modelRoles:
   default: openai-codex/gpt-5.6-terra:high
-  plan: openai-codex/gpt-5.6-sol
-  smol: openai-codex/gpt-5.6-luna
-  slow: openai-codex/gpt-5.6-terra:xhigh
-  commit: openai-codex/gpt-5.6-luna
+  plan:    openai-codex/gpt-5.6-sol
+  smol:    openai-codex/gpt-5.6-luna
+  slow:    openai-codex/gpt-5.6-sol:high
+  task:    litellm/gpt-5.6-terra
+  commit:  openai-codex/gpt-5.6-luna
 {{- end }}
 personality: pragmatic
 providers:

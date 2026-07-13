@@ -1,18 +1,21 @@
 {{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
 notify = ["{{ .chezmoi.homeDir }}/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
-model = "gpt-5.6-terra"
+model = "gpt-5-6-sol"
 service_tier = "fast"
-model_reasoning_effort = "xhigh"
+model_reasoning_effort = "high"
 approvals_reviewer = "auto_review"
 
 {{- if eq .machine_type "client" }}
 model_provider = "litellm"
+model_catalog_json = "models.json"
 
 [model_providers.litellm]
 name = "LiteLLM"
 base_url = "{{ $cc.litellm_url.value }}/v1"
 env_key = "OPENAI_API_KEY"
+env_key_instructions = "Set OPENAI_API_KEY to your LiteLLM API key."
 wire_api = "responses"
+supports_websockets = false
 {{- end }}
 
 [mcp_servers.idea]
