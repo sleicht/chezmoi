@@ -2,7 +2,7 @@
 notify = ["{{ .chezmoi.homeDir }}/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
 model = "gpt-5.6-terra"
 service_tier = "fast"
-model_reasoning_effort = "medium"
+model_reasoning_effort = "xhigh"
 approvals_reviewer = "auto_review"
 
 {{- if eq .machine_type "client" }}
@@ -88,6 +88,7 @@ global = "intellij"
 [projects."{{ .chezmoi.homeDir }}/.local/share/chezmoi"]
 trust_level = "trusted"
 
+{{- if eq .machine_type "personal" }}
 [projects."{{ .chezmoi.homeDir }}/jessie.ai/app-jessie"]
 trust_level = "trusted"
 
@@ -97,7 +98,6 @@ trust_level = "trusted"
 [projects."{{ .chezmoi.homeDir }}/git/forgit"]
 trust_level = "trusted"
 
-{{- if eq .machine_type "personal" }}
 [mcp_servers.gitnexus]
 command = "{{ .chezmoi.homeDir }}/.npm-global/bin/gitnexus"
 args = ["mcp"]
