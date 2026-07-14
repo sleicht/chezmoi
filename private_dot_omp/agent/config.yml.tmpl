@@ -29,7 +29,7 @@ exa:
   enableSearch: false
   enabled: false
 extensions:
-  - ./plugins/local-dotfiles-tools
+  - "{{ .chezmoi.homeDir }}/.omp/agent/plugins/local-dotfiles-tools/hooks/mise-just-enforcer.ts"
 inspect_image:
   enabled: true
 lsp:
@@ -47,13 +47,13 @@ defaultModel: litellm/gpt-5.6-sol:high
 modelProviderOrder:
   - litellm
 modelRoles:
-  default: litellm/gpt-5.6-terra
-  advisor: litellm/gpt-5.6-terra
-  plan:    litellm/gpt-5.6-sol
-  smol:    litellm/gpt-5.6-luna
-  slow:    litellm/gpt-5.6-sol:high
-  task:    litellm/gpt-5.6-terra
-  commit:  openai-codex/gpt-5.6-luna
+  default: litellm/gpt-5-6-terra
+  advisor: litellm/gpt-5-6-terra
+  plan:    litellm/gpt-5-6-sol
+  smol:    litellm/gpt-5-6-luna
+  slow:    litellm/gpt-5-6-sol:high
+  task:    litellm/gpt-5-6-terra
+  commit:  openai-codex/gpt-5-6-luna
 {{- else }}
 modelRoles:
   default: openai-codex/gpt-5.6-terra:high
