@@ -1,144 +1,85 @@
 # General Instructions
 
-Be brief.
+Be extremely concise; grammar may yield to brevity.
+Evaluate suggestions critically and offer alternatives.
+Before editing a file, read and research it. Before changing a function, find all callers.
+Never read or search `build`, `node_modules`, `.git`, `dist`, or `__pycache__` unless explicitly asked.
 
-When reporting information to me, be extremely concise and sacrifice grammar for the sake of concision.
-Don't be overly eager to agree with me, but think about the suggestions I make and speak up if you have another idea (better or worse).
-Before editing any file, read it first. Before modifying a function, grep for all callers. Research before you edit.
-Do not read or search files under these directories unless I explicitly ask: build, node_modules, .git, dist, __pycache__.
-
-When ending a session, output a "handoff block":
-- what was completed
-- open decisions / TODOs
+End a genuinely complete/blocked task or explicitly ended session with a handoff block:
+- completed
+- open decisions/TODOs
 - next suggested action
 
-A turn ending is not a session ending. Never finish with progress-only text.
-While work remains, call a tool.
-Output a handoff only when the user explicitly ends the session or the task is genuinely complete/blocked.
+A turn is not a session. Never finish with progress-only text; while work remains, call a tool.
 
 ## Language and Style
 
-- Always use British English
-- Always answer in the same language I wrote.
+- Use British English.
+- Reply in the user's language.
 
-## Version control
+## Version Control
 
-Before any version-control write op (commit, branch, push, history edit, PR), read `~/.agents/version-control.md` for the full GitButler policy and commit/branch naming rules.
+Before any write operation (commit, branch, push, history edit, PR), read `~/.agents/gitbutler.md` for GitButler policy and naming rules.
 
-# MR Review Protocol
+## MR Review
 
 When reviewing MR notes:
-1. Categorise: must-fix / suggestion / nit
-2. Flag only genuinely ambiguous items (not stylistic preference)
-3. Propose fix for each must-fix before asking
+1. Categorize each as must-fix, suggestion, or nit.
+2. Flag only genuine ambiguity, not stylistic preference.
+3. Propose a fix for every must-fix before asking.
 
-## Keep It Minimal
+## Minimal, Surgical Changes
 
-- No features, abstractions, or error handling beyond what was asked
-- Don't touch adjacent code, comments, or formatting
-- Match existing style; every changed line traces to the request
-- Clean up only what YOUR changes made unused
+- Implement only what was asked: no speculative features, single-use abstractions, configurability, or impossible-case handling.
+- Touch no unrelated code, comments, or formatting; do not refactor working code.
+- Match existing style. Every changed line must trace to the request.
+- Before implementing, flag adjacent code that contradicts the change, even slightly.
+- Mention unrelated dead code; never remove it unless asked.
+- Remove only imports, variables, or functions made unused by your changes.
+- Prefer the simplest solution; rewrite overcomplicated work.
 
 ## Tool Preferences
 
-- Prefer `fd` over `find` for file discovery — use the `fd` skill for syntax reference.
-- Prefer `rg` (ripgrep) over `grep` for content search
-- Prefer `bat` over `cat` for file preview (syntax highlighting, line numbers)
-- Use `jq` for JSON processing, never manual string parsing
-- Use `duckdb` for ad-hoc SQL queries on CSV, Parquet, or JSON files — no Python scripts or jq chains
-- Use `mise run` for task running when a `mise.toml` exists; fall back to `just` (Justfile) over Makefile otherwise
-- Use `./gradlew` (or `./mvnw`), never system-installed build tools — but prefer `mise run`/`just` over direct Gradle/Maven commands when task definitions exist
-- Use `./gradlew dependencies` for dependency trees, not manual POM/build file reading
-- Use `semgrep --config auto` for security/correctness checks on Java/Kotlin before manual review
-- Use `shellcheck` to lint shell scripts
-- Use `git-delta` is configured as the git pager — diffs have line numbers and structured output
-- Use `watchexec` to auto-rerun commands on file changes (e.g. `watchexec -e kt,java -- mise run test`)
-- Use `httpie` (`http`/`https` commands) over `curl` for API testing
+- File discovery: `fd`, not `find`; use the `fd` skill for syntax.
+- Content search: `rg`, not `grep`.
+- File preview: `bat`, not `cat`.
+- JSON: `jq`, never manual parsing.
+- CSV, Parquet, or JSON queries: `duckdb`, not Python scripts or jq chains.
+- Tasks: `mise run` when `mise.toml` exists; otherwise `just` before Make.
+- Builds: prefer `mise run`/`just`; otherwise `./gradlew` or `./mvnw`, never system tools.
+- Dependency trees: `./gradlew dependencies`, not manual POM/build-file reading.
+- Java/Kotlin security and correctness: `semgrep --config auto` before manual review.
+- Shell linting: `shellcheck`.
+- Git diffs: configured `git-delta` pager.
+- Re-run on changes: `watchexec` (for example, `watchexec -e kt,java -- mise run test`).
+- API testing: `http`/`https`, not `curl`.
 
 ## Java/Kotlin
 
-- Prefer Kotlin for new files unless the project is Java-only
-- Prefer Kotlin DSL (`*.gradle.kts`) for new build scripts
-- Run existing formatter (ktfmt/ktlint/spotless) before committing; match project config
+- Prefer Kotlin for new files unless the project is Java-only.
+- Prefer Kotlin DSL (`*.gradle.kts`) for new build scripts.
+- Before committing, run the configured formatter (ktfmt/ktlint/spotless).
 
-## 1. Think Before Coding
-
-**Don't assume. Don't hide confusion. Surface tradeoffs.**
+## Execution
 
 Before implementing:
-- State your assumptions explicitly. If uncertain, ask.
-- If multiple interpretations exist, present them - don't pick silently.
-- If a simpler approach exists, say so. Push back when warranted.
-- If something is unclear, stop. Name what's confusing. Ask.
+- State assumptions; if uncertain, ask.
+- Present multiple interpretations instead of choosing silently.
+- Surface simpler approaches and trade-offs; push back when warranted.
+- Stop and ask when unclear.
 
-## 2. Simplicity First
+Define verifiable success criteria and loop until verified. For multi-step work, give a brief `step → verification` plan. Prefer tests that reproduce invalid input or bugs; verify refactors before and after.
 
-**Minimum code that solves the problem. Nothing speculative.**
-
-- No features beyond what was asked.
-- No abstractions for single-use code.
-- No "flexibility" or "configurability" that wasn't requested.
-- No error handling for impossible scenarios.
-- If you write 200 lines and it could be 50, rewrite it.
-
-Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
-
-## 3. Surgical Changes
-
-**Touch only what you must. Clean up only your own mess.**
-but!
-**If you notice adjacent code that contradicts the change you’re making — even slightly — surface it before implementing.**
-
-When editing existing code:
-- Don't "improve" adjacent code, comments, or formatting.
-- Don't refactor things that aren't broken.
-- Match existing style, even if you'd do it differently.
-- If you notice unrelated dead code, mention it - don't delete it.
-
-When your changes create orphans:
-- Remove imports/variables/functions that YOUR changes made unused.
-- Don't remove pre-existing dead code unless asked.
-
-The test: Every changed line should trace directly to the user's request.
-
-## 4. Goal-Driven Execution
-
-**Define success criteria. Loop until verified.**
-
-Transform tasks into verifiable goals:
-- "Add validation" → "Write tests for invalid inputs, then make them pass"
-- "Fix the bug" → "Write a test that reproduces it, then make it pass"
-- "Refactor X" → "Ensure tests pass before and after"
-
-For multi-step tasks, state a brief plan:
-```
-1. [Step] → verify: [check]
-2. [Step] → verify: [check]
-3. [Step] → verify: [check]
-```
-
-Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
-
-## 5: Memory of Agreements
-
-**Once an assumption is confirmed, it is binding for the session.**
-
-- If a previous answer established a convention (debounce timing, naming pattern, error format), apply it to all subsequent related work without re-asking.
-- If you need to break a previous agreement, state which one you’re breaking and why, before implementing.
-- At session start, surface any unresolved decisions from prior turns.
+Confirmed assumptions and conventions bind the session. Apply them without re-asking; before breaking one, state which and why. At session start, surface unresolved decisions.
 
 <!-- sonar:begin:codex-secrets-on-read -->
-# SonarQube secrets scanning for files protocol
+# Secret Scanning Before Reads
 
-Before reading any file in this workspace, scan it for secrets with the deterministic scanner:
+Before reading any workspace file, run:
 
 ```bash
 sonar analyze secrets <path/to/file>
 ```
 
-If the command reports that the file contains a secret, **do not read the file**. Instead:
-
-1. Inform the user that the file appears to contain a secret or credential and that reading it would expose the value in chat history, logs, and any downstream telemetry.
-2. Advise them to rotate the leaked credential at its source of truth and remove it from the file.
-3. Do not proceed with the original request until the secret has been removed.
+If it reports a secret, do not read the file. Warn that reading would expose the credential in chat, logs, and telemetry; advise rotating it at the source and removing it. Pause the original request until removed.
 <!-- sonar:end:codex-secrets-on-read -->
