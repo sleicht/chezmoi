@@ -1,6 +1,10 @@
 {{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
 notify = ["{{ .chezmoi.homeDir }}/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
+{{- if eq .machine_type "client" }}
 model = "gpt-5-6-sol"
+{{- else }}
+model = "gpt-5.6-sol"
+{{- end }}
 service_tier = "fast"
 model_reasoning_effort = "high"
 approvals_reviewer = "auto_review"
@@ -32,13 +36,13 @@ NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_n
 NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
 NODE_REPL_TRUSTED_CODE_PATHS = "{{ .chezmoi.homeDir }}/.codex"
 CODEX_HOME = "{{ .chezmoi.homeDir }}/.codex"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "2b020a2faded171bf620563ce51864b7c3ff320f1834f0044b73fcbeabb29a76,6d25aa7656feac858f3a3bdaea5bcbab0dbfd426c9de8e6931ce90c399ee8e4f"
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "2b020a2faded171bf620563ce51864b7c3ff320f1834f0044b73fcbeabb29a76,6d25aa7656feac858f3a3bdaea5bcbab0dbfd426c9de8e6931ce90c399ee8e4f,e2cad16d8d9f60f09c9f0951ec7dfdd9e8f59dedd06045c0b6827dc8fa8322f0"
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
 NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
 NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.707.30751"
+BROWSER_USE_CODEX_APP_VERSION = "26.707.62119"
 CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
 
 [mcp_servers.sonarqube]
@@ -89,7 +93,7 @@ gpt-5-6-luna = 4
 gpt-5-6-sol = 4
 gpt-5-6-terra = 4
 "gpt-5.5" = 4
-"gpt-5.6-sol" = 1
+"gpt-5.6-sol" = 4
 
 [projects."{{ .chezmoi.homeDir }}/.local/share/chezmoi"]
 trust_level = "trusted"
@@ -121,8 +125,34 @@ source = "https://github.com/readdle/spark-codex-marketplace.git"
 enabled = true
 
 [marketplaces.open-code-review]
-last_updated = "2026-07-09T16:40:24Z"
-last_revision = "fbc11045bde7e37fee6268119cb9949a9a3474d1"
+last_updated = "2026-07-16T18:44:10Z"
+last_revision = "4ee453fd795955fe9467d28860b02ca550730c0a"
 source_type = "git"
 source = "https://github.com/alibaba/open-code-review.git"
+
+[marketplaces.openai-primary-runtime]
+last_updated = "2026-07-13T20:19:05Z"
+source_type = "local"
+source = "/Users/stephanlv_fanaka/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
+
+[plugins."spark-cli-skills@spark-codex-marketplace"]
+enabled = true
+
+[plugins."browser@openai-bundled"]
+enabled = true
+
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
 {{- end }}

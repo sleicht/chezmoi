@@ -46,6 +46,10 @@
                         {
                             "from": { "key_code": "non_us_backslash" },
                             "to": [{ "key_code": "backslash" }]
+                        },
+                        {
+                            "from": { "key_code": "right_control" },
+                            "to": [{ "key_code": "right_option" }]
                         }
                     ]
                 },

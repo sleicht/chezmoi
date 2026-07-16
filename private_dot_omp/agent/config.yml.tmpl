@@ -3,7 +3,7 @@
 # Only non-default values are listed (verified against omp 16.3.15 schema).
 
 advisor:
-  enabled: false
+  enabled: true
   syncBacklog: "3"
 autolearn:
   enabled: true
@@ -12,6 +12,7 @@ bash:
   autoBackground:
     enabled: true
 browser:
+  enabled: true
   cmux: false
 commands:
   enableOpencodeUser: false
@@ -61,10 +62,10 @@ modelRoles:
   commit:  openai-codex/gpt-5-6-luna
 {{- else }}
 modelRoles:
-  default: openai-codex/gpt-5.6-terra:high
+  default: openai-codex/gpt-5.6-sol:medium
   plan:    openai-codex/gpt-5.6-sol
   smol:    openai-codex/gpt-5.6-luna
-  slow:    openai-codex/gpt-5.6-sol:high
+  slow:    openai-codex/gpt-5.6-terra:high
   task:    litellm/gpt-5.6-terra
   commit:  openai-codex/gpt-5.6-luna
 {{- end }}
@@ -95,5 +96,22 @@ theme:
   light: light-cyberpunk
 worktree:
   base: .git/wt
+stt:
+  modelName: parakeet
+  enabled: true
+power:
+  sleepPrevention: idle
+shellMinimizer:
+  sourceOutlineLevel: aggressive
+speechgen:
+  enabled: false
+ask:
+  enabled: true
+web_search:
+  enabled: true
+todo:
+  eager: default
+secrets:
+  enabled: true
 # Native `omp` MCP support reads ~/.omp/agent/mcp.json.
 # Pi-specific packages remain configured separately under ~/.pi during the parallel rollout.
