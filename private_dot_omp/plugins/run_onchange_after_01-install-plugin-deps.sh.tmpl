@@ -1,0 +1,14 @@
+#!/bin/bash
+# hash: {{ include "private_dot_omp/plugins/package.json" | sha256sum }}
+# Auto-installs OMP plugin dependencies when package.json changes
+set -euo pipefail
+
+cd "{{ .chezmoi.homeDir }}/.omp/plugins"
+
+if command -v bun >/dev/null 2>&1; then
+  bun install --ignore-scripts
+elif command -v mise >/dev/null 2>&1; then
+  mise exec bun -- bun install --ignore-scripts
+else
+  echo "==> bun CLI not found, skipping OMP plugin installation."
+fi

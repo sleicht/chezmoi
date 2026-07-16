@@ -85,8 +85,8 @@ models = [
 
 [commit]
 {{- if eq .machine_type "client" }}
-provider_id = "litellm_anthropic"
-model_id = "claude-sonnet-5"
+provider_id = "openai_compatible"
+model_id = "gpt-5-6-terra"
 {{- else }}
 provider_id = "ollama"
 model_id = "kimi-k2.6:cloud"
@@ -101,7 +101,7 @@ model_cache_ttl_secs = 604800      # 7 days
 [session]
 {{- if eq .machine_type "client" }}
 provider_id = "openai_compatible"
-model_id = "gpt-5-5"
+model_id = "gpt-5-6-sol"
 {{- else }}
 provider_id = "ollama"
 model_id = "kimi-k2.6:cloud"
@@ -110,8 +110,8 @@ model_id = "kimi-k2.6:cloud"
 # ── Suggest ─────────────────────────────────────────────────────────
 [suggest]
 {{- if eq .machine_type "client" }}
-provider_id = "litellm_anthropic"
-model_id = "claude-sonnet-5"
+provider_id = "openai_compatible"
+model_id = "gpt-5-6-terra"
 {{- else }}
 provider_id = "ollama"
 model_id = "kimi-k2.6:cloud"

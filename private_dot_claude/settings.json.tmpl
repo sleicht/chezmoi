@@ -5,8 +5,6 @@
   "editorMode": "normal",
   "enableAllProjectMcpServers": false,
   "enabledPlugins": {
-    "aiup-compose-ktor-exposed@ai-unified-process-marketplace": true,
-    "aiup-core@ai-unified-process-marketplace": true,
     "caveman@caveman": true,
     "ck@cavekit-marketplace": true,
     "code-review@claude-plugins-official": false,
@@ -33,9 +31,9 @@
     "gitlab@claude-plugins-official": true,
     "glab-cli@dotfiles-marketplace": true,
     "jdtls-lombok@dotfiles-marketplace": true,
-    "plannotator@plannotator": true,
     "stripe@claude-plugins-official": true,
 {{- end }}
+    "plannotator@plannotator": true,
     "skill-creator@claude-plugins-official": true
   },
   "env": {
@@ -71,6 +69,12 @@
         "source": "github"
       }
     },
+    "plannotator": {
+      "source": {
+        "repo": "backnotprop/plannotator",
+        "source": "github"
+      }
+    },
 {{- if eq .machine_type "client" }}
 {{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
     "{{ $cc.marketplace_name.value }}": {
@@ -84,12 +88,6 @@
     "openai-codex": {
       "source": {
         "repo": "openai/codex-plugin-cc",
-        "source": "github"
-      }
-    },
-    "plannotator": {
-      "source": {
-        "repo": "backnotprop/plannotator",
         "source": "github"
       }
     }
@@ -264,7 +262,7 @@
       {
         "hooks": [
           {
-            "command": "bash '/Users/stephanlv_fanaka/.claude/hooks/herdr-agent-state.sh' session",
+            "command": "bash '{{ .chezmoi.homeDir }}/.claude/hooks/herdr-agent-state.sh' session",
             "timeout": 10,
             "type": "command"
           }
