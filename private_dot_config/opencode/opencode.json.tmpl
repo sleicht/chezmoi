@@ -10,7 +10,6 @@
     "google-vertex-anthropic"
   ],
   "plugin": [
-    "oh-my-openagent",
 {{- if eq .machine_type "client" }}
 {{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
     "{{ $cc.marketplace_name.value }}@git+{{ $cc.marketplace_url_https.value }}",
@@ -26,49 +25,25 @@
         "baseURL": "{{ $cc.litellm_url.value }}/v1"
       },
       "models": {
-        "claude-opus-4-6": {
-          "name": "Claude Opus 4.6",
-          "limit": {
-            "context": 1000000,
-            "output": 32000
+        "claude-haiku-4-5": {
+          "name": "Claude Haiku 4.5",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
           },
-          "variants": {
-            "low": { "reasoningEffort": "low" },
-            "medium": { "reasoningEffort": "medium" },
-            "high": { "reasoningEffort": "high" },
-            "max": { "reasoningEffort": "max" }
-          }
-        },
-        "claude-opus-4-7": {
-          "name": "Claude Opus 4.7",
           "limit": {
-            "context": 1000000,
-            "output": 32000
-          },
-          "variants": {
-            "low": { "reasoningEffort": "low" },
-            "medium": { "reasoningEffort": "medium" },
-            "high": { "reasoningEffort": "high" },
-            "xhigh": { "reasoningEffort": "xhigh" },
-            "max": { "reasoningEffort": "max" }
-          }
-        },
-        "claude-opus-4-8": {
-          "name": "Claude Opus 4.8",
-          "limit": {
-            "context": 1000000,
-            "output": 32000
-          },
-          "variants": {
-            "low": { "reasoningEffort": "low" },
-            "medium": { "reasoningEffort": "medium" },
-            "high": { "reasoningEffort": "high" },
-            "xhigh": { "reasoningEffort": "xhigh" },
-            "max": { "reasoningEffort": "max" }
+            "context": 200000,
+            "output": 8192
           }
         },
         "claude-sonnet-4-6": {
           "name": "Claude Sonnet 4.6",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "limit": {
             "context": 200000,
             "output": 16000
@@ -82,6 +57,11 @@
         },
         "claude-sonnet-5": {
           "name": "Claude Sonnet 5",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "limit": {
             "context": 1000000,
             "output": 32000
@@ -93,17 +73,71 @@
             "max": { "reasoningEffort": "max" }
           }
         },
-        "claude-haiku-4-5": {
-          "name": "Claude Haiku 4.5",
+        "claude-opus-4-6": {
+          "name": "Claude Opus 4.6",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "limit": {
             "context": 200000,
-            "output": 8192
+            "output": 32000
+          },
+          "variants": {
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" },
+            "max": { "reasoningEffort": "max" }
+          }
+        },
+        "claude-opus-4-7": {
+          "name": "Claude Opus 4.7",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 200000,
+            "output": 32000
+          },
+          "variants": {
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" },
+            "xhigh": { "reasoningEffort": "xhigh" },
+            "max": { "reasoningEffort": "max" }
+          }
+        },
+        "claude-opus-4-8": {
+          "name": "Claude Opus 4.8",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 200000,
+            "output": 32000
+          },
+          "variants": {
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" },
+            "xhigh": { "reasoningEffort": "xhigh" },
+            "max": { "reasoningEffort": "max" }
           }
         },
         "gemini-3.1-flash-lite": {
           "name": "Gemini 3.1 Flash Lite",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "limit": {
-            "context": 1000000,
+            "context": 1048576,
             "output": 8192
           },
           "variants": {
@@ -114,8 +148,13 @@
         },
         "gemini-3.5-flash": {
           "name": "Gemini 3.5 Flash",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "limit": {
-            "context": 1000000,
+            "context": 1048576,
             "output": 65536
           },
           "variants": {
@@ -126,9 +165,71 @@
         },
         "gpt-5-5": {
           "name": "GPT 5.5",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
           "limit": {
             "context": 128000,
             "output": 16384
+          },
+          "variants": {
+            "none": { "reasoningEffort": "none" },
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" },
+            "xhigh": { "reasoningEffort": "xhigh" }
+          }
+        },
+        "gpt-5-6-luna": {
+          "name": "GPT 5.6 Luna",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 1000000,
+            "output": 128000
+          },
+          "variants": {
+            "none": { "reasoningEffort": "none" },
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" },
+            "xhigh": { "reasoningEffort": "xhigh" }
+          }
+        },
+        "gpt-5-6-terra": {
+          "name": "GPT 5.6 Terra",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 1000000,
+            "output": 128000
+          },
+          "variants": {
+            "none": { "reasoningEffort": "none" },
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" },
+            "xhigh": { "reasoningEffort": "xhigh" }
+          }
+        },
+        "gpt-5-6-sol": {
+          "name": "GPT 5.6 Sol",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 1000000,
+            "output": 128000
           },
           "variants": {
             "none": { "reasoningEffort": "none" },
@@ -144,7 +245,15 @@
   },
   "permission": {
     "*": "ask",
-    "read": "allow",
+    "read": {
+      "*": "allow",
+      "*.env": "ask",
+      "*.env.*": "ask",
+      "*.env.private.*": "deny",
+      "*.env.example": "allow",
+      "*.env.template": "allow"
+    },
+    "edit": "allow",
     "glob": "allow",
     "grep": "allow",
     "bash": {
@@ -162,17 +271,28 @@
       "test *": "allow",
       "tr *": "allow",
       "wc *": "allow",
-      "git diff *": "allow",
-      "git log *": "allow",
-      "git branch": "allow",
-      "git status *": "allow",
-      "glab mr view *": "allow",
-      "just *": "allow"
+      "git *": "allow",
+      "but *": "allow",
+      "glab *": "allow",
+      "mvn *": "allow",
+      "gradle *": "allow",
+      "mise *": "allow",
+      "pytest *": "allow",
+      "python3 *": "allow",
+      "npm *": "allow",
+      "curl *": "allow",
+      "just *": "allow",
+      "sonar *": "allow"
     },
-    "skill": "allow",
     "task": "allow",
+    "skill": "allow",
+    "lsp": "allow",
     "todowrite": "allow",
-    "websearch": "allow"
+    "webfetch": "allow",
+    "websearch": "allow",
+    "external_directory": "allow",
+    "doom_loop": "ask"
   },
+  "small_model": "litellm/gpt-5-6-luna",
   "shell": "zsh"
 }
