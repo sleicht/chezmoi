@@ -193,7 +193,7 @@ packages:
       - "aerospace"
       - "agentsview"
       - "arc"
-      - "bartender"
+#      - "bartender"
       - "beyond-compare"
       - "bitwarden"
       - "claude-code@latest"
