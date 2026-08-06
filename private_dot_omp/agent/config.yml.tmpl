@@ -2,116 +2,136 @@
 # Keep secrets in the local auth database or environment, not in this file.
 # Only non-default values are listed (verified against omp 16.3.15 schema).
 
-advisor:
+advisor: 
   enabled: true
   syncBacklog: "3"
-autolearn:
+autolearn: 
   enabled: true
   autoContinue: true
-bash:
-  autoBackground:
+bash: 
+  autoBackground: 
     enabled: true
-browser:
+browser: 
   enabled: true
   cmux: false
-commands:
+commands: 
   enableOpencodeUser: false
   enableOpencodeProject: false
-compaction:
+compaction: 
   handoffSaveToDisk: true
   idleEnabled: true # run maintenance while idle
   reserveTokens: 16384 # headroom kept under the context window
   strategy: snapcompact # "context-full" | "handoff" | "shake" | "snapcompact" | "off"
 defaultThinkingLevel: auto
-dev:
-  autoqa:
-    consent: granted
-display:
+dev: 
+  autoqaConsent: granted
+display: 
   shimmer: kitt
   showTokenUsage: true
-exa:
+exa: 
   enableSearch: false
   enabled: false
-extensions:
+extensions: 
   - "{{ .chezmoi.homeDir }}/.omp/agent/plugins/local-dotfiles-tools/hooks/mise-just-enforcer.ts"
-features:
+features: 
   unexpectedStopDetection: true
-inspect_image:
-  enabled: true
-lsp:
+inspect_image: 
+  mode: "on"
+lsp: 
   formatOnWrite: true
-mcp:
-  discoveryMode: true
-memory:
+mcp: 
+  {}
+memory: 
   backend: hindsight
-mnemopi:
+mnemopi: 
   # inactive while memory.backend is hindsight; kept for a possible backend switch
   embeddingVariant: multilingual
   scoping: per-project-tagged
 {{- if eq .machine_type "client" }}
 defaultModel: litellm/gpt-5.6-sol:high
-modelProviderOrder:
+modelProviderOrder: 
   - litellm
-modelRoles:
-  default: litellm/gpt-5-6-terra
+modelRoles: 
+  default: litellm/gpt-5-6-sol
   advisor: litellm/gpt-5-6-terra
-  plan:    litellm/gpt-5-6-sol
-  smol:    litellm/gpt-5-6-luna
-  slow:    litellm/gpt-5-6-sol:high
-  task:    litellm/gpt-5-6-terra
-  commit:  openai-codex/gpt-5-6-luna
+  plan: litellm/gpt-5-6-sol
+  smol: litellm/gpt-5-6-luna
+  slow: litellm/gpt-5-6-sol:high
+  task: litellm/gpt-5-6-terra
+  commit: openai-codex/gpt-5-6-luna
 {{- else }}
 modelRoles:
   default: openai-codex/gpt-5.6-sol:medium
   plan:    openai-codex/gpt-5.6-sol
   smol:    openai-codex/gpt-5.6-luna
   slow:    openai-codex/gpt-5.6-terra:high
-  task:    litellm/gpt-5.6-terra
+  task:    openai-codex/gpt-5.6-terra
   commit:  openai-codex/gpt-5.6-luna
 {{- end }}
 personality: pragmatic
-providers:
-  webSearch: searxng
-read:
-  summarize:
+providers: 
+  webSearchOrder: 
+    - searxng
+    - perplexity
+    - gemini
+    - anthropic
+    - codex
+    - xai
+    - zai
+    - exa
+    - tinyfish
+    - jina
+    - kagi
+    - tavily
+    - firecrawl
+    - brave
+    - kimi
+    - parallel
+    - synthetic
+    - startpage
+    - duckduckgo
+    - ecosia
+    - google
+    - mojeek
+    - public
+read: 
+  summarize: 
     prose: true
 readLineNumbers: true
-searxng:
+searxng: 
   endpoint: http://localhost:3939/
 setupVersion: 1
-statusLine:
+statusLine: 
   preset: nerd
   transparent: true
 symbolPreset: nerd
-task:
+task: 
   showResolvedModelBadge: true
-  isolation:
+  isolation: 
     mode: auto
     merge: branch
     commits: ai
-terminal:
+terminal: 
   showProgress: true
-theme:
+theme: 
   dark: dracula
   light: light-cyberpunk
-worktree:
+worktree: 
   base: .git/wt
-stt:
+stt: 
   modelName: parakeet
   enabled: true
-power:
+power: 
   sleepPrevention: idle
-shellMinimizer:
+shellMinimizer: 
   sourceOutlineLevel: aggressive
-speechgen:
+speechgen: 
   enabled: false
-ask:
+ask: 
   enabled: true
-web_search:
+web_search: 
   enabled: true
-todo:
+todo: 
   eager: default
-secrets:
+secrets: 
   enabled: true
-# Native `omp` MCP support reads ~/.omp/agent/mcp.json.
-# Pi-specific packages remain configured separately under ~/.pi during the parallel rollout.
