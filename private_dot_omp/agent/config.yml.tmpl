@@ -20,8 +20,13 @@ commands:
 compaction: 
   handoffSaveToDisk: true
   idleEnabled: true # run maintenance while idle
+  idleThresholdTokens: 150000 # compact substantial context during idle periods
+  idleTimeoutSeconds: 120 # avoid retaining costly context through short pauses
   reserveTokens: 16384 # headroom kept under the context window
+  keepRecentTokens: 20000 # retain the latest working set after compaction
+  midTurnEnabled: true # compact at safe boundaries in long tool loops
   strategy: snapcompact # "context-full" | "handoff" | "shake" | "snapcompact" | "off"
+  thresholdTokens: 180000 # compact before uncached history dominates prompt cost
 defaultThinkingLevel: auto
 dev: 
   autoqaConsent: granted
