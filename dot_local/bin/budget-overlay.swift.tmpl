@@ -18,9 +18,9 @@ struct InfoPayload: Decodable {
 }
 
 func colorForPercentage(_ pct: Double) -> NSColor {
-    if pct < 20 { return NSColor(red: 1, green: 0.388, blue: 0.278, alpha: 1) }
-    if pct < 50 { return .orange }
-    return NSColor(red: 0.196, green: 0.804, blue: 0.196, alpha: 1)
+    if pct < 20 { return .systemRed }
+    if pct < 50 { return .systemOrange }
+    return .systemGreen
 }
 
 func timeAgo(from date: Date?) -> String {
@@ -49,7 +49,7 @@ func styledMenuBarText(pct: String, pctColor: NSColor, spend: String) -> NSAttri
     ])
     attr.append(sep)
 
-    let spendColor = NSColor(red: 0.8, green: 0.8, blue: 0.0, alpha: 1)
+    let spendColor = NSColor.systemYellow
     let spendStr = NSAttributedString(string: spend, attributes: [
         .font: font, .foregroundColor: spendColor
     ])
@@ -62,21 +62,22 @@ func styledMenuBarText(pct: String, pctColor: NSColor, spend: String) -> NSAttri
 }
 
 @MainActor
-class AppDelegate: NSObject, NSApplicationDelegate {
-    var statusItem: NSStatusItem!
-    var timer: Timer?
-    var lastUpdated: Date?
+final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
+    private let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+    private let remainingItem = NSMenuItem(title: "Remaining     —", action: nil, keyEquivalent: "")
+    private let spentItem = NSMenuItem(title: "Spent              —", action: nil, keyEquivalent: "")
+    private let totalItem = NSMenuItem(title: "Total Budget  —", action: nil, keyEquivalent: "")
+    private let updatedItem = NSMenuItem(title: "Updated never", action: nil, keyEquivalent: "")
 
-    var remainingItem: NSMenuItem!
-    var spentItem: NSMenuItem!
-    var totalItem: NSMenuItem!
-    var updatedItem: NSMenuItem!
+    private var timer: Timer?
+    private var refreshTask: Task<Void, Never>?
+    private var refreshGeneration = 0
+    private var lastUpdated: Date?
 
     private let apiUrl = "{{ $cc.litellm_url.value }}/key/info"
     private let pollInterval: TimeInterval = 15 * 60
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         statusItem.button?.attributedTitle = styledMenuBarText(pct: "...", pctColor: .gray, spend: "—")
 
         buildMenu()
@@ -85,35 +86,32 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         NSWorkspace.shared.notificationCenter.addObserver(
             self,
-            selector: #selector(refresh),
+            selector: #selector(didWake(_:)),
             name: NSWorkspace.didWakeNotification,
             object: nil
         )
     }
 
-    func buildMenu() {
+    private func buildMenu() {
         let menu = NSMenu()
+        menu.delegate = self
 
         let header = NSMenuItem(title: "LiteLLM Budget", action: nil, keyEquivalent: "")
         header.isEnabled = false
         menu.addItem(header)
         menu.addItem(.separator())
 
-        remainingItem = NSMenuItem(title: "Remaining     —", action: nil, keyEquivalent: "")
         remainingItem.isEnabled = false
         menu.addItem(remainingItem)
 
-        spentItem = NSMenuItem(title: "Spent              —", action: nil, keyEquivalent: "")
         spentItem.isEnabled = false
         menu.addItem(spentItem)
 
-        totalItem = NSMenuItem(title: "Total Budget  —", action: nil, keyEquivalent: "")
         totalItem.isEnabled = false
         menu.addItem(totalItem)
 
         menu.addItem(.separator())
 
-        updatedItem = NSMenuItem(title: "Updated never", action: nil, keyEquivalent: "")
         updatedItem.isEnabled = false
         menu.addItem(updatedItem)
 
@@ -129,51 +127,76 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         statusItem.menu = menu
     }
 
-    func startTimer() {
+    private func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: pollInterval, repeats: true) { [weak self] _ in
             Task { @MainActor in self?.refresh() }
         }
     }
 
-    @objc func refresh() {
+    @objc private func didWake(_ notification: Notification) {
+        refresh()
+    }
+
+    @objc private func refresh() {
+        refreshGeneration += 1
+        let generation = refreshGeneration
+        refreshTask?.cancel()
+
         guard let apiKey = ProcessInfo.processInfo.environment["LITELLM_KEY"], !apiKey.isEmpty else {
             updateUI(pct: "NO KEY", pctColor: .gray, spend: "—", info: nil, error: "Set LITELLM_KEY environment variable")
             return
         }
 
-        guard let url = URL(string: apiUrl) else { return }
+        guard let url = URL(string: apiUrl) else {
+            updateUI(pct: "ERR", pctColor: .gray, spend: "—", info: nil, error: "Invalid API URL")
+            return
+        }
         var request = URLRequest(url: url)
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.timeoutInterval = 10
 
-        Task {
+        refreshTask = Task { [weak self] in
+            guard let self else { return }
+
             do {
                 let (data, response) = try await URLSession.shared.data(for: request)
+                guard generation == refreshGeneration else { return }
+
                 if let http = response as? HTTPURLResponse, http.statusCode != 200 {
                     let msg = http.statusCode == 401 || http.statusCode == 403
                         ? "Bad API key (HTTP \(http.statusCode))"
                         : "HTTP \(http.statusCode)"
                     updateUI(pct: "ERR", pctColor: .gray, spend: "—", info: nil, error: msg)
+                    refreshTask = nil
                     return
                 }
+
                 let decoded = try JSONDecoder().decode(KeyInfoResponse.self, from: data)
-                let info = BudgetInfo(
-                    maxBudget: decoded.info.max_budget ?? 0,
-                    spend: decoded.info.spend ?? 0
-                )
+                guard let maxBudget = decoded.info.max_budget, let spend = decoded.info.spend else {
+                    updateUI(pct: "ERR", pctColor: .gray, spend: "—", info: nil, error: "Incomplete budget response")
+                    refreshTask = nil
+                    return
+                }
+
+                let info = BudgetInfo(maxBudget: maxBudget, spend: spend)
                 let pct = info.percentage
                 let text = pct.map { String(format: "%.1f%%", $0) } ?? "N/A"
                 let color = pct.map { colorForPercentage($0) } ?? .gray
                 let spendText = String(format: "$%.2f", info.spend)
                 lastUpdated = Date()
                 updateUI(pct: text, pctColor: color, spend: spendText, info: info, error: nil)
+                refreshTask = nil
+            } catch is CancellationError {
+                // A newer refresh owns the UI.
             } catch {
+                guard generation == refreshGeneration else { return }
                 updateUI(pct: "ERR", pctColor: .gray, spend: "—", info: nil, error: error.localizedDescription)
+                refreshTask = nil
             }
         }
     }
 
-    func updateUI(pct: String, pctColor: NSColor, spend: String, info: BudgetInfo?, error: String?) {
+    private func updateUI(pct: String, pctColor: NSColor, spend: String, info: BudgetInfo?, error: String?) {
         statusItem.button?.attributedTitle = styledMenuBarText(pct: pct, pctColor: pctColor, spend: spend)
 
         if let info {
@@ -186,7 +209,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             totalItem.title     = ""
         }
 
+        updateTimestamp()
+    }
+
+    private func updateTimestamp() {
         updatedItem.title = "Updated \(timeAgo(from: lastUpdated))"
+    }
+
+    func menuWillOpen(_ menu: NSMenu) {
+        updateTimestamp()
     }
 }
 

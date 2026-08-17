@@ -1,79 +1,104 @@
 {{- if and (eq .machine_type "client") (eq .chezmoi.os "darwin") -}}
 #!/bin/bash
-# Compile and install LiteLlmBudgetOverlay when Swift source or API key changes
+# Compile and install LiteLlmBudgetOverlay when its source or LaunchAgent changes
 # budget-overlay.swift hash: {{ include "dot_local/bin/budget-overlay.swift.tmpl" | sha256sum }}
-{{- $key := output "sh" "-c" (printf "chezmoi secret keyring get --service=litellm --user=%s 2>/dev/null || echo" .chezmoi.username) | trim }}
-# litellm-key hash: {{ $key | sha256sum }}
-set -eufo pipefail
+# LaunchAgent hash: {{ include "private_Library/private_LaunchAgents/litellm-budget-overlay.plist.tmpl" | sha256sum }}
+set -euo pipefail
+umask 077
 
-LABEL="litellm-budget-overlay"
-APP_DIR="${HOME}/.local/bin/LiteLlmBudgetOverlay.app"
-BINARY_PATH="${APP_DIR}/Contents/MacOS/budget-overlay"
-SOURCE="${HOME}/.local/bin/budget-overlay.swift"
-PLIST_PATH="${HOME}/Library/LaunchAgents/${LABEL}.plist"
-LITELLM_KEY={{ $key | squote }}
-
-if [ -z "${LITELLM_KEY}" ]; then
-    echo "WARNING: LITELLM_KEY not found in keychain. Budget overlay will show 'NO KEY'."
-    echo "  Set it with: chezmoi secret keyring set --service=litellm --user=${USER}"
-fi
+readonly LABEL="litellm-budget-overlay"
+readonly APP_PARENT="${HOME}/.local/bin"
+readonly APP_DIR="${APP_PARENT}/LiteLlmBudgetOverlay.app"
+readonly SOURCE="${HOME}/.local/bin/budget-overlay.swift"
+readonly PLIST_PATH="${HOME}/Library/LaunchAgents/${LABEL}.plist"
+DOMAIN="gui/$(id -u)"
+readonly DOMAIN
+readonly SERVICE="${DOMAIN}/${LABEL}"
 
 if ! command -v swiftc > /dev/null 2>&1; then
-    echo "WARNING: swiftc not found, skipping budget-overlay build"
-    echo "  Install Xcode Command Line Tools: xcode-select --install"
-    exit 0
+    echo "ERROR: swiftc not found; cannot update budget-overlay" >&2
+    echo "  Install Xcode Command Line Tools: xcode-select --install" >&2
+    exit 1
 fi
 
 echo "==> Building budget-overlay..."
 
-# Stop running instance and unload agent
-pkill -f "LiteLlmBudgetOverlay.app/Contents/MacOS/budget-overlay" 2>/dev/null || true
-launchctl bootout "gui/$(id -u)/${LABEL}" 2>/dev/null || true
+mkdir -p "${APP_PARENT}"
+STAGING_DIR="$(mktemp -d "${APP_PARENT}/.budget-overlay.XXXXXX")"
+readonly STAGING_DIR
+readonly STAGED_APP="${STAGING_DIR}/LiteLlmBudgetOverlay.app"
+readonly STAGED_BINARY="${STAGED_APP}/Contents/MacOS/budget-overlay"
+readonly SWAP_HELPER="${STAGING_DIR}/rename-swap"
+trap 'rm -rf "${STAGING_DIR}"' EXIT
 
-# Compile
-swiftc "${SOURCE}" -o /tmp/budget-overlay-bin -framework AppKit
+mkdir -p "${STAGED_APP}/Contents/MacOS"
+swiftc "${SOURCE}" -o "${STAGED_BINARY}" -framework AppKit
 echo "  Compiled successfully."
 
-# Create .app bundle
-mkdir -p "${APP_DIR}/Contents/MacOS"
-mv /tmp/budget-overlay-bin "${BINARY_PATH}"
+# Build a helper for atomic same-volume directory exchange on macOS
+/usr/bin/xcrun clang -x c -o "${SWAP_HELPER}" - <<'SWAP_SOURCE'
+#include <fcntl.h>
+#include <stdio.h>
+#include <unistd.h>
 
-# Generate Info.plist with API key baked in via LSEnvironment
-cat > "${APP_DIR}/Contents/Info.plist" << 'INFOPLIST'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>LSUIElement</key>
-  <true/>
-  <key>CFBundleExecutable</key>
-  <string>budget-overlay</string>
-  <key>CFBundleIdentifier</key>
-  <string>litellm-budget-overlay</string>
-  <key>LSEnvironment</key>
-  <dict>
-    <key>LITELLM_KEY</key>
-    <string>{{ $key }}</string>
-  </dict>
-</dict>
-</plist>
-INFOPLIST
+int main(int argc, char **argv) {
+    if (argc != 3) {
+        return 2;
+    }
+    if (renameatx_np(AT_FDCWD, argv[1], AT_FDCWD, argv[2], RENAME_SWAP) == 0) {
+        return 0;
+    }
+    perror("renameatx_np");
+    return 1;
+}
+SWAP_SOURCE
 
-chmod 600 "${APP_DIR}/Contents/Info.plist"
+# Generate the bundle metadata without embedding runtime credentials
+/usr/bin/plutil -create xml1 "${STAGED_APP}/Contents/Info.plist"
+/usr/bin/plutil -insert LSUIElement -bool true "${STAGED_APP}/Contents/Info.plist"
+/usr/bin/plutil -insert CFBundleExecutable -string budget-overlay "${STAGED_APP}/Contents/Info.plist"
+/usr/bin/plutil -insert CFBundleIdentifier -string litellm-budget-overlay "${STAGED_APP}/Contents/Info.plist"
 
-# Ad-hoc code sign
-codesign --force --sign - "${BINARY_PATH}"
-echo "  App bundle created and signed."
+if [ ! -f "${PLIST_PATH}" ]; then
+    echo "ERROR: LaunchAgent not found: ${PLIST_PATH}" >&2
+    exit 1
+fi
+/usr/bin/plutil -lint "${PLIST_PATH}" > /dev/null
 
-# Bootstrap LaunchAgent and start
-if [ -f "${PLIST_PATH}" ]; then
-    launchctl bootstrap "gui/$(id -u)" "${PLIST_PATH}"
-    echo "  LaunchAgent registered."
+# Sign the completed application bundle
+codesign --force --sign - "${STAGED_APP}"
+echo "  Staged app bundle created and signed."
+
+# Stop the service, then atomically exchange same-volume app directories
+launchctl bootout "${SERVICE}" 2>/dev/null || true
+
+had_previous=false
+if [ -d "${APP_DIR}" ]; then
+    if ! "${SWAP_HELPER}" "${STAGED_APP}" "${APP_DIR}"; then
+        launchctl bootstrap "${DOMAIN}" "${PLIST_PATH}" 2>/dev/null || true
+        echo "ERROR: Failed to atomically replace ${APP_DIR}; previous app preserved" >&2
+        exit 1
+    fi
+    had_previous=true
+elif ! mv "${STAGED_APP}" "${APP_DIR}"; then
+    echo "ERROR: Failed to install ${APP_DIR}" >&2
+    exit 1
 fi
 
-/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -f "${APP_DIR}"
-open -a "${APP_DIR}"
+if ! launchctl bootstrap "${DOMAIN}" "${PLIST_PATH}"; then
+    if ${had_previous}; then
+        if "${SWAP_HELPER}" "${APP_DIR}" "${STAGED_APP}"; then
+            launchctl bootstrap "${DOMAIN}" "${PLIST_PATH}" 2>/dev/null || true
+            echo "ERROR: Failed to bootstrap ${LABEL}; previous app restored" >&2
+        else
+            echo "ERROR: Failed to bootstrap ${LABEL}, and atomic rollback failed" >&2
+        fi
+    else
+        echo "ERROR: Failed to bootstrap ${LABEL}; built app remains at ${APP_DIR}" >&2
+    fi
+    exit 1
+fi
 
+echo "  LaunchAgent registered and started."
 echo "==> Budget overlay installed and running."
 {{- end }}
