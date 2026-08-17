@@ -1,52 +1,54 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"os"
 	"os/exec"
 	"strings"
 )
 
-// runPicker launches fzf in a loop (Ctrl+R triggers rescan).
-// Returns the action ("cd", "editor", "cd+editor") and the selected path.
-// Returns ("", "") on escape/no selection.
-func runPicker(cfg Config, entries []string) (action, path string) {
+// runPicker launches fzf in a loop; Ctrl+R rescans project paths.
+func runPicker(cfg Config, entries []string) (action, path string, err error) {
 	for {
-		key, selected := launchFzf(entries)
+		key, selected, err := launchFzf(entries)
+		if err != nil {
+			return "", "", err
+		}
 
 		if key == "ctrl-r" {
-			// Rescan, rebuild cache, relaunch
-			repos := scanAll(cfg)
-			entries = sortAndFormat(cfg, repos)
-			writeCache(cfg, entries)
+			paths, err := discoverAll(cfg)
+			if err != nil {
+				return "", "", err
+			}
+			_ = writeCache(cfg, paths)
+			entries = sortAndFormat(cfg, collectAllMetadata(paths))
 			continue
 		}
 
 		if selected == "" {
-			return "", ""
+			return "", "", nil
 		}
 
-		// Extract path from "display\tpath" format
 		if idx := strings.LastIndex(selected, "\t"); idx >= 0 {
 			path = selected[idx+1:]
 		} else {
-			return "", ""
+			return "", "", fmt.Errorf("invalid fzf selection")
 		}
 
 		switch key {
 		case "ctrl-e":
-			return "editor", path
+			return "editor", path, nil
 		case "ctrl-o":
-			return "cd+editor", path
+			return "cd+editor", path, nil
 		default:
-			return "cd", path
+			return "cd", path, nil
 		}
 	}
 }
 
-// launchFzf runs fzf as a subprocess and returns the pressed key and selected line.
-func launchFzf(entries []string) (key, selected string) {
-	input := strings.Join(entries, "\n")
-
+// launchFzf runs fzf and distinguishes cancellation from execution failures.
+func launchFzf(entries []string) (key, selected string, err error) {
 	cmd := exec.Command("fzf",
 		"--expect=ctrl-e,ctrl-o,ctrl-r",
 		"--ansi",
@@ -58,24 +60,25 @@ func launchFzf(entries []string) (key, selected string) {
 		"--layout=reverse-list",
 	)
 
-	cmd.Stdin = strings.NewReader(input)
+	cmd.Stdin = strings.NewReader(strings.Join(entries, "\n"))
 	cmd.Stderr = os.Stderr
 
 	out, err := cmd.Output()
 	if err != nil {
-		// fzf returns exit code 1 on no match, 2 on error, 130 on interrupt
-		return "", ""
+		var exitErr *exec.ExitError
+		if errors.As(err, &exitErr) && (exitErr.ExitCode() == 1 || exitErr.ExitCode() == 130) {
+			return "", "", nil
+		}
+		return "", "", fmt.Errorf("run fzf: %w", err)
 	}
 
-	lines := strings.SplitN(strings.TrimRight(string(out), "\n"), "\n", 2)
+	lines := strings.SplitN(strings.TrimSuffix(string(out), "\n"), "\n", 2)
 	if len(lines) == 0 {
-		return "", ""
+		return "", "", nil
 	}
-
 	key = strings.TrimSpace(lines[0])
 	if len(lines) > 1 {
-		selected = strings.TrimSpace(lines[1])
+		selected = strings.TrimSuffix(lines[1], "\r")
 	}
-
-	return key, selected
+	return key, selected, nil
 }

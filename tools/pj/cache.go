@@ -2,21 +2,33 @@ package main
 
 import (
 	"bufio"
+	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
 	"os"
 	"path/filepath"
 	"time"
 )
 
-// loadCache reads the disk cache if it exists and is within TTL.
-// Returns the lines and true if valid, or nil and false if stale/missing.
+const cacheVersion = "pj-cache-v2"
+
+// cacheFingerprint identifies configuration that affects project discovery.
+func cacheFingerprint(cfg Config) string {
+	hash := sha256.New()
+	for _, dir := range cfg.Dirs {
+		_, _ = fmt.Fprintln(hash, filepath.Clean(dir))
+	}
+	_, _ = fmt.Fprintln(hash, cfg.Depth)
+	for _, exclude := range cfg.Excludes {
+		_, _ = fmt.Fprintln(hash, exclude)
+	}
+	return hex.EncodeToString(hash.Sum(nil))
+}
+
+// loadCache reads cached project paths if the cache is current and matches cfg.
 func loadCache(cfg Config) ([]string, bool) {
 	info, err := os.Stat(cfg.CacheFile)
-	if err != nil {
-		return nil, false
-	}
-
-	age := time.Since(info.ModTime()).Seconds()
-	if int64(age) >= cfg.CacheTTL {
+	if err != nil || time.Since(info.ModTime()) >= time.Duration(cfg.CacheTTL)*time.Second {
 		return nil, false
 	}
 
@@ -26,37 +38,55 @@ func loadCache(cfg Config) ([]string, bool) {
 	}
 	defer f.Close()
 
-	var lines []string
 	scanner := bufio.NewScanner(f)
-	// Increase buffer size for long display lines
-	scanner.Buffer(make([]byte, 0, 4096), 4096)
-	for scanner.Scan() {
-		line := scanner.Text()
-		if line != "" {
-			lines = append(lines, line)
-		}
-	}
-	if len(lines) == 0 {
+	scanner.Buffer(make([]byte, 4096), 1024*1024)
+	expectedHeader := cacheVersion + " " + cacheFingerprint(cfg)
+	if !scanner.Scan() || scanner.Text() != expectedHeader {
 		return nil, false
 	}
-	return lines, true
+
+	var paths []string
+	for scanner.Scan() {
+		if path := scanner.Text(); path != "" {
+			paths = append(paths, path)
+		}
+	}
+	if scanner.Err() != nil {
+		return nil, false
+	}
+	return paths, true
 }
 
-// writeCache persists cache lines to disk.
-func writeCache(cfg Config, lines []string) {
+// writeCache atomically persists project paths to disk.
+func writeCache(cfg Config, paths []string) error {
 	dir := filepath.Dir(cfg.CacheFile)
-	_ = os.MkdirAll(dir, 0o755)
-
-	f, err := os.Create(cfg.CacheFile)
-	if err != nil {
-		return
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return err
 	}
-	defer f.Close()
+
+	f, err := os.CreateTemp(dir, ".cache-*")
+	if err != nil {
+		return err
+	}
+	tempPath := f.Name()
+	defer os.Remove(tempPath)
 
 	w := bufio.NewWriter(f)
-	for _, line := range lines {
-		_, _ = w.WriteString(line)
-		_ = w.WriteByte('\n')
+	if _, err = fmt.Fprintln(w, cacheVersion+" "+cacheFingerprint(cfg)); err == nil {
+		for _, path := range paths {
+			if _, err = fmt.Fprintln(w, path); err != nil {
+				break
+			}
+		}
 	}
-	_ = w.Flush()
+	if err == nil {
+		err = w.Flush()
+	}
+	if closeErr := f.Close(); err == nil {
+		err = closeErr
+	}
+	if err != nil {
+		return err
+	}
+	return os.Rename(tempPath, cfg.CacheFile)
 }

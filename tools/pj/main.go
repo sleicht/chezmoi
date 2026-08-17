@@ -7,19 +7,23 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
 // Config holds all runtime configuration parsed from environment variables.
 type Config struct {
-	Dirs     []string
-	Depth    int
-	Excludes []string
-	CacheTTL int64 // seconds
+	Dirs      []string
+	Depth     int
+	Excludes  []string
+	CacheTTL  int64 // seconds
 	CacheFile string
 }
 
-func parseConfig() Config {
-	home, _ := os.UserHomeDir()
+func parseConfig() (Config, error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return Config{}, fmt.Errorf("determine home directory: %w", err)
+	}
 
 	dirs := []string{filepath.Join(home, "Projects"), filepath.Join(home, "git")}
 	if env := os.Getenv("PJ_DIRS"); env != "" {
@@ -68,40 +72,44 @@ func parseConfig() Config {
 		Excludes:  excludes,
 		CacheTTL:  cacheTTL,
 		CacheFile: cacheFile,
-	}
+	}, nil
 }
 
 // Repo holds discovered repository metadata.
 type Repo struct {
-	Path       string
-	Label      string // parent/name display label
-	Branch     string
-	Dirty      bool
-	TildePath  string
-	RelTime    string
-	Mtime      int64
-	EditorTag  string // "[IJ]", "[SL]", or ""
+	Path      string
+	Label     string // parent/name display label
+	Branch    string
+	Dirty     bool
+	TildePath string
+	RelTime   string
+	Mtime     int64
+	EditorTag string // "[IJ]", "[SL]", or ""
 }
 
 // ANSI escape codes for colour output.
 const (
-	ansiReset   = "\033[0m"
-	ansiGreen   = "\033[32m"
-	ansiRed     = "\033[31m"
-	ansiDim     = "\033[2m"
-	ansiYellow  = "\033[33m"
-	ansiCyan    = "\033[36m"
+	ansiReset  = "\033[0m"
+	ansiGreen  = "\033[32m"
+	ansiRed    = "\033[31m"
+	ansiDim    = "\033[2m"
+	ansiYellow = "\033[33m"
+	ansiCyan   = "\033[36m"
 )
 
-// truncate shortens s to maxLen, replacing the last char with '…' if truncated.
+// truncate shortens s to maxLen runes, replacing the last rune with '…'.
 func truncate(s string, maxLen int) string {
-	if len(s) <= maxLen {
+	if maxLen <= 0 {
+		return ""
+	}
+	if utf8.RuneCountInString(s) <= maxLen {
 		return s
 	}
-	if maxLen <= 1 {
+	runes := []rune(s)
+	if maxLen == 1 {
 		return "…"
 	}
-	return s[:maxLen-1] + "…"
+	return string(runes[:maxLen-1]) + "…"
 }
 
 // formatDisplay produces the coloured fixed-width display string for fzf.
@@ -143,24 +151,36 @@ func (r *Repo) formatCacheLine() string {
 }
 
 func main() {
-	cfg := parseConfig()
+	if err := run(); err != nil {
+		fmt.Fprintf(os.Stderr, "pj-picker: %v\n", err)
+		os.Exit(1)
+	}
+}
 
-	// Try loading from disk cache
-	entries, ok := loadCache(cfg)
+func run() error {
+	cfg, err := parseConfig()
+	if err != nil {
+		return err
+	}
+
+	paths, ok := loadCache(cfg)
 	if !ok {
-		repos := scanAll(cfg)
-		entries = sortAndFormat(cfg, repos)
-		writeCache(cfg, entries)
+		paths, err = discoverAll(cfg)
+		if err != nil {
+			return err
+		}
+		_ = writeCache(cfg, paths)
 	}
 
-	// Run fzf picker loop (handles Ctrl+R internally)
-	action, path := runPicker(cfg, entries)
-	if action == "" || path == "" {
-		return
+	entries := sortAndFormat(cfg, collectAllMetadata(paths))
+	action, path, err := runPicker(cfg, entries)
+	if err != nil {
+		return err
 	}
-
-	// Output protocol: "action\tpath"
-	fmt.Printf("%s\t%s\n", action, path)
+	if action != "" && path != "" {
+		fmt.Printf("%s\t%s\n", action, path)
+	}
+	return nil
 }
 
 // sortAndFormat applies zoxide ordering + mtime fallback, returns cache lines.

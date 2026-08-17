@@ -1,12 +1,13 @@
 {{- if stat (joinPath .chezmoi.sourceDir "tools/pj/main.go") -}}
 #!/usr/bin/env bash
-# Rebuild pj-picker when Go source changes.
+# Rebuild pj-picker when any Go build input changes.
 # Source hashes (trigger rebuild on change):
-# main.go:    {{ include "tools/pj/main.go" | sha256sum }}
-# scanner.go: {{ include "tools/pj/scanner.go" | sha256sum }}
-# cache.go:   {{ include "tools/pj/cache.go" | sha256sum }}
-# zoxide.go:  {{ include "tools/pj/zoxide.go" | sha256sum }}
-# picker.go:  {{ include "tools/pj/picker.go" | sha256sum }}
+{{- range $path := glob (joinPath .chezmoi.sourceDir "tools/pj/*.go") }}
+# {{ base $path }}: {{ include $path | sha256sum }}
+{{- end }}
+{{- range $path := glob (joinPath .chezmoi.sourceDir "tools/pj/go.*") }}
+# {{ base $path }}: {{ include $path | sha256sum }}
+{{- end }}
 
 set -euo pipefail
 
@@ -14,13 +15,18 @@ SOURCE_DIR="{{ .chezmoi.sourceDir }}/tools/pj"
 DEST="${HOME}/.local/bin/pj-picker"
 
 if ! command -v go &>/dev/null; then
-  echo "pj-picker: go not found, skipping build" >&2
-  exit 0
+  echo "pj-picker: go not found; cannot build" >&2
+  exit 1
 fi
 
 echo "Building pj-picker..."
 mkdir -p "$(dirname "$DEST")"
+tmp=$(mktemp "${DEST}.XXXXXX")
+trap 'rm -f "$tmp"' EXIT
 cd "$SOURCE_DIR"
-go build -o "$DEST" .
+go build -o "$tmp" .
+chmod 0755 "$tmp"
+mv -f "$tmp" "$DEST"
+trap - EXIT
 echo "pj-picker installed to $DEST"
 {{- end }}

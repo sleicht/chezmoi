@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/fs"
 	"os"
 	"os/exec"
@@ -19,198 +20,223 @@ var projectMarkers = []string{
 	"Makefile", "build.gradle", "pyproject.toml",
 }
 
-// scanAll discovers repos under cfg.Dirs, collects metadata in parallel, and returns them.
-func scanAll(cfg Config) []Repo {
-	home, _ := os.UserHomeDir()
+// discoverAll finds project roots beneath configured directories.
+func discoverAll(cfg Config) ([]string, error) {
 	excludeSet := make(map[string]bool, len(cfg.Excludes))
-	for _, e := range cfg.Excludes {
-		excludeSet[e] = true
+	for _, exclude := range cfg.Excludes {
+		excludeSet[strings.TrimSpace(exclude)] = true
 	}
 
-	// Phase 1: discover repo paths
-	gitRepos := discoverGitRepos(cfg, excludeSet)
-	markerRepos := discoverMarkerRepos(cfg, excludeSet)
-
-	// Merge: marker repos only if they don't already have .git
-	gitSet := make(map[string]bool, len(gitRepos))
-	for _, p := range gitRepos {
-		gitSet[p] = true
+	gitRepos, err := discoverGitRepos(cfg, excludeSet)
+	if err != nil {
+		return nil, err
 	}
-	allPaths := append([]string{}, gitRepos...)
-	for _, p := range markerRepos {
-		if !gitSet[p] {
-			allPaths = append(allPaths, p)
-		}
+	markerRepos, err := discoverMarkerRepos(cfg, excludeSet)
+	if err != nil {
+		return nil, err
 	}
 
-	// Prune nested repos (parent takes priority)
+	allSet := make(map[string]bool, len(gitRepos)+len(markerRepos))
+	for _, path := range append(gitRepos, markerRepos...) {
+		allSet[filepath.Clean(path)] = true
+	}
+	allPaths := make([]string, 0, len(allSet))
+	for path := range allSet {
+		allPaths = append(allPaths, path)
+	}
 	sort.Strings(allPaths)
-	var pruned []string
-	var lastParent string
-	for _, p := range allPaths {
-		if lastParent != "" && strings.HasPrefix(p, lastParent+"/") {
-			continue
+
+	pruned := make([]string, 0, len(allPaths))
+	for _, path := range allPaths {
+		nested := false
+		for _, parent := range pruned {
+			if isWithin(path, parent) {
+				nested = true
+				break
+			}
 		}
-		pruned = append(pruned, p)
-		lastParent = p
+		if !nested {
+			pruned = append(pruned, path)
+		}
 	}
+	return pruned, nil
+}
 
-	// Phase 2: collect metadata in parallel
-	repos := make([]Repo, len(pruned))
-	sem := make(chan struct{}, runtime.NumCPU())
+func isWithin(path, parent string) bool {
+	rel, err := filepath.Rel(parent, path)
+	return err == nil && rel != "." && rel != ".." && !strings.HasPrefix(rel, ".."+string(filepath.Separator))
+}
+
+func collectAllMetadata(paths []string) []Repo {
+	home, _ := os.UserHomeDir()
+	repos := make([]Repo, len(paths))
+	sem := make(chan struct{}, max(1, runtime.NumCPU()))
 	var wg sync.WaitGroup
-
-	for i, path := range pruned {
+	for i, path := range paths {
 		wg.Add(1)
-		go func(idx int, repoPath string) {
+		go func(index int, repoPath string) {
 			defer wg.Done()
 			sem <- struct{}{}
 			defer func() { <-sem }()
-			repos[idx] = collectMetadata(repoPath, home)
+			repos[index] = collectMetadata(repoPath, home)
 		}(i, path)
 	}
 	wg.Wait()
-
-	// Filter out zero-value entries (shouldn't happen, but be safe)
-	var result []Repo
-	for _, r := range repos {
-		if r.Path != "" {
-			result = append(result, r)
-		}
-	}
-	return result
+	return repos
 }
 
-// discoverGitRepos walks cfg.Dirs looking for .git directories.
-func discoverGitRepos(cfg Config, excludes map[string]bool) []string {
+// discoverGitRepos walks cfg.Dirs looking for .git files and directories.
+func discoverGitRepos(cfg Config, excludes map[string]bool) ([]string, error) {
 	var paths []string
-	maxDepth := cfg.Depth * 2 // .git can be one level deeper than the repo root
-
 	for _, root := range cfg.Dirs {
-		rootDepth := strings.Count(filepath.Clean(root), string(filepath.Separator))
-		_ = filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
-			if err != nil {
-				return fs.SkipDir
+		root = filepath.Clean(root)
+		if _, err := os.Stat(root); err != nil {
+			if os.IsNotExist(err) {
+				continue
 			}
-
-			name := d.Name()
-
-			// Found a .git file (worktree) or directory — record the parent as a repo
-			if name == ".git" {
+			return nil, fmt.Errorf("inspect project root %s: %w", root, err)
+		}
+		err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+			depth, err := pathDepth(root, path)
+			if err != nil {
+				return err
+			}
+			if d.Name() == ".git" && depth-1 <= cfg.Depth {
 				paths = append(paths, filepath.Dir(path))
 				if d.IsDir() {
 					return fs.SkipDir
 				}
 				return nil
 			}
-
 			if !d.IsDir() {
 				return nil
 			}
-
-			// Skip excluded directories
-			if excludes[name] {
+			if path != root && excludes[d.Name()] {
 				return fs.SkipDir
 			}
-
-			// Depth check
-			depth := strings.Count(filepath.Clean(path), string(filepath.Separator)) - rootDepth
-			if depth > maxDepth {
+			if depth > cfg.Depth {
 				return fs.SkipDir
 			}
-
 			return nil
 		})
+		if err != nil {
+			return nil, fmt.Errorf("scan %s for Git repositories: %w", root, err)
+		}
 	}
-	return paths
+	return paths, nil
+}
+
+func pathDepth(root, path string) (int, error) {
+	rel, err := filepath.Rel(root, path)
+	if err != nil {
+		return 0, err
+	}
+	if rel == "." {
+		return 0, nil
+	}
+	return len(strings.Split(rel, string(filepath.Separator))), nil
 }
 
 // discoverMarkerRepos walks cfg.Dirs looking for project marker files.
-func discoverMarkerRepos(cfg Config, excludes map[string]bool) []string {
+func discoverMarkerRepos(cfg Config, excludes map[string]bool) ([]string, error) {
 	markerSet := make(map[string]bool, len(projectMarkers))
-	for _, m := range projectMarkers {
-		markerSet[m] = true
+	for _, marker := range projectMarkers {
+		markerSet[marker] = true
 	}
 
 	seen := make(map[string]bool)
 	for _, root := range cfg.Dirs {
-		rootDepth := strings.Count(filepath.Clean(root), string(filepath.Separator))
-		maxDepth := cfg.Depth * 2
-
-		_ = filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
-			if err != nil {
-				return fs.SkipDir
+		root = filepath.Clean(root)
+		if _, err := os.Stat(root); err != nil {
+			if os.IsNotExist(err) {
+				continue
 			}
-
-			name := d.Name()
+			return nil, fmt.Errorf("inspect project root %s: %w", root, err)
+		}
+		err := filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+			depth, err := pathDepth(root, path)
+			if err != nil {
+				return err
+			}
 			if d.IsDir() {
-				if excludes[name] {
+				if path != root && excludes[d.Name()] {
 					return fs.SkipDir
 				}
-				depth := strings.Count(filepath.Clean(path), string(filepath.Separator)) - rootDepth
-				if depth > maxDepth {
+				if depth > cfg.Depth {
 					return fs.SkipDir
 				}
 				return nil
 			}
-
-			// Check if this file is a project marker
-			if markerSet[name] {
-				dir := filepath.Dir(path)
-				seen[dir] = true
+			if markerSet[d.Name()] && depth-1 <= cfg.Depth {
+				seen[filepath.Dir(path)] = true
 			}
 			return nil
 		})
+		if err != nil {
+			return nil, fmt.Errorf("scan %s for project markers: %w", root, err)
+		}
 	}
 
 	paths := make([]string, 0, len(seen))
-	for p := range seen {
-		paths = append(paths, p)
+	for path := range seen {
+		paths = append(paths, path)
 	}
-	return paths
+	return paths, nil
 }
 
-// collectMetadata gathers git, mtime, and editor info for a single repo.
+// collectMetadata gathers Git, activity, and editor information for one project.
 func collectMetadata(repoPath, home string) Repo {
 	r := Repo{Path: repoPath}
 
-	// Label: parent/name relative to home
-	rel := strings.TrimPrefix(repoPath, home+"/")
+	rel, err := filepath.Rel(home, repoPath)
+	if err != nil || strings.HasPrefix(rel, ".."+string(filepath.Separator)) {
+		rel = repoPath
+	}
 	parent := filepath.Dir(rel)
 	name := filepath.Base(rel)
 	if parent == "." {
 		r.Label = name
 	} else {
-		r.Label = parent + "/" + name
+		r.Label = filepath.Join(parent, name)
+	}
+	if rel == repoPath {
+		r.TildePath = repoPath
+	} else {
+		r.TildePath = "~/" + rel
 	}
 
-	// Tilde path
-	r.TildePath = "~/" + rel
-
-	// Branch
-	if out, err := exec.Command("git", "-C", repoPath, "branch", "--show-current").Output(); err == nil {
-		r.Branch = strings.TrimSpace(string(out))
+	isGit := false
+	if out, err := exec.Command("git", "-C", repoPath, "rev-parse", "--is-inside-work-tree").Output(); err == nil {
+		isGit = strings.TrimSpace(string(out)) == "true"
 	}
-	if r.Branch == "" {
-		r.Branch = "(detached)"
-	}
-
-	// Dirty check (tracked files only, no untracked)
-	if out, err := exec.Command("git", "-C", repoPath, "status", "--porcelain", "-uno").Output(); err == nil {
-		if len(strings.TrimSpace(string(out))) > 0 {
-			r.Dirty = true
+	if isGit {
+		if out, err := exec.Command("git", "-C", repoPath, "symbolic-ref", "--quiet", "--short", "HEAD").Output(); err == nil {
+			r.Branch = strings.TrimSpace(string(out))
+		} else {
+			r.Branch = "(detached)"
+		}
+		if out, err := exec.Command("git", "-C", repoPath, "status", "--porcelain", "-uno").Output(); err == nil {
+			r.Dirty = strings.TrimSpace(string(out)) != ""
+		}
+		if out, err := exec.Command("git", "-C", repoPath, "log", "-1", "--format=%ct").Output(); err == nil {
+			r.Mtime, _ = strconv.ParseInt(strings.TrimSpace(string(out)), 10, 64)
 		}
 	}
-
-	// Mtime + relative time
-	if info, err := os.Stat(repoPath); err == nil {
-		r.Mtime = info.ModTime().Unix()
-		r.RelTime = relativeTime(info.ModTime())
+	if r.Mtime == 0 {
+		if info, err := os.Stat(repoPath); err == nil {
+			r.Mtime = info.ModTime().Unix()
+		}
 	}
-
-	// Editor detection
+	if r.Mtime > 0 {
+		r.RelTime = relativeTime(time.Unix(r.Mtime, 0))
+	}
 	r.EditorTag = detectEditor(repoPath)
-
 	return r
 }
 
