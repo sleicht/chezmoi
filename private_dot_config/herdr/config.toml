@@ -119,6 +119,12 @@ key = "prefix+alt+g"
 type = "pane"
 command = "lazygit"
 
+[[keys.command]]
+key = "prefix+m"
+type = "plugin_action"
+command = "osamahbeig.pane-mover.open"
+description = "move this pane"
+
 # Legacy indexed shortcut config is still parsed for compatibility.
 # Prefer switch_tab, switch_workspace, and focus_agent for new configs.
 # [keys.indexed]
