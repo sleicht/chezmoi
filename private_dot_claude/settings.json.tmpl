@@ -80,6 +80,7 @@
 {{- if eq .machine_type "client" }}
 {{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
     "{{ $cc.marketplace_name.value }}": {
+      "autoUpdate": true,
       "source": {
         "ref": "{{ $cc.marketplace_ref.value }}",
         "source": "git",
@@ -243,22 +244,22 @@
       {
         "hooks": [
           {
-            "command": "'{{ .chezmoi.homeDir }}/.claude/hooks/sonar-secrets/build-scripts/pretool-secrets.sh'",
-            "timeout": 60,
-            "type": "command"
-          }
-        ],
-        "matcher": "Read"
-      },
-      {
-        "hooks": [
-          {
             "command": "if [ -f '{{ .chezmoi.homeDir }}/.orca/agent-hooks/claude-hook.sh' ] && [ -r '{{ .chezmoi.homeDir }}/.orca/agent-hooks/claude-hook.sh' ] && [ -x '{{ .chezmoi.homeDir }}/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '{{ .chezmoi.homeDir }}/.orca/agent-hooks/claude-hook.sh'; else { command -p cat 2>/dev/null || cat; } >/dev/null 2>&1 || :; fi",
             "timeout": 10,
             "type": "command"
           }
         ],
         "matcher": "*"
+      },
+      {
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/.claude/hooks/sonar-secrets/build-scripts/pretool-secrets.sh'",
+            "timeout": 60,
+            "type": "command"
+          }
+        ],
+        "matcher": "Read"
       }
 {{- if eq .machine_type "personal" }}
       ,{
@@ -411,21 +412,21 @@
       {
         "hooks": [
           {
+            "command": "if [ -f '{{ .chezmoi.homeDir }}/.orca/agent-hooks/claude-hook.sh' ] && [ -r '{{ .chezmoi.homeDir }}/.orca/agent-hooks/claude-hook.sh' ] && [ -x '{{ .chezmoi.homeDir }}/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '{{ .chezmoi.homeDir }}/.orca/agent-hooks/claude-hook.sh'; else { command -p cat 2>/dev/null || cat; } >/dev/null 2>&1 || :; fi",
+            "timeout": 10,
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
             "command": "'{{ .chezmoi.homeDir }}/.claude/hooks/sonar-secrets/build-scripts/prompt-secrets.sh'",
             "timeout": 60,
             "type": "command"
           }
         ],
         "matcher": "*"
-      },
-      {
-        "hooks": [
-          {
-            "command": "if [ -f '{{ .chezmoi.homeDir }}/.orca/agent-hooks/claude-hook.sh' ] && [ -r '{{ .chezmoi.homeDir }}/.orca/agent-hooks/claude-hook.sh' ] && [ -x '{{ .chezmoi.homeDir }}/.orca/agent-hooks/claude-hook.sh' ]; then /bin/sh '{{ .chezmoi.homeDir }}/.orca/agent-hooks/claude-hook.sh'; else { command -p cat 2>/dev/null || cat; } >/dev/null 2>&1 || :; fi",
-            "timeout": 10,
-            "type": "command"
-          }
-        ]
       }
 {{- if eq .machine_type "personal" }}
       ,{
