@@ -34,9 +34,8 @@ startup_timeout_sec = 120
 NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
 NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
 NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
-NODE_REPL_TRUSTED_CODE_PATHS = "{{ .chezmoi.homeDir }}/.codex"
+NODE_REPL_TRUSTED_CODE_PATHS = "{{ .chezmoi.homeDir }}/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
 CODEX_HOME = "{{ .chezmoi.homeDir }}/.codex"
-NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "2b020a2faded171bf620563ce51864b7c3ff320f1834f0044b73fcbeabb29a76,6d25aa7656feac858f3a3bdaea5bcbab0dbfd426c9de8e6931ce90c399ee8e4f,e2cad16d8d9f60f09c9f0951ec7dfdd9e8f59dedd06045c0b6827dc8fa8322f0"
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
 NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
@@ -62,17 +61,53 @@ args = [ "/Applications/Tolaria.app/Contents/Resources/mcp-server/index.js" ]
 
 [mcp_servers.tolaria.env]
 VAULT_PATH = "{{ .chezmoi.homeDir }}/Documents/Getting Started"
-{{- end }}
 
-[marketplaces.openai-bundled]
-last_updated = "2026-07-09T20:17:37Z"
-source_type = "local"
-source = "{{ .chezmoi.homeDir }}/.codex/.tmp/bundled-marketplaces/openai-bundled"
+[mcp_servers.gitnexus]
+command = "{{ .chezmoi.homeDir }}/.npm-global/bin/gitnexus"
+args = [ "mcp" ]
+{{- end }}
 
 [plugins."visualize@openai-bundled"]
 enabled = true
 
+{{- if eq .machine_type "personal" }}
+[plugins."coderabbit@openai-curated"]
+enabled = true
+
+[plugins."spark-cli-skills@spark-codex-marketplace"]
+enabled = true
+{{- end }}
+
 [plugins."browser@openai-bundled"]
+enabled = true
+
+{{- if eq .machine_type "personal" }}
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
+{{- end }}
+
+[plugins."computer-use@openai-bundled"]
+enabled = true
+
+[plugins."chrome@openai-bundled"]
+enabled = true
+
+[plugins."sites@openai-bundled"]
+enabled = true
+
+[plugins."codex-app-tools@openai-bundled"]
 enabled = true
 
 [features]
@@ -80,10 +115,11 @@ hooks = true
 js_repl = false
 
 [desktop]
-conversationDetailMode = "STEPS_COMMANDS"
+conversationDetailMode = "STEPS_PROSE"
 ambient-suggestions-enabled = false
 followUpQueueMode = "queue"
 dock-icon-preference = "codex-system"
+realtimeVoiceScreenContextEnabled = true
 
 [desktop.open-in-target-preferences]
 global = "intellij"
@@ -108,51 +144,28 @@ trust_level = "trusted"
 [projects."{{ .chezmoi.homeDir }}/git/forgit"]
 trust_level = "trusted"
 
-[mcp_servers.gitnexus]
-command = "{{ .chezmoi.homeDir }}/.npm-global/bin/gitnexus"
-args = ["mcp"]
-
-[plugins."coderabbit@openai-curated"]
-enabled = true
+[marketplaces.openai-bundled]
+last_updated = "2026-08-18T19:51:06Z"
+source_type = "local"
+source = "{{ .chezmoi.homeDir }}/.codex/.tmp/bundled-marketplaces/openai-bundled"
 
 [marketplaces.spark-codex-marketplace]
-last_updated = "2026-07-11T20:21:13Z"
-last_revision = "ca8783514278670223496b62148b31f51d2df17b"
+last_updated = "2026-08-04T10:57:14Z"
+last_revision = "709d568465b2f6770942322fea43a28d6ae7bd4d"
 source_type = "git"
 source = "https://github.com/readdle/spark-codex-marketplace.git"
 
-[plugins."spark-cli-skills@spark-codex-marketplace"]
-enabled = true
-
 [marketplaces.open-code-review]
-last_updated = "2026-07-16T18:44:10Z"
-last_revision = "4ee453fd795955fe9467d28860b02ca550730c0a"
+last_updated = "2026-08-18T15:04:15Z"
+last_revision = "ab9a83e36d2af921527661fab0a5993552b45bd6"
 source_type = "git"
 source = "https://github.com/alibaba/open-code-review.git"
 
 [marketplaces.openai-primary-runtime]
-last_updated = "2026-07-13T20:19:05Z"
+last_updated = "2026-08-16T13:21:00Z"
 source_type = "local"
 source = "/Users/stephanlv_fanaka/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
-
-[plugins."spark-cli-skills@spark-codex-marketplace"]
-enabled = true
-
-[plugins."browser@openai-bundled"]
-enabled = true
-
-[plugins."documents@openai-primary-runtime"]
-enabled = true
-
-[plugins."pdf@openai-primary-runtime"]
-enabled = true
-
-[plugins."spreadsheets@openai-primary-runtime"]
-enabled = true
-
-[plugins."presentations@openai-primary-runtime"]
-enabled = true
-
-[plugins."template-creator@openai-primary-runtime"]
-enabled = true
 {{- end }}
+
+[shell_environment_policy.set]
+NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"

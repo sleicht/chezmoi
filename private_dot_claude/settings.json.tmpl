@@ -98,6 +98,16 @@
   },
   "hooks": {
     "Notification": [
+{{- if eq .machine_type "personal" }}
+      {
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Waiting # notchbar-agents-claude-hook",
+            "type": "command"
+          }
+        ]
+      },
+{{- end }}
       {
         "hooks": [
           {
@@ -108,16 +118,6 @@
         ],
         "matcher": ""
       }
-{{- if eq .machine_type "personal" }}
-      ,{
-        "hooks": [
-          {
-            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Waiting # notchbar-agents-claude-hook",
-            "type": "command"
-          }
-        ]
-      }
-{{- end }}
     ],
     "PermissionRequest": [
       {
@@ -132,6 +132,27 @@
       }
     ],
     "PostToolUse": [
+{{- if eq .machine_type "personal" }}
+      {
+        "hooks": [
+          {
+            "command": "node \"{{ .chezmoi.homeDir }}/.claude/hooks/gitnexus/gitnexus-hook.cjs\"",
+            "statusMessage": "Checking GitNexus index freshness...",
+            "timeout": 10,
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      },
+      {
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Auto # notchbar-agents-claude-hook",
+            "type": "command"
+          }
+        ]
+      },
+{{- end }}
       {
         "hooks": [
           {
@@ -152,29 +173,18 @@
         ],
         "matcher": "*"
       }
+    ],
+    "PostToolUseFailure": [
 {{- if eq .machine_type "personal" }}
-      ,{
-        "hooks": [
-          {
-            "command": "node \"{{ .chezmoi.homeDir }}/.claude/hooks/gitnexus/gitnexus-hook.cjs\"",
-            "statusMessage": "Checking GitNexus index freshness...",
-            "timeout": 10,
-            "type": "command"
-          }
-        ],
-        "matcher": "Bash"
-      },
       {
         "hooks": [
           {
-            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Auto # notchbar-agents-claude-hook",
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' ToolFail # notchbar-agents-claude-hook",
             "type": "command"
           }
         ]
-      }
+      },
 {{- end }}
-    ],
-    "PostToolUseFailure": [
       {
         "hooks": [
           {
@@ -185,16 +195,6 @@
         ],
         "matcher": "*"
       }
-{{- if eq .machine_type "personal" }}
-      ,{
-        "hooks": [
-          {
-            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' ToolFail # notchbar-agents-claude-hook",
-            "type": "command"
-          }
-        ]
-      }
-{{- end }}
     ],
     "PreCompact": [
       {
@@ -219,6 +219,14 @@
           }
         ],
         "matcher": "Grep|Glob|Bash"
+      },
+      {
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Working # notchbar-agents-claude-hook",
+            "type": "command"
+          }
+        ]
       },
 {{- end }}
       {
@@ -261,18 +269,18 @@
         ],
         "matcher": "Read"
       }
+    ],
+    "SessionEnd": [
 {{- if eq .machine_type "personal" }}
-      ,{
+      {
         "hooks": [
           {
-            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Working # notchbar-agents-claude-hook",
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Ended # notchbar-agents-claude-hook",
             "type": "command"
           }
         ]
-      }
+      },
 {{- end }}
-    ],
-    "SessionEnd": [
       {
         "hooks": [
           {
@@ -283,16 +291,6 @@
         ],
         "matcher": ""
       }
-{{- if eq .machine_type "personal" }}
-      ,{
-        "hooks": [
-          {
-            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Ended # notchbar-agents-claude-hook",
-            "type": "command"
-          }
-        ]
-      }
-{{- end }}
     ],
     "SessionStart": [
       {
@@ -418,6 +416,16 @@
           }
         ]
       },
+{{- if eq .machine_type "personal" }}
+      {
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Working # notchbar-agents-claude-hook",
+            "type": "command"
+          }
+        ]
+      },
+{{- end }}
       {
         "hooks": [
           {
@@ -428,16 +436,6 @@
         ],
         "matcher": "*"
       }
-{{- if eq .machine_type "personal" }}
-      ,{
-        "hooks": [
-          {
-            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Working # notchbar-agents-claude-hook",
-            "type": "command"
-          }
-        ]
-      }
-{{- end }}
     ]
   },
   "includeCoAuthoredBy": false,
