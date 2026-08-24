@@ -110,6 +110,7 @@ packages:
       - "grep"
       - "gs"
       - "helm"
+      - "herdr"
       - "htop"
       - "httpie"
       - "imagemagick"
@@ -380,7 +381,6 @@ packages:
       "iFinance 5": 1500241909
       "kChat": 6443845553
       "LilyView": 529490330
-      "Numbers": 409203825
       "Phiewer PRO": 1270923434
       "Tailscale": 1475387142
       "TestFlight": 899247664
