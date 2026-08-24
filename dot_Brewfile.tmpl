@@ -5,7 +5,7 @@
 # Taps
 {{ range .packages.darwin.taps -}}
 {{ if kindIs "map" . -}}
-tap {{ index . "name" | quote }}{{ with index . "url" }}, {{ . | quote }}{{ end }}
+tap {{ index . "name" | quote }}{{ with index . "url" }}, {{ . | quote }}{{ end }}, trusted: true
 {{ else -}}
 # trusted: true auto-trusts these non-official taps for Homebrew >= 6.0.0 (Tap Trust),
 # so `brew bundle` does not require a manual `brew trust` per machine.
