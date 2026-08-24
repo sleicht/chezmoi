@@ -15,8 +15,15 @@ CONFLICTS=("node" "rust" "volta" "rbenv" "go" "asdf")
 
 for pkg in "${CONFLICTS[@]}"; do
     if brew list "$pkg" &>/dev/null; then
+        # Brewed formulae hardcode absolute shebangs (e.g. /opt/homebrew/opt/node/bin/node),
+        # so removing a runtime other formulae depend on breaks them irreparably.
+        dependents=$(brew uses --installed "$pkg" 2>/dev/null | tr '\n' ' ')
+        if [[ -n "$dependents" ]]; then
+            echo "Keeping $pkg (required by: ${dependents% })"
+            continue
+        fi
         echo "Removing $pkg (mise will manage this)..."
-        brew uninstall --ignore-dependencies "$pkg" || true
+        brew uninstall "$pkg" || true
     fi
 done
 
