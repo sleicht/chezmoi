@@ -25,21 +25,24 @@ compaction:
   reserveTokens: 16384 # headroom kept under the context window
   keepRecentTokens: 20000 # retain the latest working set after compaction
   midTurnEnabled: true # compact at safe boundaries in long tool loops
-  strategy: snapcompact # "context-full" | "handoff" | "shake" | "snapcompact" | "off"
   thresholdTokens: 180000 # compact before uncached history dominates prompt cost
+  methodOrder:
+    - snapcompact
+    - remote
+    - soft
 defaultThinkingLevel: auto
 dev: 
   autoqaConsent: granted
 display: 
   shimmer: kitt
   showTokenUsage: true
-exa: 
-  enableSearch: false
+  cacheMissMarker: true
+exa:
   enabled: false
 extensions: 
   - "{{ .chezmoi.homeDir }}/.omp/agent/plugins/local-dotfiles-tools/hooks/mise-just-enforcer.ts"
 features: 
-  unexpectedStopDetection: true
+  unexpectedStopDetection: smart
 inspect_image: 
   mode: "on"
 lsp: 
@@ -99,13 +102,29 @@ providers:
     - google
     - mojeek
     - public
-read: 
+  webSearchExclude:
+    - xai
+    - zai
+    - tinyfish
+    - jina
+    - kagi
+    - tavily
+    - firecrawl
+    - brave
+    - kimi
+    - parallel
+    - synthetic
+    - startpage
+    - mojeek
+    - exa
+    - perplexity
+read:
   summarize: 
     prose: true
 readLineNumbers: true
 searxng: 
   endpoint: http://localhost:3939/
-setupVersion: 1
+setupVersion: 2
 statusLine: 
   preset: nerd
   transparent: true
@@ -140,3 +159,9 @@ todo:
   eager: default
 secrets: 
   enabled: true
+composer:
+  shape: box
+retry:
+  modelFallback: false
+steeringMode: one-at-a-time
+interruptMode: immediate
