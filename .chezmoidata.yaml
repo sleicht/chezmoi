@@ -413,12 +413,12 @@ tools:
     # Global runtime versions - used in config.toml template
     global_tools:
       node: "lts"
-      python: "3.12"
-      go: "1.22"
+      python: "3.14"
+      go: "1.26"
       rust: "stable"
       java: "temurin-25"
-      ruby: "3"
-      terraform: "1.9"
+      ruby: "4"
+      terraform: "1.15"
     settings:
       jobs: 4
       not_found_auto_install: true
