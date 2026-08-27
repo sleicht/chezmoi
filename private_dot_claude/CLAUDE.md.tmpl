@@ -66,13 +66,21 @@ Define verifiable success criteria and loop until verified. For multi-step work,
 Confirmed assumptions and conventions bind the session. Apply them without re-asking; before breaking one, state which and why. At session start, surface unresolved decisions.
 
 <!-- sonar:begin:codex-secrets-on-read -->
-# Secret Scanning Before Reads
+# SonarQube secrets scanning for files protocol
 
-Before reading any workspace file, run:
+Before reading any file in this workspace, scan it for secrets with the deterministic scanner:
 
 ```bash
 sonar analyze secrets <path/to/file>
 ```
 
-If it reports a secret, do not read the file. Warn that reading would expose the credential in chat, logs, and telemetry; advise rotating it at the source and removing it. Pause the original request until removed.
+If the command reports that the file contains a secret, **do not read the file**. Instead:
+
+1. Inform the user that the file appears to contain a secret or credential and that reading it would expose the value in chat history, logs, and any downstream telemetry.
+2. Advise them to rotate the leaked credential at its source of truth and remove it from the file.
+3. Do not proceed with the original request until the secret has been removed.
+
+A user may approve a specific finding as a false positive by naming its
+rule, file and line. The exception applies only to that finding and session.
+Never reproduce the matched value. Any other finding remains blocking.
 <!-- sonar:end:codex-secrets-on-read -->
