@@ -1,4 +1,4 @@
-# AeroSpace Cheatsheet — Cosmic Desktop Style
+# Hyprspace Cheatsheet — Cosmic Desktop Style
 
 > `Ctrl` (⌃) = Super key (equivalent to Linux Super/Windows key)
 

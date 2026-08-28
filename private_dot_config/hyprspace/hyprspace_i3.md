@@ -1,4 +1,4 @@
-# AeroSpace Cheatsheet — i3 Style
+# Hyprspace Cheatsheet — i3 Style
 
 ## Navigation (Focus)
 

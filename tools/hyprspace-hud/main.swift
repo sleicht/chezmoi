@@ -87,7 +87,7 @@ let message: String
 if CommandLine.arguments.count > 1 {
     message = CommandLine.arguments.dropFirst().joined(separator: " ")
 } else {
-    fputs("Usage: aerospace-hud <message>\n", stderr)
+    fputs("Usage: hyprspace-hud <message>\n", stderr)
     exit(1)
 }
 

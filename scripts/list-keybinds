@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # =============================================================================
-# list-keybinds — Aggregate keyboard shortcuts from AeroSpace, Ghostty, and ZSH
+# list-keybinds — Aggregate keyboard shortcuts from Hyprspace, Ghostty, and ZSH
 # =============================================================================
 # Parses config files statically to produce a grouped, readable shortcut map.
 #
 # Usage:
 #   ./scripts/list-keybinds                    # Show all sources
-#   ./scripts/list-keybinds --source aerospace # One source only
+#   ./scripts/list-keybinds --source hyprspace # One source only
 #   ./scripts/list-keybinds --raw              # No colour output
 # =============================================================================
 
@@ -35,7 +35,7 @@ usage() {
 Usage: list-keybinds [OPTIONS]
 
 Options:
-  --source NAME   Show only one source (macos, aerospace, ghostty, zsh)
+  --source NAME   Show only one source (macos, hyprspace, ghostty, zsh)
   --raw           Plain output without colours
   --detect        Launch Shortcut Detective for live key interception
   --help, -h      Show this help
@@ -47,7 +47,7 @@ while [[ $# -gt 0 ]]; do
     --source)
       shift
       SOURCE_FILTER="${1:-}"
-      [[ -z "$SOURCE_FILTER" ]] && { echo "ERROR: --source requires a value (aerospace, ghostty, zsh)" >&2; exit 2; }
+      [[ -z "$SOURCE_FILTER" ]] && { echo "ERROR: --source requires a value (hyprspace, ghostty, zsh)" >&2; exit 2; }
       ;;
     --raw) RAW=true ;;
     --detect) DETECT=true ;;
@@ -108,7 +108,7 @@ print_binding() {
   printf "  ${CYAN}%-22s${NC} %s\n" "$1" "$2"
 }
 
-# Convert AeroSpace key notation to human-readable form
+# Convert Hyprspace key notation to human-readable form
 # e.g. ctrl-alt-shift-left → Ctrl+Alt+Shift+Left
 normalise_key() {
   local key="$1"
@@ -407,12 +407,12 @@ parse_macos() {
   done
 }
 
-# ── AeroSpace parser ────────────────────────────────────────────────────────
+# ── Hyprspace parser ────────────────────────────────────────────────────────
 
-parse_aerospace() {
-  local config="${HOME}/.config/aerospace/aerospace.toml"
+parse_hyprspace() {
+  local config="${HOME}/.config/hyprspace/config.toml"
   if [[ ! -f "$config" ]]; then
-    echo "  (aerospace config not found)"
+    echo "  (Hyprspace config not found)"
     return
   fi
 
@@ -463,7 +463,7 @@ parse_aerospace() {
     # Detect mode section headers: [mode.main.binding]
     if [[ "$line" =~ ^\[mode\.([a-z]+)\.binding\]$ ]]; then
       current_mode="${BASH_REMATCH[1]}"
-      print_section "AeroSpace (${current_mode})"
+      print_section "Hyprspace (${current_mode})"
       continue
     fi
 
@@ -615,15 +615,15 @@ main() {
   case "${SOURCE_FILTER}" in
     "")
       parse_macos
-      parse_aerospace
+      parse_hyprspace
       parse_ghostty
       parse_zsh
       ;;
     macos)     parse_macos ;;
-    aerospace) parse_aerospace ;;
+    hyprspace) parse_hyprspace ;;
     ghostty)   parse_ghostty ;;
     zsh)       parse_zsh ;;
-    *) echo "ERROR: Unknown source '${SOURCE_FILTER}'. Use: macos, aerospace, ghostty, zsh" >&2; exit 2 ;;
+    *) echo "ERROR: Unknown source '${SOURCE_FILTER}'. Use: macos, hyprspace, ghostty, zsh" >&2; exit 2 ;;
   esac
   echo ""
 }

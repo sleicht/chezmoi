@@ -22,7 +22,7 @@ Personal dotfiles for macOS, managed with [chezmoi](https://www.chezmoi.io/) and
 | **Editor**    | EditorConfig · [aider](https://aider.chat/) (AI pair programming)                                                                                                                                                                                                                                                                                                                |
 | **Git**       | [Lazygit](https://github.com/jesseduffield/lazygit) · [Gitleaks](https://gitleaks.io/) (secret scanning) · global config + hooks                                                                                                                                                                                                                                                 |
 | **Dev Tools** | [mise](https://mise.jdx.dev/) (runtime manager + task runner) · [topgrade](https://github.com/topgrade-rs/topgrade) (all-in-one updater) · [bat](https://github.com/sharkdp/bat) · [lsd](https://github.com/lsd-rs/lsd) · [btop](https://github.com/aristocratos/btop) · [atuin](https://atuin.sh/) (shell history) · [worktrunk](https://worktrunk.dev/) (git worktree manager) |
-| **macOS**     | [Homebrew](https://brew.sh/) (Brewfile) · [AeroSpace](https://github.com/nikitabobko/AeroSpace) (tiling WM) · [SketchyBar](https://github.com/FelixKratz/SketchyBar) (status bar) · [Karabiner-Elements](https://karabiner-elements.pqrs.org/) · [Finicky](https://github.com/nickmilo/finicky) (browser routing)                                                                |
+| **macOS**     | [Homebrew](https://brew.sh/) (Brewfile) · [Hyprspace](https://hyprspace.net/) (tiling WM) · [SketchyBar](https://github.com/FelixKratz/SketchyBar) (status bar) · [Karabiner-Elements](https://karabiner-elements.pqrs.org/) · [Finicky](https://github.com/nickmilo/finicky) (browser routing)                                                                |
 | **Security**  | age encryption for SSH keys · Bitwarden for secrets · permission hardening                                                                                                                                                                                                                                                                                                       |
 
 ## 🚀 Getting Started
@@ -135,7 +135,7 @@ topgrade -n               # dry-run — preview what would be updated
 
 ### SketchyBar (Status Bar)
 
-[SketchyBar](https://github.com/FelixKratz/SketchyBar) provides a workspace-aware status bar driven by AeroSpace callbacks. After first `chezmoi apply`:
+[SketchyBar](https://github.com/FelixKratz/SketchyBar) provides a workspace-aware status bar driven by Hyprspace callbacks. After first `chezmoi apply`:
 
 ```bash
 brew services start sketchybar    # start the bar service
@@ -168,7 +168,7 @@ The bar displays active workspaces with app icons (via [sketchybar-app-font](htt
 │   ├── ghostty/config                 #   terminal config
 │   ├── mise/config.toml.tmpl          #   runtime versions
 │   ├── mise/tasks/                    #   mise task scripts (dotfiles, git, projects)
-│   ├── aerospace/aerospace.toml       #   tiling WM + sketchybar callbacks
+│   ├── hyprspace/config.toml           #   tiling WM + sketchybar callbacks
 │   ├── sketchybar/sketchybarrc        #   status bar config
 │   ├── sketchybar/plugins/            #   bar plugin scripts (workspace, app icons, battery, etc.)
 │   ├── topgrade/topgrade.toml         #   all-in-one updater config
