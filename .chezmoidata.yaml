@@ -203,6 +203,7 @@ packages:
       - "bitwarden"
       - "claude-code@latest"
       - "codex"
+      - "crisp"
       - "dash"
       - "devpod"
       - "finicky"
