@@ -85,8 +85,8 @@ Brewfile_Personal
 # -----------------------------------------------------------------------------
 {{- if ne .chezmoi.os "darwin" }}
 # macOS-only configs — ignore on Linux
-.config/aerospace
-.config/aerospace/**
+.config/hyprspace
+.config/hyprspace/**
 .config/sketchybar
 .config/sketchybar/**
 Library
@@ -143,8 +143,8 @@ run_onchange_after_*
 run_once_after_*
 run_after_*
 # Skip desktop/GUI configs
-.config/aerospace
-.config/aerospace/**
+.config/hyprspace
+.config/hyprspace/**
 .config/sketchybar
 .config/sketchybar/**
 .config/karabiner

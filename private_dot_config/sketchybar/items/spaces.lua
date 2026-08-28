@@ -22,18 +22,18 @@ end
 local full_workspace_template = {}
 local workspace_states = {}
 
--- Add aerospace events
-sbar.add("event", "aerospace_workspace_change")
-sbar.add("event", "aerospace_monitor_change")
+-- Add Hyprspace events
+sbar.add("event", "hyprspace_workspace_change")
+sbar.add("event", "hyprspace_monitor_change")
 
--- Create space items for all aerospace workspaces
-local all_workspaces = exec_lines("aerospace list-workspaces --all")
+-- Create space items for all Hyprspace workspaces
+local all_workspaces = exec_lines("hyprspace list-workspaces --all")
 
 for _, sid in ipairs(all_workspaces) do
 	-- Determine which monitor this workspace is on
 	local monitor_id = exec(
 		string.format(
-			"aerospace list-windows --workspace %s --format '%%{monitor-appkit-nsscreen-screens-id}' | cut -c1",
+			"hyprspace list-windows --workspace %s --format '%%{monitor-appkit-nsscreen-screens-id}' | cut -c1",
 			sid
 		)
 	)
@@ -67,7 +67,7 @@ for _, sid in ipairs(all_workspaces) do
 			y_offset = -1,
 			shadow = { drawing = "off" },
 		},
-		click_script = "aerospace workspace " .. sid,
+		click_script = "hyprspace workspace " .. sid,
 	})
 
 	workspace_states[sid] = {
@@ -89,18 +89,18 @@ local function states_equal(old, new)
 	return old.drawing == new.drawing and old.label_string == new.label_string and old.icon_color == new.icon_color
 end
 
--- Build partial current state from aerospace (only non-empty workspaces)
+-- Build partial current state from Hyprspace (only non-empty workspaces)
 local function build_current_state()
 	local state = {}
-	local focused_workspace = exec("aerospace list-workspaces --focused")
+	local focused_workspace = exec("hyprspace list-workspaces --focused")
 
 	-- Only build state for non-empty workspaces
-	local monitors = exec_lines("aerospace list-monitors")
+	local monitors = exec_lines("hyprspace list-monitors")
 	for i, _ in ipairs(monitors) do
-		local non_empty_workspaces = exec_lines("aerospace list-workspaces --monitor " .. i .. " --empty no")
+		local non_empty_workspaces = exec_lines("hyprspace list-workspaces --monitor " .. i .. " --empty no")
 
 		for _, sid in ipairs(non_empty_workspaces) do
-			local apps_raw = exec(string.format("aerospace list-windows --workspace %s", sid))
+			local apps_raw = exec(string.format("hyprspace list-windows --workspace %s", sid))
 
 			local icon_strip = " "
 			for line in apps_raw:gmatch("[^\r\n]+") do
@@ -133,7 +133,7 @@ end
 -- Function to update all workspace states (with diff-based optimization)
 local function update_all_workspaces()
 	sbar.begin_config()
-	-- Build partial state from aerospace (only non-empty workspaces)
+	-- Build partial state from Hyprspace (only non-empty workspaces)
 	local new_state = build_current_state()
 
 	-- Move empty workspaces to monitor 1 (side effect)
@@ -141,7 +141,7 @@ local function update_all_workspaces()
 	for _, sid in ipairs(all_workspaces) do
 		if new_state[sid] == nil or new_state[sid].label_string == "" then
 			-- WARN: this assumes monitor 1 is your main monitor
-			os.execute(string.format("aerospace move-workspace-to-monitor --workspace %s 1", sid))
+			os.execute(string.format("hyprspace move-workspace-to-monitor --workspace %s 1", sid))
 		end
 	end
 
@@ -205,8 +205,8 @@ local poop = sbar.add("item", "poop", {
 	background = { drawing = "off" },
 })
 
--- Subscribe to aerospace events
-poop:subscribe("aerospace_workspace_change", function(env)
+-- Subscribe to Hyprspace events
+poop:subscribe("hyprspace_workspace_change", function(env)
 	update_all_workspaces()
 end)
 
@@ -218,7 +218,7 @@ poop:subscribe("front_app_switched", function(env)
 	update_all_workspaces()
 end)
 
-poop:subscribe("aerospace_monitor_change", function(env)
+poop:subscribe("hyprspace_monitor_change", function(env)
 	if env.FOCUSED_WORKSPACE and env.TARGET_MONITOR then
 		sbar.set("space." .. env.FOCUSED_WORKSPACE, {
 			display = env.TARGET_MONITOR,

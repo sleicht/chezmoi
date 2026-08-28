@@ -59,10 +59,9 @@ packages:
       - name: "jundot/omlx"
         url: "https://github.com/jundot/omlx"
       - "manaflow-ai/cmux"
-      - "mediosz/tap"
       - "neurosnap/tap"
-      - "nikitabobko/tap"
       - "olets/tap"
+      - "PeachlifeAB/tap"
       - "rcmdnk/file"
       - "slp/krunkit"
       - "vet-run/vet"
@@ -194,7 +193,7 @@ packages:
 
     # Common casks - casks needed on all machines
     common_casks:
-      - "aerospace"
+      - "hyprspace"
       - "agentsview"
       - "arc"
       - "atuin-desktop"
@@ -355,7 +354,6 @@ packages:
       - "slack"
       - "stats"
       - "steam"
-      - "swipeaerospace"
       - "the-unarchiver"
       - "thecommander"
       - "tidal"

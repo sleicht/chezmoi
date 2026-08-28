@@ -1,4 +1,4 @@
-# Pop!_OS COSMIC-style key bindings for AeroSpace
+# Pop!_OS COSMIC-style key bindings for Hyprspace
 # 'ctrl' (⌃) = Linux Super/Windows key equivalent
 # Reference: https://support.system76.com/articles/pop-cosmic-keyboard-shortcuts/
 
@@ -9,20 +9,20 @@ after-login-command = []
 # Move already-open windows to their workspaces on startup
 after-startup-command = ['''exec-and-forget bash -c '
   tile_move() {
-    aerospace list-windows --monitor all --app-bundle-id "$1" --format "%{window-id}" 2>/dev/null \
-      | while read -r wid; do aerospace layout --window-id "$wid" h_tiles; aerospace move-node-to-workspace --window-id "$wid" "$2"; done
+    hyprspace list-windows --monitor all --app-bundle-id "$1" --format "%{window-id}" 2>/dev/null \
+      | while read -r wid; do hyprspace layout --window-id "$wid" h_tiles; hyprspace move-node-to-workspace --window-id "$wid" "$2"; done
   }
   accordion_move() {
-    aerospace list-windows --monitor all --app-bundle-id "$1" --format "%{window-id}" 2>/dev/null \
-      | while read -r wid; do aerospace layout --window-id "$wid" accordion; aerospace move-node-to-workspace --window-id "$wid" "$2"; done
+    hyprspace list-windows --monitor all --app-bundle-id "$1" --format "%{window-id}" 2>/dev/null \
+      | while read -r wid; do hyprspace layout --window-id "$wid" accordion; hyprspace move-node-to-workspace --window-id "$wid" "$2"; done
   }
   resize_width() {
-    aerospace list-windows --monitor all --app-bundle-id "$1" --format "%{window-id}" 2>/dev/null \
-      | while read -r wid; do aerospace resize --window-id "$wid" width "$2"; done
+    hyprspace list-windows --monitor all --app-bundle-id "$1" --format "%{window-id}" 2>/dev/null \
+      | while read -r wid; do hyprspace resize --window-id "$wid" width "$2"; done
   }
   float_move() {
-    aerospace list-windows --monitor all --app-bundle-id "$1" --format "%{window-id}" 2>/dev/null \
-      | while read -r wid; do aerospace layout --window-id "$wid" floating; aerospace move-node-to-workspace --window-id "$wid" "$2"; done
+    hyprspace list-windows --monitor all --app-bundle-id "$1" --format "%{window-id}" 2>/dev/null \
+      | while read -r wid; do hyprspace layout --window-id "$wid" floating; hyprspace move-node-to-workspace --window-id "$wid" "$2"; done
   }
   float_move com.apple.finder 0
   float_move com.cocoatech.PathFinder 0
@@ -50,7 +50,7 @@ after-startup-command = ['''exec-and-forget bash -c '
 '
 ''']
 
-# Start AeroSpace at login
+# Start Hyprspace at login
 start-at-login = true
 
 # Keep workspace 0 always available; 7 is the small external monitor workspace
@@ -70,7 +70,7 @@ automatically-unhide-macos-hidden-apps = false
 exec-on-workspace-change = [
   '/bin/bash',
   '-c',
-  'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE',
+  'sketchybar --trigger hyprspace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE',
 ]
 
 # Pin workspace 7 to external monitor
@@ -151,10 +151,10 @@ ctrl-shift-7 = 'move-node-to-workspace 7 --focus-follows-window'
 ctrl-q = 'close'
 
 # Ctrl + F → Maximize/fullscreen toggle
-ctrl-f = ['fullscreen', 'exec-and-forget $HOME/.local/bin/aerospace-hud "$(aerospace list-windows --focused --format "%{window-layout}")"']
+ctrl-f = ['fullscreen', 'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"']
 
 # Ctrl + F11 → Fullscreen (alternate)
-ctrl-f11 = ['fullscreen', 'exec-and-forget $HOME/.local/bin/aerospace-hud "$(aerospace list-windows --focused --format "%{window-layout}")"']
+ctrl-f11 = ['fullscreen', 'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"']
 
 # Ctrl + Enter → Launch terminal
 ctrl-enter = '''exec-and-forget osascript -e '
@@ -167,13 +167,13 @@ end tell'
 ctrl-alt-r = 'mode resize'
 
 # Ctrl + Shift + F → Toggle floating/tiling
-ctrl-alt-f = ['layout floating tiling', 'exec-and-forget $HOME/.local/bin/aerospace-hud "$(aerospace list-windows --focused --format "%{window-layout}")"']
+ctrl-alt-f = ['layout floating tiling', 'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"']
 
 # Ctrl + O → Flip tile orientation (horizontal ↔ vertical)
-ctrl-alt-o = ['layout tiles horizontal vertical', 'exec-and-forget $HOME/.local/bin/aerospace-hud "$(aerospace list-windows --focused --format "%{window-layout}")"']
+ctrl-alt-o = ['layout tiles horizontal vertical', 'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"']
 
 # Ctrl + Alt + S → Toggle stacking (accordion)
-ctrl-alt-s = ['layout accordion tiling', 'exec-and-forget $HOME/.local/bin/aerospace-hud "$(aerospace list-windows --focused --format "%{window-layout}")"']
+ctrl-alt-s = ['layout accordion tiling', 'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"']
 
 # ── Workspace / Monitor ──────────────────────────────────────────────────────
 
@@ -183,7 +183,7 @@ alt-tab = 'workspace-back-and-forth'
 # Alt + Shift + Tab → Move workspace to next monitor
 alt-shift-tab = [
   'move-workspace-to-monitor --wrap-around next',
-  'exec-and-forget sketchybar --trigger aerospace_monitor_change TARGET_MONITOR=$(aerospace list-monitors --focused --format "%{monitor-appkit-nsscreen-screens-id}") FOCUSED_WORKSPACE=$(aerospace list-workspaces --focused)',
+  'exec-and-forget sketchybar --trigger hyprspace_monitor_change TARGET_MONITOR=$(hyprspace list-monitors --focused --format "%{monitor-appkit-nsscreen-screens-id}") FOCUSED_WORKSPACE=$(hyprspace list-workspaces --focused)',
 ]
 
 # ── Service / Config Reload ──────────────────────────────────────────────────
@@ -208,7 +208,7 @@ shift-up    = 'resize height +50'
 [mode.service.binding]
 esc       = ['reload-config', 'mode main']
 r         = ['flatten-workspace-tree', 'mode main'] # reset layout
-f         = ['layout floating tiling', 'exec-and-forget $HOME/.local/bin/aerospace-hud "$(aerospace list-windows --focused --format "%{window-layout}")"', 'mode main']
+f         = ['layout floating tiling', 'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"', 'mode main']
 backspace = ['close-all-windows-but-current', 'mode main']
 
 # ── Window Detection Rules ───────────────────────────────────────────────────
