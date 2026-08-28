@@ -1,120 +1,62 @@
-# Hyprspace Cheatsheet — Cosmic Desktop Style
+# Hyprspace Cheatsheet — Starter Defaults
 
-> `Ctrl` (⌃) = Super key (equivalent to Linux Super/Windows key)
+## Workspaces
 
-## Navigation (Focus)
+| Shortcut            | Action                       |
+|---------------------|------------------------------|
+| `Alt + 0…7`         | Switch to workspace 0…7      |
+| `Alt + Shift + 0…7` | Move window to workspace 0…7 |
+| `Alt + Tab`         | Focus the previous window    |
 
-| Shortcut | Action |
-|----------|--------|
-| `Ctrl + ←` | Focus left |
-| `Ctrl + ↓` | Focus down |
-| `Ctrl + ↑` | Focus up |
-| `Ctrl + →` | Focus right |
-| `Ctrl + Shift + ←/→/↑/↓` | Prev/next workspace |
+Workspaces 1–6 stay on the configured primary monitor. Persistent workspace 7
+stays on the configured secondary monitor; persistent workspace 0 is unpinned.
 
-## Move Windows
+## Focus and Move
 
-| Shortcut | Action |
-|----------|--------|
-| `Ctrl + Alt + ←` | Move window left |
-| `Ctrl + Alt + →` | Move window down |
-| `Ctrl + Alt + ↑` | Move window up |
-| `Ctrl + Alt + ↓` | Move window right |
-| `Ctrl + Alt + Shift + ←/→` | Move window to prev/next monitor |
-| `Ctrl + Alt + Shift + ↑/↓` | Move window to prev/next workspace |
+| Shortcut                | Action                         |
+|-------------------------|--------------------------------|
+| `Alt + H/J/K/L`         | Focus left/down/up/right       |
+| `Alt + Shift + H/J/K/L` | Move window left/down/up/right |
 
-## Window Management
+## Layout
 
-| Shortcut | Action |
-|----------|--------|
-| `Ctrl + Q` | Close window |
-| `Ctrl + F` | Maximize (fullscreen) |
-| `Ctrl + F11` | Fullscreen (alternate) |
-| `Ctrl + Alt + F` | Toggle floating/tiling |
-| `Ctrl + Alt + O` | Flip tile orientation (H/V) |
-| `Ctrl + Alt + S` | Toggle stacking (accordion) |
-| `Ctrl + Alt + R` | Enter resize mode |
-| `Ctrl + Enter` | Launch Ghostty terminal |
-
-## Workspaces — Switch
-
-| Shortcut | Workspace |
-|----------|-----------|
-| `Ctrl + 0` | 0 (File managers) |
-| `Ctrl + 1` | 1 (Terminal) |
-| `Ctrl + 2` | 2 (IDE) |
-| `Ctrl + 3` | 3 (Web) |
-| `Ctrl + 4` | 4 (Mail) |
-| `Ctrl + 5` | 5 (Social) |
-| `Ctrl + 6` | 6 (Free) |
-| `Ctrl + 9` | Back-and-forth |
-| `Alt + Tab` | Back-and-forth |
-
-## Workspaces — Move Window To
-
-| Shortcut | Workspace |
-|----------|-----------|
-| `Ctrl + Shift + 0` | 0 (File managers) |
-| `Ctrl + Shift + 1` | 1 (Terminal) |
-| `Ctrl + Shift + 2` | 2 (IDE) |
-| `Ctrl + Shift + 3` | 3 (Web) |
-| `Ctrl + Shift + 4` | 4 (Mail) |
-| `Ctrl + Shift + 5` | 5 (Social) |
-| `Ctrl + Shift + 6` | 6 (Free) |
-
-## Monitor
-
-| Shortcut | Action |
-|----------|--------|
-| `Alt + Shift + Tab` | Move workspace to next monitor |
-
-## Resize Mode (`Ctrl + Alt + R`)
-
-| Shortcut | Action |
-|----------|--------|
-| `→` | Grow width |
-| `Shift + →` | Shrink width |
-| `←` | Shrink width |
-| `Shift + ←` | Grow width |
-| `↓` | Grow height |
-| `Shift + ↓` | Shrink height |
-| `↑` | Shrink height |
-| `Shift + ↑` | Grow height |
-| `Enter` / `Esc` | Exit resize mode |
+| Shortcut              | Action                               |
+|-----------------------|--------------------------------------|
+| `Alt + Shift + Space` | Toggle floating/tiling               |
+| `Alt + Shift + /`     | Toggle horizontal/vertical tiles     |
+| `Alt + Shift + ,`     | Toggle horizontal/vertical accordion |
+| `Alt + -`             | Shrink focused window                |
+| `Alt + =`             | Grow focused window                  |
+| `Alt + F`             | Toggle fullscreen                    |
+| `Alt + Cmd + F`       | Toggle macOS native fullscreen       |
 
 ## Service Mode (`Alt + Shift + ;`)
 
-| Shortcut | Action |
-|----------|--------|
-| `Esc` | Reload config & exit |
-| `R` | Reset layout (flatten) |
-| `F` | Toggle floating/tiling |
-| `Backspace` | Close all windows but current |
+| Shortcut          | Action                              |
+|-------------------|-------------------------------------|
+| `Esc`             | Reload config and exit service mode |
+| `R`               | Flatten workspace tree and exit     |
+| `F`               | Toggle floating/tiling and exit     |
+| `Alt + Shift + ;` | Exit service mode                   |
 
-## Config
+## App Routing
 
-| Shortcut | Action |
-|----------|--------|
-| `Alt + Shift + C` | Reload config |
+| App                                                        | Workspace | Layout    |
+|------------------------------------------------------------|-----------|-----------|
+| Finder, Path Finder, Tailscale                             | 0         | floating  |
+| Ghostty, Cmux, T3 Code, GitButler                          | 1         | tiled     |
+| IntelliJ, Sublime Text                                     | 2         | accordion |
+| Chrome, Zen Browser, Vivaldi, Arc                          | 3         | floating  |
+| Spark, Fantastical, Outlook                                | 4         | tiled     |
+| WhatsApp, Threema, Infomaniak Chat, Messages, Slack, Teams | 5         | tiled     |
 
-## Window Auto-Assignment
+Spark is resized to 1400 points wide. Routing runs both for new windows and for
+windows already open when Hyprspace starts.
 
-| App | Workspace | Layout |
-|-----|-----------|--------|
-| Finder | 0 (File managers) | floating |
-| Path Finder | 0 (File managers) | floating |
-| Tailscale | 0 (File managers) | floating |
-| Ghostty | 1 (Terminal) | floating |
-| T3 Code | 1 (Terminal) | tiled |
-| GitButler | 1 (Terminal) | tiled |
-| IntelliJ | 2 (IDE) | tiled |
-| Sublime Text | 2 (IDE) | floating |
-| Chrome | 3 (Web) | tiled |
-| Zen Browser | 3 (Web) | tiled |
-| Vivaldi | 3 (Web) | tiled |
-| Spark | 4 (Mail) | tiled |
-| Fantastical | 4 (Mail) | tiled |
-| WhatsApp | 5 (Social) | tiled |
-| Threema | 5 (Social) | tiled |
-| Infomaniak Chat | 5 (Social) | tiled |
-| Messages | 5 (Social) | tiled |
+## Other Floating Applications
+
+- Screen Sharing
+- iPhone Simulator
+- CleanMyMac and CleanMyMac X
+- Bitwarden
+- QuickTime Player

@@ -1,12 +1,10 @@
-# Pop!_OS COSMIC-style key bindings for Hyprspace
-# 'ctrl' (⌃) = Linux Super/Windows key equivalent
-# Reference: https://support.system76.com/articles/pop-cosmic-keyboard-shortcuts/
+# Hyprspace starter config with local monitor and menu-bar integration.
+# Hyprspace supplies the opinionated dwindle defaults; keep this file small.
 
 config-version = 2
+start-at-login = true
 
-after-login-command = []
-
-# Move already-open windows to their workspaces on startup
+# Route already-open windows when Hyprspace starts.
 after-startup-command = ['''exec-and-forget bash -c '
   tile_move() {
     hyprspace list-windows --monitor all --app-bundle-id "$1" --format "%{window-id}" 2>/dev/null \
@@ -48,32 +46,22 @@ after-startup-command = ['''exec-and-forget bash -c '
   tile_move com.tinyspeck.slackmacgap 5
   tile_move com.microsoft.teams2 5
 '
-''']
+''',
+  'exec-and-forget borders active_color=0xff50bfcb inactive_color=0xff414550 width=8.0 hidpi=off',
+]
 
-# Start Hyprspace at login
-start-at-login = true
-
-# Keep workspace 0 always available; 7 is the small external monitor workspace
+# Keep routed file-manager and external-monitor workspaces available.
 persistent-workspaces = ["0", "7"]
 
-# Normalizations keep the tree sane — Cosmic also uses a tree-based tiling model
-enable-normalization-flatten-containers = true
-enable-normalization-opposite-orientation-for-nested-containers = true
-
-# Mouse follows focus when focused monitor changes
-on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
-
-# Prevent macOS from hiding apps (cmd is our Super key, so cmd-h conflicts)
-automatically-unhide-macos-hidden-apps = false
-
-# Notify Sketchybar about workspace change
+# Notify Sketchybar about workspace changes.
 exec-on-workspace-change = [
   '/bin/bash',
-  '-c',
+  '-lc',
   'sketchybar --trigger hyprspace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE PREV_WORKSPACE=$AEROSPACE_PREV_WORKSPACE',
 ]
 
-# Pin workspace 7 to external monitor
+# Keep the main starter workspaces on the primary monitor and workspace 7 on
+# the small external monitor.
 [workspace-to-monitor-force-assignment]
 {{- $m := .monitors.personal -}}
 {{- if eq .machine_type "client" }}
@@ -87,135 +75,99 @@ exec-on-workspace-change = [
 6 = '{{ $m.primary }}'
 7 = '{{ $m.secondary }}'
 
-[key-mapping]
-preset = 'qwerty'
-
-# ── Gaps ──────────────────────────────────────────────────────────────────────
-# Cosmic Desktop has gaps between tiled windows by default
 [gaps]
-inner.horizontal = 3
-inner.vertical = 3
-outer.left = 5
-outer.bottom = 5
-outer.top = [{ monitor."DELL U2725QE" = 20 }, 5]
-outer.right = 5
+inner.horizontal = 18
+inner.vertical = 18
+outer.left = 18
+outer.right = 18
+outer.bottom = 18
+outer.top = [{ monitor."built-in" = 18 }, { monitor."main" = 48 }, 48]
 
-# ── Main Bindings ─────────────────────────────────────────────────────────────
+# ---------- MAIN KEY BINDINGS -----------
 [mode.main.binding]
+alt-0 = 'workspace 0'
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-shift-0 = 'move-node-to-workspace 0'
+alt-shift-1 = 'move-node-to-workspace 1'
+alt-shift-2 = 'move-node-to-workspace 2'
+alt-shift-3 = 'move-node-to-workspace 3'
+alt-shift-4 = 'move-node-to-workspace 4'
+alt-shift-5 = 'move-node-to-workspace 5'
+alt-shift-6 = 'move-node-to-workspace 6'
+alt-shift-7 = 'move-node-to-workspace 7'
 
-# ── Navigation ────────────────────────────────────────────────────────────────
+alt-h = 'focus left'
+alt-j = 'focus down'
+alt-k = 'focus up'
+alt-l = 'focus right'
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
 
-# Ctrl + Arrow keys → Focus window in direction
-ctrl-left  = 'focus left'
-ctrl-down  = 'focus down'
-ctrl-up    = 'focus up'
-ctrl-right = 'focus right'
-
-# Ctrl + Shift + Arrow keys → Navigate between workspaces
-ctrl-shift-up    = 'workspace prev'
-ctrl-shift-down  = 'workspace next'
-ctrl-shift-left  = 'workspace prev'
-ctrl-shift-right = 'workspace next'
-
-
-# ── Move Windows ──────────────────────────────────────────────────────────────
-
-# Ctrl + Shift + Arrow keys are used for workspace nav, so use Ctrl + Alt for moving
-# Ctrl + Alt + Arrow keys → Move window in tiling layout
-ctrl-alt-left  = 'move left'
-ctrl-alt-right = 'move down'
-ctrl-alt-up    = 'move up'
-ctrl-alt-down  = 'move right'
-
-# Ctrl + Alt + Shift + Arrow keys → Move window to next/prev monitor
-ctrl-alt-shift-left  = 'move-node-to-monitor --wrap-around prev'
-ctrl-alt-shift-right = 'move-node-to-monitor --wrap-around next'
-
-# Ctrl + Alt + Shift + Up/Down → Move window to prev/next workspace
-ctrl-alt-shift-up    = 'move-node-to-workspace prev --focus-follows-window'
-ctrl-alt-shift-down  = 'move-node-to-workspace next --focus-follows-window'
-
-# Ctrl + Shift + number → Move window to workspace
-ctrl-shift-0 = 'move-node-to-workspace 0 --focus-follows-window'
-ctrl-shift-1 = 'move-node-to-workspace 1 --focus-follows-window'
-ctrl-shift-2 = 'move-node-to-workspace 2 --focus-follows-window'
-ctrl-shift-3 = 'move-node-to-workspace 3 --focus-follows-window'
-ctrl-shift-4 = 'move-node-to-workspace 4 --focus-follows-window'
-ctrl-shift-5 = 'move-node-to-workspace 5 --focus-follows-window'
-ctrl-shift-6 = 'move-node-to-workspace 6 --focus-follows-window'
-ctrl-shift-7 = 'move-node-to-workspace 7 --focus-follows-window'
-
-# ── Manage Windows ────────────────────────────────────────────────────────────
-
-# Ctrl + Q → Close window
-ctrl-q = 'close'
-
-# Ctrl + F → Maximize/fullscreen toggle
-ctrl-f = ['fullscreen', 'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"']
-
-# Ctrl + F11 → Fullscreen (alternate)
-ctrl-f11 = ['fullscreen', 'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"']
-
-# Ctrl + Enter → Launch terminal
-ctrl-enter = '''exec-and-forget osascript -e '
-tell application "Ghostty"
-    activate
-end tell'
-'''
-
-# Ctrl + R → Enter resize mode
-ctrl-alt-r = 'mode resize'
-
-# Ctrl + Shift + F → Toggle floating/tiling
-ctrl-alt-f = ['layout floating tiling', 'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"']
-
-# Ctrl + O → Flip tile orientation (horizontal ↔ vertical)
-ctrl-alt-o = ['layout tiles horizontal vertical', 'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"']
-
-# Ctrl + Alt + S → Toggle stacking (accordion)
-ctrl-alt-s = ['layout accordion tiling', 'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"']
-
-# ── Workspace / Monitor ──────────────────────────────────────────────────────
-
-# Alt + Tab → Back and forth between last workspaces
-alt-tab = 'workspace-back-and-forth'
-
-# Alt + Shift + Tab → Move workspace to next monitor
-alt-shift-tab = [
-  'move-workspace-to-monitor --wrap-around next',
-  'exec-and-forget sketchybar --trigger hyprspace_monitor_change TARGET_MONITOR=$(hyprspace list-monitors --focused --format "%{monitor-appkit-nsscreen-screens-id}") FOCUSED_WORKSPACE=$(hyprspace list-workspaces --focused)',
+alt-tab = 'focus-back-and-forth'
+alt-shift-space = [
+  'layout floating tiling',
+  'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"',
 ]
-
-# ── Service / Config Reload ──────────────────────────────────────────────────
 alt-shift-semicolon = 'mode service'
-alt-shift-c = 'reload-config'
+alt-shift-slash = [
+  'layout tiles horizontal vertical',
+  'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"',
+]
+alt-shift-comma = [
+  'layout accordion horizontal vertical',
+  'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"',
+]
+alt-minus = 'resize smart -50'
+alt-equal = 'resize smart +50'
+alt-f = [
+  'fullscreen',
+  'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"',
+]
+alt-cmd-f = 'macos-native-fullscreen'
 
-# ── Resize Mode ──────────────────────────────────────────────────────────────
-[mode.resize.binding]
-esc   = 'mode main'
-enter = 'mode main'
-
-right       = 'resize width +50'
-shift-right = 'resize width -50'
-left        = 'resize width -50'
-shift-left  = 'resize width +50'
-down        = 'resize height +50'
-shift-down  = 'resize height -50'
-up          = 'resize height -50'
-shift-up    = 'resize height +50'
-
-# ── Service Mode ─────────────────────────────────────────────────────────────
+# ---------- SERVICE MODE -----------
 [mode.service.binding]
-esc       = ['reload-config', 'mode main']
-r         = ['flatten-workspace-tree', 'mode main'] # reset layout
-f         = ['layout floating tiling', 'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"', 'mode main']
-backspace = ['close-all-windows-but-current', 'mode main']
+esc = ['reload-config', 'mode main']
+r = ['flatten-workspace-tree', 'mode main']
+f = [
+  'layout floating tiling',
+  'exec-and-forget $HOME/.local/bin/hyprspace-hud "$(hyprspace list-windows --focused --format "%{window-layout}")"',
+  'mode main',
+]
+alt-shift-semicolon = 'mode main'
 
-# ── Window Detection Rules ───────────────────────────────────────────────────
-# Default: all new windows float (override per-app below)
+# ---------- WINDOW CONTROL -----------
 [[on-window-detected]]
-check-further-callbacks = true
-run = 'layout floating'
+if.app-id = "com.apple.ScreenSharing"
+run = ["layout floating"]
+
+[[on-window-detected]]
+if.app-id = 'com.apple.iphonesimulator'
+run = ["layout floating"]
+
+[[on-window-detected]]
+if.app-id = 'com.macpaw.CleanMyMac'
+run = ["layout floating"]
+
+[[on-window-detected]]
+if.app-id = "com.macpaw.CleanMyMac4"
+run = ["layout floating"]
+
+[[on-window-detected]]
+if.app-id = "com.bitwarden.desktop"
+run = ["layout floating"]
+
+[[on-window-detected]]
+if.app-id = "com.apple.QuickTimePlayerX"
+run = ["layout floating"]
 
 [[on-window-detected]]
 if.app-id = 'com.apple.finder'
@@ -238,15 +190,15 @@ check-further-callbacks = false
 run = ['layout h_tiles', 'move-node-to-workspace 1'] # Terminal
 
 [[on-window-detected]]
+if.app-id = 'com.cmuxterm.app'
+run = ['layout h_tiles', 'move-node-to-workspace 1'] # Terminal
+
+[[on-window-detected]]
 if.app-id = 'com.t3tools.t3code'
 run = ['layout h_tiles', 'move-node-to-workspace 1'] # Terminal
 
 [[on-window-detected]]
 if.app-id = 'com.gitbutler.app'
-run = ['layout h_tiles', 'move-node-to-workspace 1'] # Terminal
-
-[[on-window-detected]]
-if.app-id = 'com.cmuxterm.app'
 run = ['layout h_tiles', 'move-node-to-workspace 1'] # Terminal
 
 [[on-window-detected]]

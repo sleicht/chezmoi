@@ -178,6 +178,7 @@ packages:
     # macOS-only formulae
     darwin_only_brews:
       - "apfel"
+      - "borders"
       - "devcontainer"
       - "mackup"
       - "mas"
