@@ -1,0 +1,51 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* Preserve Codex's bytes when all chezmoi-owned settings are present. */ -}}
+{{- $desiredText := includeTemplate "codex-config.toml.tmpl" . -}}
+{{- if not .chezmoi.stdin -}}
+{{- $desiredText -}}
+{{- else -}}
+{{- $current := fromToml .chezmoi.stdin -}}
+{{- $desired := fromToml $desiredText -}}
+{{- $modified := dict "current" $current "desired" $desired | jq `
+def merge_required($have; $required):
+  reduce ($required | keys[]) as $key
+    ($have; .[$key] = $required[$key]);
+
+.current as $current
+| .desired as $desired
+| $current
+| .notify = $desired.notify
+| .model = $desired.model
+| .service_tier = $desired.service_tier
+| .model_reasoning_effort = $desired.model_reasoning_effort
+| .approvals_reviewer = $desired.approvals_reviewer
+| if ($desired | has("model_provider")) then
+    .model_provider = $desired.model_provider
+    | .model_catalog_json = $desired.model_catalog_json
+    | .model_providers = merge_required(
+        (.model_providers // {});
+        $desired.model_providers
+      )
+  else . end
+| .mcp_servers = (
+    (.mcp_servers // {})
+    | .idea = $desired.mcp_servers.idea
+    | .sonarqube = $desired.mcp_servers.sonarqube
+    | if ($desired.mcp_servers | has("tolaria")) then
+        .tolaria = $desired.mcp_servers.tolaria
+      else . end
+    | if ($desired.mcp_servers | has("gitnexus")) then
+        .gitnexus = $desired.mcp_servers.gitnexus
+      else . end
+  )
+| .plugins = merge_required((.plugins // {}); $desired.plugins)
+| .features = merge_required((.features // {}); $desired.features)
+| .desktop = merge_required((.desktop // {}); $desired.desktop)
+| .projects = merge_required((.projects // {}); $desired.projects)
+` | first -}}
+{{- if deepEqual $current $modified -}}
+{{- .chezmoi.stdin -}}
+{{- else -}}
+{{ $modified | toToml }}
+{{- end -}}
+{{- end -}}
