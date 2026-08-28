@@ -1,0 +1,69 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* Preserve Claude's bytes when all chezmoi-owned settings are present. */ -}}
+{{- $desiredText := includeTemplate "claude-settings.json.tmpl" . -}}
+{{- if not .chezmoi.stdin -}}
+{{- $desiredText -}}
+{{- else -}}
+{{- $current := fromJson .chezmoi.stdin -}}
+{{- $desired := fromJson $desiredText -}}
+{{- $modified := dict "current" $current "desired" $desired | jq `
+def add_missing($have; $required):
+  reduce $required[] as $item
+    ($have; if index($item) == null then . + [$item] else . end);
+
+.current as $current
+| .desired as $desired
+| $current
+| .agentPushNotifEnabled = $desired.agentPushNotifEnabled
+| .alwaysThinkingEnabled = $desired.alwaysThinkingEnabled
+| .autoUpdatesChannel = $desired.autoUpdatesChannel
+| .editorMode = $desired.editorMode
+| .enableAllProjectMcpServers = $desired.enableAllProjectMcpServers
+| .includeCoAuthoredBy = $desired.includeCoAuthoredBy
+| .outputStyle = $desired.outputStyle
+| .preferredNotifChannel = $desired.preferredNotifChannel
+| .remoteControlAtStartup = $desired.remoteControlAtStartup
+| .env = ((.env // {}) + ($desired.env | del(.BRAVE_SEARCH_API_KEY)))
+| .permissions = (
+    (.permissions // {})
+    | .defaultMode = $desired.permissions.defaultMode
+    | .allow = add_missing((.allow // []); $desired.permissions.allow)
+    | .deny = add_missing((.deny // []); $desired.permissions.deny)
+  )
+| .sandbox = (
+    (.sandbox // {})
+    | .autoAllowBashIfSandboxed = $desired.sandbox.autoAllowBashIfSandboxed
+    | .enabled = $desired.sandbox.enabled
+    | .permissions = (
+        (.permissions // {})
+        | .additionalWritePaths = add_missing(
+            (.additionalWritePaths // []);
+            $desired.sandbox.permissions.additionalWritePaths
+          )
+      )
+  )
+| .statusLine = $desired.statusLine
+| .worktree = (
+    (.worktree // {})
+    | .baseRef = $desired.worktree.baseRef
+  )
+| .hooks = (
+    (.hooks // {})
+    | .PreToolUse = add_missing(
+        (.PreToolUse // []);
+        [$desired.hooks.PreToolUse[]
+          | select(any(.hooks[]; .command | contains("/sonar-secrets/")))]
+      )
+    | .UserPromptSubmit = add_missing(
+        (.UserPromptSubmit // []);
+        [$desired.hooks.UserPromptSubmit[]
+          | select(any(.hooks[]; .command | contains("/sonar-secrets/")))]
+      )
+  )
+` | first -}}
+{{- if deepEqual $current $modified -}}
+{{- .chezmoi.stdin -}}
+{{- else -}}
+{{ $modified | toPrettyJson }}
+{{- end -}}
+{{- end -}}
