@@ -121,6 +121,7 @@ packages:
       - "lazydocker"
       - "lazygit"
       - "lazyjj"
+      - "linecast"
       - "lsd"
       - "lua-language-server"
       - "mise"
