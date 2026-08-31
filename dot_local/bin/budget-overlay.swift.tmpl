@@ -17,6 +17,90 @@ struct InfoPayload: Decodable {
     let spend: Double?
 }
 
+struct DailyActivityResponse: Decodable {
+    let metadata: DailyActivityMetadata
+    let results: [DailyActivityResult]
+}
+
+struct DailyActivityMetadata: Decodable {
+    let total_spend: Double
+}
+
+struct DailyActivityResult: Decodable {
+    let breakdown: DailyActivityBreakdown
+}
+
+struct DailyActivityBreakdown: Decodable {
+    let models: [String: DailyMetricEntry]
+}
+
+struct DailyMetricEntry: Decodable {
+    let metrics: UsageMetrics
+}
+
+struct UsageMetrics: Decodable {
+    let spend: Double
+    let prompt_tokens: Int
+    let completion_tokens: Int
+    let cache_read_input_tokens: Int
+    let cache_creation_input_tokens: Int
+}
+
+struct ModelInfoResponse: Decodable {
+    let data: [ModelInfoEntry]
+}
+
+struct ModelInfoEntry: Decodable {
+    let model_name: String
+    let litellm_params: ModelParameters?
+    let model_info: ModelPricing?
+}
+
+struct ModelParameters: Decodable {
+    let model: String?
+}
+
+struct ModelPricing: Decodable {
+    let input_cost_per_token: Double?
+    let output_cost_per_token: Double?
+    let cache_read_input_token_cost: Double?
+    let cache_creation_input_token_cost: Double?
+}
+
+enum ModelFamily: String, CaseIterable {
+    case gpt = "GPT"
+    case claude = "Claude"
+    case other = "Other"
+}
+
+struct PricedTokens {
+    var tokens = 0
+    var cost = 0.0
+    var hasCompletePricing = true
+
+    mutating func add(tokens newTokens: Int, rate: Double?) {
+        tokens += newTokens
+        guard newTokens > 0 else { return }
+        guard let rate else {
+            hasCompletePricing = false
+            return
+        }
+        cost += Double(newTokens) * rate
+    }
+}
+
+struct FamilyUsage {
+    var spend = 0.0
+    var tokenRead = PricedTokens()
+    var tokenWrite = PricedTokens()
+    var cacheRead = PricedTokens()
+    var cacheWrite = PricedTokens()
+
+    var hasUsage: Bool {
+        spend > 0 || tokenRead.tokens > 0 || tokenWrite.tokens > 0 || cacheRead.tokens > 0 || cacheWrite.tokens > 0
+    }
+}
+
 func colorForPercentage(_ pct: Double) -> NSColor {
     if pct < 20 { return .systemRed }
     if pct < 50 { return .systemOrange }
@@ -31,9 +115,77 @@ func timeAgo(from date: Date?) -> String {
     return "\(seconds / 3600)h ago"
 }
 
+func kiloTokens(_ tokens: Int) -> String {
+    String(format: "%.1fk", Double(tokens) / 1_000)
+}
+
+func modelFamily(for model: String) -> ModelFamily {
+    let name = model.lowercased()
+    if name.contains("claude") { return .claude }
+    if name.contains("gpt") { return .gpt }
+    return .other
+}
+
+func pricingLookup(from response: ModelInfoResponse?) -> [String: ModelPricing] {
+    var lookup: [String: ModelPricing] = [:]
+    for entry in response?.data ?? [] {
+        guard let pricing = entry.model_info else { continue }
+        for name in [entry.model_name, entry.litellm_params?.model].compactMap({ $0 }) {
+            let key = name.lowercased()
+            if lookup[key] == nil { lookup[key] = pricing }
+            if let shortName = key.split(separator: "/").last, lookup[String(shortName)] == nil {
+                lookup[String(shortName)] = pricing
+            }
+        }
+    }
+    return lookup
+}
+
+func groupedUsage(
+    from activity: DailyActivityResponse,
+    pricingByModel: [String: ModelPricing]
+) -> [ModelFamily: FamilyUsage] {
+    var grouped = Dictionary(uniqueKeysWithValues: ModelFamily.allCases.map { ($0, FamilyUsage()) })
+
+    for result in activity.results {
+        for (model, entry) in result.breakdown.models {
+            let family = modelFamily(for: model)
+            var usage = grouped[family] ?? FamilyUsage()
+            let metrics = entry.metrics
+            let key = model.lowercased()
+            let shortKey = key.split(separator: "/").last.map(String.init) ?? key
+            let pricing = pricingByModel[key] ?? pricingByModel[shortKey]
+            // prompt_tokens folds in the cache counters for both Anthropic and OpenAI on this
+            // deployment, so subtract them out or cache tokens get counted twice: once here at the
+            // full input rate, once again below at their (much lower) cache rate.
+            let tokenRead = max(metrics.prompt_tokens - metrics.cache_read_input_tokens - metrics.cache_creation_input_tokens, 0)
+
+            usage.spend += metrics.spend
+            usage.tokenRead.add(tokens: tokenRead, rate: pricing?.input_cost_per_token)
+            usage.tokenWrite.add(tokens: metrics.completion_tokens, rate: pricing?.output_cost_per_token)
+            usage.cacheRead.add(
+                tokens: metrics.cache_read_input_tokens,
+                rate: pricing?.cache_read_input_token_cost ?? pricing?.input_cost_per_token
+            )
+            usage.cacheWrite.add(
+                tokens: metrics.cache_creation_input_tokens,
+                rate: pricing?.cache_creation_input_token_cost ?? pricing?.input_cost_per_token
+            )
+            grouped[family] = usage
+        }
+    }
+
+    return grouped
+}
+
+func pricedTokenTitle(_ label: String, usage: PricedTokens) -> String {
+    let cost = usage.hasCompletePricing ? String(format: "$%.2f", usage.cost) : "$—"
+    return "  \(label)  \(kiloTokens(usage.tokens)) · \(cost)"
+}
+
 func styledMenuBarText(pct: String, pctColor: NSColor, spend: String) -> NSAttributedString {
     let font = NSFont(name: "JetBrains Mono", size: 12)
-              ?? NSFont.monospacedSystemFont(ofSize: 12, weight: .bold)
+        ?? NSFont.monospacedSystemFont(ofSize: 12, weight: .bold)
     let attr = NSMutableAttributedString()
 
     let robot = NSAttributedString(string: "🤖 ", attributes: [.font: font])
@@ -67,14 +219,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private let remainingItem = NSMenuItem(title: "Remaining     —", action: nil, keyEquivalent: "")
     private let spentItem = NSMenuItem(title: "Spent              —", action: nil, keyEquivalent: "")
     private let totalItem = NSMenuItem(title: "Total Budget  —", action: nil, keyEquivalent: "")
+    private let dailySpendItem = NSMenuItem(title: "Spend          —", action: nil, keyEquivalent: "")
+    private let dailyEndSeparator = NSMenuItem.separator()
     private let updatedItem = NSMenuItem(title: "Updated never", action: nil, keyEquivalent: "")
+    private var dailyDetailItems: [NSMenuItem] = []
 
     private var timer: Timer?
     private var refreshTask: Task<Void, Never>?
     private var refreshGeneration = 0
     private var lastUpdated: Date?
 
-    private let apiUrl = "{{ $cc.litellm_url.value }}/key/info"
+    private let keyInfoUrl = "{{ $cc.litellm_url.value }}/key/info"
+    private let dailyActivityUrl = "{{ $cc.litellm_url.value }}/user/daily/activity/aggregated"
+    private let modelInfoUrl = "{{ $cc.litellm_url.value }}/model/info"
     private let pollInterval: TimeInterval = 15 * 60
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -112,6 +269,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         menu.addItem(.separator())
 
+        let dailyHeader = NSMenuItem(title: "Today", action: nil, keyEquivalent: "")
+        dailyHeader.isEnabled = false
+        menu.addItem(dailyHeader)
+
+        dailySpendItem.isEnabled = false
+        menu.addItem(dailySpendItem)
+
+        menu.addItem(dailyEndSeparator)
+
         updatedItem.isEnabled = false
         menu.addItem(updatedItem)
 
@@ -142,27 +308,37 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let generation = refreshGeneration
         refreshTask?.cancel()
 
-        guard let apiKey = ProcessInfo.processInfo.environment["LITELLM_KEY"], !apiKey.isEmpty else {
-            updateUI(pct: "NO KEY", pctColor: .gray, spend: "—", info: nil, error: "Set LITELLM_KEY environment variable")
+        guard let apiKey = ProcessInfo.processInfo.environment["LITELLM_API_KEY"], !apiKey.isEmpty else {
+            updateUI(pct: "NO KEY", pctColor: .gray, spend: "—", info: nil, error: "Set LITELLM_API_KEY environment variable")
             return
         }
 
-        guard let url = URL(string: apiUrl) else {
+        guard
+            let keyInfoUrl = URL(string: keyInfoUrl),
+            let dailyActivityUrl = makeDailyActivityUrl(),
+            let modelInfoUrl = URL(string: modelInfoUrl)
+        else {
             updateUI(pct: "ERR", pctColor: .gray, spend: "—", info: nil, error: "Invalid API URL")
             return
         }
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.timeoutInterval = 10
+
+        let keyInfoRequest = makeRequest(url: keyInfoUrl, apiKey: apiKey)
+        let dailyActivityRequest = makeRequest(url: dailyActivityUrl, apiKey: apiKey)
+        let modelInfoRequest = makeRequest(url: modelInfoUrl, apiKey: apiKey)
 
         refreshTask = Task { [weak self] in
             guard let self else { return }
 
             do {
-                let (data, response) = try await URLSession.shared.data(for: request)
+                async let keyInfoResult = URLSession.shared.data(for: keyInfoRequest)
+                async let dailyActivityResult = URLSession.shared.data(for: dailyActivityRequest)
+                async let modelInfoResult = try? URLSession.shared.data(for: modelInfoRequest)
+                let ((keyInfoData, keyInfoResponse), (dailyActivityData, dailyActivityResponse)) =
+                    try await (keyInfoResult, dailyActivityResult)
+                let optionalModelInfoResult = await modelInfoResult
                 guard generation == refreshGeneration else { return }
 
-                if let http = response as? HTTPURLResponse, http.statusCode != 200 {
+                if let http = keyInfoResponse as? HTTPURLResponse, http.statusCode != 200 {
                     let msg = http.statusCode == 401 || http.statusCode == 403
                         ? "Bad API key (HTTP \(http.statusCode))"
                         : "HTTP \(http.statusCode)"
@@ -171,7 +347,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     return
                 }
 
-                let decoded = try JSONDecoder().decode(KeyInfoResponse.self, from: data)
+                if let http = dailyActivityResponse as? HTTPURLResponse, http.statusCode != 200 {
+                    let msg = http.statusCode == 401 || http.statusCode == 403
+                        ? "Daily usage unavailable (HTTP \(http.statusCode))"
+                        : "Daily usage HTTP \(http.statusCode)"
+                    updateUI(pct: "ERR", pctColor: .gray, spend: "—", info: nil, error: msg)
+                    refreshTask = nil
+                    return
+                }
+
+                let decoded = try JSONDecoder().decode(KeyInfoResponse.self, from: keyInfoData)
+                let dailyActivity = try JSONDecoder().decode(DailyActivityResponse.self, from: dailyActivityData)
+                let modelInfo: ModelInfoResponse? = optionalModelInfoResult.flatMap { data, response in
+                    guard let http = response as? HTTPURLResponse, http.statusCode == 200 else { return nil }
+                    return try? JSONDecoder().decode(ModelInfoResponse.self, from: data)
+                }
                 guard let maxBudget = decoded.info.max_budget, let spend = decoded.info.spend else {
                     updateUI(pct: "ERR", pctColor: .gray, spend: "—", info: nil, error: "Incomplete budget response")
                     refreshTask = nil
@@ -182,9 +372,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 let pct = info.percentage
                 let text = pct.map { String(format: "%.1f%%", $0) } ?? "N/A"
                 let color = pct.map { colorForPercentage($0) } ?? .gray
-                let spendText = String(format: "$%.2f", info.spend)
+                let spendText = String(format: "$%.2f", dailyActivity.metadata.total_spend)
                 lastUpdated = Date()
-                updateUI(pct: text, pctColor: color, spend: spendText, info: info, error: nil)
+                updateUI(
+                    pct: text,
+                    pctColor: color,
+                    spend: spendText,
+                    info: info,
+                    dailyActivity: dailyActivity.metadata,
+                    familyUsage: groupedUsage(
+                        from: dailyActivity,
+                        pricingByModel: pricingLookup(from: modelInfo)
+                    ),
+                    error: nil
+                )
                 refreshTask = nil
             } catch is CancellationError {
                 // A newer refresh owns the UI.
@@ -196,20 +397,96 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
     }
 
-    private func updateUI(pct: String, pctColor: NSColor, spend: String, info: BudgetInfo?, error: String?) {
+    private func makeDailyActivityUrl() -> URL? {
+        let now = Date()
+        let components = Calendar.autoupdatingCurrent.dateComponents([.year, .month, .day], from: now)
+        guard let year = components.year, let month = components.month, let day = components.day else { return nil }
+
+        let today = String(format: "%04d-%02d-%02d", year, month, day)
+        let timezoneOffset = -(TimeZone.autoupdatingCurrent.secondsFromGMT(for: now) / 60)
+        var urlComponents = URLComponents(string: dailyActivityUrl)
+        urlComponents?.queryItems = [
+            URLQueryItem(name: "start_date", value: today),
+            URLQueryItem(name: "end_date", value: today),
+            URLQueryItem(name: "timezone", value: String(timezoneOffset)),
+            URLQueryItem(name: "include_current_utc_day", value: "true")
+        ]
+        return urlComponents?.url
+    }
+
+    private func makeRequest(url: URL, apiKey: String) -> URLRequest {
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.timeoutInterval = 10
+        return request
+    }
+
+    private func updateUI(
+        pct: String,
+        pctColor: NSColor,
+        spend: String,
+        info: BudgetInfo?,
+        dailyActivity: DailyActivityMetadata? = nil,
+        familyUsage: [ModelFamily: FamilyUsage] = [:],
+        error: String?
+    ) {
         statusItem.button?.attributedTitle = styledMenuBarText(pct: pct, pctColor: pctColor, spend: spend)
 
         if let info {
             remainingItem.title = String(format: "Remaining     $%.2f", info.remaining)
             spentItem.title     = String(format: "Spent              $%.2f", info.spend)
             totalItem.title     = String(format: "Total Budget  $%.2f", info.maxBudget)
+
+            if let dailyActivity {
+                dailySpendItem.title = String(format: "Spend          $%.2f", dailyActivity.total_spend)
+                updateDailyDetails(familyUsage)
+            }
         } else if let error {
             remainingItem.title = error
             spentItem.title     = ""
             totalItem.title     = ""
+            dailySpendItem.title = ""
+            clearDailyDetails()
         }
 
         updateTimestamp()
+    }
+
+    private func updateDailyDetails(_ familyUsage: [ModelFamily: FamilyUsage]) {
+        clearDailyDetails()
+        guard let menu = statusItem.menu else { return }
+
+        var insertionIndex = menu.index(of: dailyEndSeparator)
+        let families = ModelFamily.allCases.filter { family in
+            familyUsage[family]?.hasUsage == true
+        }
+
+        for family in families {
+            let usage = familyUsage[family] ?? FamilyUsage()
+            let titles = [
+                String(format: "%@ — $%.2f", family.rawValue, usage.spend),
+                pricedTokenTitle("Token Read", usage: usage.tokenRead),
+                pricedTokenTitle("Token Write", usage: usage.tokenWrite),
+                pricedTokenTitle("Cache Read", usage: usage.cacheRead),
+                pricedTokenTitle("Cache Write", usage: usage.cacheWrite)
+            ]
+
+            for title in titles {
+                let item = NSMenuItem(title: title, action: nil, keyEquivalent: "")
+                item.isEnabled = false
+                menu.insertItem(item, at: insertionIndex)
+                dailyDetailItems.append(item)
+                insertionIndex += 1
+            }
+        }
+    }
+
+    private func clearDailyDetails() {
+        guard let menu = statusItem.menu else { return }
+        for item in dailyDetailItems {
+            menu.removeItem(item)
+        }
+        dailyDetailItems.removeAll()
     }
 
     private func updateTimestamp() {
