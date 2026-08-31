@@ -30,5 +30,10 @@ if [[ -x .sonar/sonarqube-cli/hooks/pre-commit ]]; then
   exec .sonar/sonarqube-cli/hooks/pre-commit "$@"
 fi
 
+# Delegate to pre-commit hook if it exists
+if [[ -x .~/.pre-commit-cache/git-init-template/hooks/pre-commit ]]; then
+  exec ~/.pre-commit-cache/git-init-template/hooks/pre-commit "$@"
+fi
+
 # Warn only on commit (exit 0 regardless) — per user decision
 exit 0

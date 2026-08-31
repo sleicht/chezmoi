@@ -1,0 +1,16 @@
+#!/bin/bash
+# Global prepare-commit-msg hook — light secret scanning for all repos
+# Deployed by chezmoi to ~/.config/git/hooks/prepare-commit-msg
+
+# Delegate to repo-local hook if it exists (e.g., prepare-commit-msg framework)
+if [[ -x .git/hooks/prepare-commit-msg ]]; then
+  exec .git/hooks/prepare-commit-msg "$@"
+fi
+
+# Delegate to prepare-commit-msg hook if it exists
+if [[ -x .~/.prepare-commit-msg-cache/git-init-template/hooks/prepare-commit-msg ]]; then
+  exec ~/.prepare-commit-msg-cache/git-init-template/hooks/prepare-commit-msg "$@"
+fi
+
+# Warn only on commit (exit 0 regardless) — per user decision
+exit 0
