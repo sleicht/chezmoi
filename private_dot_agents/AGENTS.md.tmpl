@@ -2,49 +2,49 @@
 
 Be extremely concise; grammar may yield to brevity.
 Evaluate suggestions critically and offer alternatives.
-Before editing a file, read and research it. Before changing a function, find all callers.
-Never read or search `build`, `node_modules`, `.git`, `dist`, or `__pycache__` unless explicitly asked.
+Before editing a file, inspect it and the relevant context. Before changing a function, find all callers.
+Never directly inspect or search `build`, `node_modules`, `dist`, or `__pycache__` unless explicitly asked. Do not inspect `.git` internals directly; use version-control commands (`but`, else Git).
 
 ## Language and Style
 
-- Use British English.
+- Use British English when replying in English.
 - Reply in the user's language.
 
 ## Version Control
 
-Before any write operation (commit, branch, push, history edit, PR), read `~/.agents/gitbutler.md` for GitButler policy and naming rules.
+Before any Git or GitButler mutation or remote write — commits, branches, merges, rebases, tags, stashes, worktrees, pushes, MR/PR changes — read `~/.agents/gitbutler.md` for policy and naming rules.
 
 ## MR Review
 
 When reviewing MR notes:
 1. Categorize each as must-fix, suggestion, or nit.
 2. Flag only genuine ambiguity, not stylistic preference.
-3. Propose a fix for every must-fix before asking.
+3. Propose a concrete fix for every must-fix before asking the user to decide.
 
 ## Minimal, Surgical Changes
 
 - Implement only what was asked: no speculative features, single-use abstractions, configurability, or impossible-case handling.
 - Touch no unrelated code, comments, or formatting; do not refactor working code.
 - Match existing style. Every changed line must trace to the request.
-- Before implementing, flag adjacent code that contradicts the change, even slightly.
+- Before implementing, flag adjacent code that materially contradicts the requested change.
 - Mention unrelated dead code; never remove it unless asked.
 - Remove only imports, variables, or functions made unused by your changes.
-- Prefer the simplest solution; rewrite overcomplicated work.
+- Prefer the simplest solution that preserves behaviour outside the requested change; rewrite overcomplicated work.
 
 ## Tool Preferences
 
 - File discovery: `fd`, not `find`; use the `fd` skill for syntax.
 - Content search: `rg`, not `grep`.
 - File preview: `bat`, not `cat`.
-- JSON: `jq`, never manual parsing.
-- CSV, Parquet, or JSON queries: `duckdb`, not Python scripts or jq chains.
+- Simple JSON inspection and transformation: `jq`, never manual parsing.
+- Tabular, relational, or aggregate queries over CSV, Parquet, or JSON: `duckdb`, not one-off Python scripts or long `jq` pipelines.
 - Tasks: `mise run` when `mise.toml` exists; otherwise `just` before Make.
 - Builds: prefer `mise run`/`just`; otherwise `./gradlew` or `./mvnw`, never system tools.
-- Dependency trees: `./gradlew dependencies`, not manual POM/build-file reading.
-- Java/Kotlin security and correctness: `semgrep --config auto` before manual review.
+- Dependency trees: prefer resolved reports (`./gradlew dependencies` or `./mvnw dependency:tree`) before inferring versions from build files.
+- Security-sensitive Java/Kotlin changes or reviews: run Semgrep before manual review — repository config (`.semgrep.yml`, `.semgrep/`) when present, otherwise `semgrep --config auto <changed-paths>`.
 - Shell linting: `shellcheck`.
 - Git diffs: configured `git-delta` pager.
-- Re-run on changes: `watchexec` (for example, `watchexec -e kt,java -- mise run test`).
+- Continuous re-runs: use `watchexec` only when requested; otherwise run finite verification once.
 - API testing: `http`/`https`, not `curl`.
 
 ## Java/Kotlin
@@ -56,23 +56,27 @@ When reviewing MR notes:
 ## Execution
 
 Before implementing:
-- State assumptions; if uncertain, ask.
-- Present multiple interpretations instead of choosing silently.
-- Surface simpler approaches and trade-offs; push back when warranted.
-- Stop and ask when unclear.
+- State only material assumptions; if a material assumption is uncertain, ask.
+- If materially different interpretations exist, present them instead of choosing silently.
+- Surface simpler approaches and meaningful trade-offs; push back when warranted.
+- Stop and ask only when ambiguity materially changes the outcome, scope, or risk.
 
 Define verifiable success criteria and loop until verified. For multi-step work, give a brief `step → verification` plan. Prefer tests that reproduce invalid input or bugs; verify refactors before and after.
 
-Confirmed assumptions and conventions bind the session. Apply them without re-asking; before breaking one, state which and why. At session start, surface unresolved decisions.
+Confirmed assumptions and conventions bind the session. Apply them without re-asking; before breaking one, state which and why. Before acting, surface unresolved decisions relevant to the current request.
 
 <!-- sonar:begin:codex-secrets-on-read -->
 # SonarQube secrets scanning for files protocol
 
-Before reading any file in this workspace, scan it for secrets with the deterministic scanner:
+Before displaying, quoting, searching, or otherwise loading file contents into model context, scan the exact file or smallest practical scope with the deterministic scanner:
 
 ```bash
-sonar analyze secrets <path/to/file>
+sonar analyze secrets <file-or-directory>
 ```
+
+Filename-only discovery does not require a scan. Build, test, and other tools may read files internally without a scan provided their contents are not emitted into model context.
+
+If the scanner fails or is unavailable without producing a deterministic result, do not read the content; report the blocker.
 
 If the command reports that the file contains a secret, **do not read the file**. Instead:
 
