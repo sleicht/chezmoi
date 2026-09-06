@@ -30,21 +30,9 @@ sbar.add("event", "aerospace_monitor_change")
 local all_workspaces = exec_lines("aerospace list-workspaces --all")
 
 for _, sid in ipairs(all_workspaces) do
-	-- Determine which monitor this workspace is on
-	local monitor_id = exec(
-		string.format(
-			"aerospace list-windows --workspace %s --format '%%{monitor-appkit-nsscreen-screens-id}' | cut -c1",
-			sid
-		)
-	)
-	if monitor_id == "" then
-		monitor_id = "1"
-	end
-
 	-- Create space item
 	sbar.add("item", "space." .. sid, {
 		position = "left",
-		display = monitor_id,
 		drawing = "off",
 		background = {
 			corner_radius = 5,
@@ -86,13 +74,20 @@ local function states_equal(old, new)
 		return true
 	end
 
-	return old.drawing == new.drawing and old.label_string == new.label_string and old.icon_color == new.icon_color
+	return old.drawing == new.drawing and old.label_string == new.label_string and old.icon_color == new.icon_color and old.display == new.display
 end
 
 -- Build partial current state from aerospace (only non-empty workspaces)
 local function build_current_state()
 	local state = {}
 	local focused_workspace = exec("aerospace list-workspaces --focused")
+	local workspace_monitors = {}
+	for _, line in ipairs(exec_lines("aerospace list-workspaces --all --format '%{workspace} %{monitor-appkit-nsscreen-screens-id}'")) do
+		local sid, monitor_id = line:match("^(%S+)%s+(%d+)$")
+		if sid then
+			workspace_monitors[sid] = monitor_id
+		end
+	end
 
 	-- Only build state for non-empty workspaces
 	local monitors = exec_lines("aerospace list-monitors")
@@ -111,6 +106,7 @@ local function build_current_state()
 			end
 
 			state[sid] = {
+				display = workspace_monitors[sid],
 				drawing = "on",
 				label_string = icon_strip,
 				icon_color = (sid == focused_workspace) and colors.TEXT_WHITE or colors.TEXT_GREY,
@@ -121,6 +117,7 @@ local function build_current_state()
 	-- Ensure focused workspace is always visible, even if empty
 	if state[focused_workspace] == nil then
 		state[focused_workspace] = {
+			display = workspace_monitors[focused_workspace],
 			drawing = "on",
 			label_string = "",
 			icon_color = colors.TEXT_WHITE,
@@ -135,15 +132,6 @@ local function update_all_workspaces()
 	sbar.begin_config()
 	-- Build partial state from aerospace (only non-empty workspaces)
 	local new_state = build_current_state()
-
-	-- Move empty workspaces to monitor 1 (side effect)
-	-- --empty requires --monitor, so derive empty workspaces from the state map
-	for _, sid in ipairs(all_workspaces) do
-		if new_state[sid] == nil or new_state[sid].label_string == "" then
-			-- WARN: this assumes monitor 1 is your main monitor
-			os.execute(string.format("aerospace move-workspace-to-monitor --workspace %s 1", sid))
-		end
-	end
 
 	-- Loop through all workspaces to handle both non-empty and empty cases
 	for _, sid in ipairs(all_workspaces) do
@@ -175,6 +163,7 @@ local function update_all_workspaces()
 				local is_focused = (new_ws_state.icon_color == colors.TEXT_WHITE)
 
 				sbar.set("space." .. sid, {
+					display = new_ws_state.display,
 					drawing = new_ws_state.drawing,
 					label = {
 						string = new_ws_state.label_string,
@@ -218,12 +207,12 @@ poop:subscribe("front_app_switched", function(env)
 	update_all_workspaces()
 end)
 
-poop:subscribe("aerospace_monitor_change", function(env)
-	if env.FOCUSED_WORKSPACE and env.TARGET_MONITOR then
-		sbar.set("space." .. env.FOCUSED_WORKSPACE, {
-			display = env.TARGET_MONITOR,
-		})
-	end
+poop:subscribe("aerospace_monitor_change", function()
+	update_all_workspaces()
+end)
+
+poop:subscribe("display_change", function()
+	update_all_workspaces()
 end)
 
 -- Create spaces bracket

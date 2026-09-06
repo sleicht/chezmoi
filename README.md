@@ -104,7 +104,7 @@ Common operations are wrapped as [mise tasks](https://mise.jdx.dev/tasks/) with 
 ```bash
 mise run d                # preview pending changes (dotfiles:diff)
 mise run a                # deploy configs (dotfiles:apply)
-mise run v                # run 112 verification checks (dotfiles:verify)
+mise run v                # run source and service checks (dotfiles:verify)
 mise run s                # full sync: backup → pull → apply → verify (dotfiles:sync)
 ```
 
@@ -234,7 +234,7 @@ All tasks are file-based scripts in `~/.config/mise/tasks/`, deployed by chezmoi
 |-----------------------|-------|------------------------------------------------------------|
 | `dotfiles:apply`      | `a`   | Deploy configs with verbose output                         |
 | `dotfiles:diff`       | `d`   | Preview changes before applying                            |
-| `dotfiles:verify`     | `v`   | Run 112 verification checks                                |
+| `dotfiles:verify`     | `v`   | Run source and service checks                                |
 | `dotfiles:smoke-test` | —     | Validate shell functionality                               |
 | `dotfiles:update`     | `u`   | Pull remote + apply in one step                            |
 | `dotfiles:sync`       | `s`   | Full sync: backup → pull → apply → verify                  |
