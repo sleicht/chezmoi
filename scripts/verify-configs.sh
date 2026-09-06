@@ -87,6 +87,7 @@ done
 TOTAL=0
 PASSED=0
 FAILED=0
+SKIPPED=0
 
 echo ""
 echo -e "${BLUE}========================================${NC}"
@@ -108,7 +109,7 @@ if [ ${#check_files[@]} -eq 0 ]; then
   echo -e "${YELLOW}No check files found in $CHECKS_DIR${NC}"
   echo "Phases 8-12 will add check files as configs are migrated."
   echo ""
-  exit 0
+  exit 1
 fi
 
 for check_file in "${check_files[@]}"; do
@@ -128,13 +129,25 @@ for check_file in "${check_files[@]}"; do
   TOTAL=$((TOTAL + 1))
 
   # Run check file in a subshell to isolate variables
-  if (source "$check_file") 2>/dev/null; then
-    PASSED=$((PASSED + 1))
-    echo -e "  ${GREEN}PASS${NC} $filename"
-  else
-    FAILED=$((FAILED + 1))
-    echo -e "  ${RED}FAIL${NC} $filename"
-  fi
+  set +e
+  # shellcheck source=/dev/null
+  (set -e; source "$check_file")
+  check_status=$?
+  set -e
+  case "$check_status" in
+    0)
+      PASSED=$((PASSED + 1))
+      echo -e "  ${GREEN}PASS${NC} $filename"
+      ;;
+    77)
+      SKIPPED=$((SKIPPED + 1))
+      echo -e "  ${YELLOW}SKIP${NC} $filename (not applicable or not running)"
+      ;;
+    *)
+      FAILED=$((FAILED + 1))
+      echo -e "  ${RED}FAIL${NC} $filename"
+      ;;
+  esac
 done
 
 # --- Summary ---
@@ -145,12 +158,16 @@ echo ""
 echo "  Total checks: $TOTAL"
 echo -e "  Passed:       ${GREEN}$PASSED${NC}"
 echo -e "  Failed:       ${RED}$FAILED${NC}"
+echo -e "  Skipped:      ${YELLOW}$SKIPPED${NC}"
 echo ""
 
-if [ "$FAILED" -gt 0 ]; then
+if [ "$TOTAL" -eq 0 ]; then
+  echo "No checks matched the requested phase." >&2
+  exit 1
+elif [ "$FAILED" -gt 0 ]; then
   echo -e "${RED}Verification FAILED — $FAILED check(s) did not pass.${NC}"
   exit 1
 else
-  echo -e "${GREEN}All checks passed.${NC}"
+  echo -e "${GREEN}Verification complete: $PASSED passed, $SKIPPED skipped.${NC}"
   exit 0
 fi

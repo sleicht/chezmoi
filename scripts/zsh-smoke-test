@@ -4,6 +4,41 @@
 # Exit 0 if all checks pass, exit 1 if any fail
 #
 
+# Run the assertions after interactive startup and the deferred plugin queue.
+if [[ ! -o interactive ]]; then
+  unset LAST_SHELL_STARTUP_MS
+  zmodload zsh/zpty
+  zpty -b dotfiles-smoke zsh -il
+  smoke_script=${0:A}
+  zpty -w dotfiles-smoke "if (( \$+functions[zsh-defer] )); then zsh-defer -a source ${(q)smoke_script}; else source ${(q)smoke_script}; fi"
+  smoke_output=""
+  smoke_deadline=$((SECONDS + 30))
+  smoke_result=1
+  while (( SECONDS < smoke_deadline )); do
+    if zpty -r dotfiles-smoke smoke_chunk; then
+      smoke_output+=$smoke_chunk
+      if [[ "$smoke_output" == *DOTFILES_SMOKE_EXIT:0* ]]; then
+        smoke_result=0
+        break
+      elif [[ "$smoke_output" == *DOTFILES_SMOKE_EXIT:1* ]]; then
+        break
+      fi
+    elif ! zpty -t dotfiles-smoke; then
+      break
+    fi
+    sleep 0.05
+  done
+  zpty -d dotfiles-smoke
+  if [[ "$smoke_output" == *DOTFILES_SMOKE_EXIT:* ]]; then
+    smoke_output="ZSH Smoke Test${smoke_output#*ZSH Smoke Test}"
+    print -r -- "${smoke_output%%DOTFILES_SMOKE_EXIT:*}"
+  else
+    print -r -- "$smoke_output"
+    print -u2 -- "Smoke test did not finish within 30 seconds or the shell exited early."
+  fi
+  exit "$smoke_result"
+fi
+
 # Check counters
 PASS_COUNT=0
 FAIL_COUNT=0
@@ -100,8 +135,10 @@ echo ""
 # Exit with appropriate code
 if [[ $FAIL_COUNT -eq 0 ]]; then
   echo "✓ All checks passed"
-  exit 0
+  echo "DOTFILES_SMOKE_EXIT:0"
+  return 0
 else
   echo "✗ Some checks failed"
-  exit 1
+  echo "DOTFILES_SMOKE_EXIT:1"
+  return 1
 fi

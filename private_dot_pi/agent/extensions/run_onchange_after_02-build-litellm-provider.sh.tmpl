@@ -1,6 +1,12 @@
 #!/bin/bash
 # hash: {{ include "private_dot_pi/agent/extensions/pi-provider-litellm/package.json" | sha256sum }}
-# Installs and builds pi-provider-litellm when package.json changes
+# Rebuild whenever TypeScript sources or compiler configuration change.
+{{- range $path := glob (joinPath .chezmoi.sourceDir "private_dot_pi/agent/extensions/pi-provider-litellm/src/*.ts") }}
+# {{ base $path }}: {{ include $path | sha256sum }}
+{{- end }}
+{{- range $path := glob (joinPath .chezmoi.sourceDir "private_dot_pi/agent/extensions/pi-provider-litellm/tsconfig*.json") }}
+# {{ base $path }}: {{ include $path | sha256sum }}
+{{- end }}
 set -e
 
 DIR="{{ .chezmoi.homeDir }}/.pi/agent/extensions/pi-provider-litellm"

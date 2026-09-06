@@ -1,8 +1,8 @@
 {{- if and (eq .machine_type "client") (eq .chezmoi.os "darwin") -}}
 #!/bin/bash
 # Compile and install LiteLlmBudgetOverlay when its source or LaunchAgent changes
-# budget-overlay.swift hash: {{ include "dot_local/bin/budget-overlay.swift.tmpl" | sha256sum }}
-# LaunchAgent hash: {{ include "private_Library/private_LaunchAgents/litellm-budget-overlay.plist.tmpl" | sha256sum }}
+# budget-overlay.swift hash: {{ includeTemplate "dot_local/bin/budget-overlay.swift.tmpl" . | sha256sum }}
+# LaunchAgent hash: {{ includeTemplate "private_Library/private_LaunchAgents/litellm-budget-overlay.plist.tmpl" . | sha256sum }}
 set -euo pipefail
 umask 077
 
