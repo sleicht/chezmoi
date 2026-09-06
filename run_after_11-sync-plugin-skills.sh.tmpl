@@ -3,8 +3,8 @@
 # into ~/.agents/skills/ so Forge Code can discover them.
 #
 # Forge does not follow symlinks when scanning for skills, so we
-# rsync the contents instead.  Skills removed from all sources are
-# moved to ~/.agents/skills/.archive/ for manual review.
+# rsync the contents instead. Only directories created by this script are
+# updated or archived; independently installed skills remain untouched.
 #
 # Runs after every chezmoi apply.
 
@@ -16,6 +16,7 @@ exit 0
 
 FORGE_SKILLS_DIR="${HOME}/.agents/skills"
 ARCHIVE_DIR="${FORGE_SKILLS_DIR}/.archive"
+OWNERSHIP_MARKER=".chezmoi-skill-sync"
 CLAUDE_SKILLS_DIR="${HOME}/.claude/skills"
 PLUGINS_CACHE="${HOME}/.claude/plugins/cache"
 INSTALLED_JSON="${HOME}/.claude/plugins/installed_plugins.json"
@@ -93,20 +94,29 @@ sync_dir() {
   local entry_name="$1"
   local source="$2"
   local target="$FORGE_SKILLS_DIR/$entry_name"
+  local changes
 
   if [[ ! -d "$source" ]]; then
     return
   fi
 
+  if [[ -L "$target" ]] || { [[ -e "$target" ]] && [[ ! -f "$target/$OWNERSHIP_MARKER" ]]; }; then
+    echo "Skipping independently managed skill: $entry_name"
+    skipped=$((skipped + 1))
+    return
+  fi
+
   if [[ -d "$target" ]]; then
     # Update: rsync and check if anything changed
-    if rsync -a --delete --checksum --dry-run --itemize-changes "$source/" "$target/" 2>/dev/null | grep -q .; then
-      rsync -a --delete --checksum "$source/" "$target/"
+    changes=$(rsync -a --delete --checksum --exclude="$OWNERSHIP_MARKER" --dry-run --itemize-changes "$source/" "$target/")
+    if [[ -n "$changes" ]]; then
+      rsync -a --delete --checksum --exclude="$OWNERSHIP_MARKER" "$source/" "$target/"
       updated=$((updated + 1))
     fi
   else
     # Create: fresh copy
     rsync -a "$source/" "$target/"
+    touch "$target/$OWNERSHIP_MARKER"
     created=$((created + 1))
   fi
 }
@@ -138,6 +148,7 @@ fi
 # Phase 2: Copy skills from the Claude Code plugins cache
 # ---------------------------------------------------------------------------
 if [[ -d "$PLUGINS_CACHE" ]] && [[ -f "$INSTALLED_JSON" ]]; then
+  install_paths=$(jq -r 'reduce (.plugins[][] | .installPath | select(. != null and . != "")) as $path ([]; if index($path) then . else . + [$path] end) | .[]' "$INSTALLED_JSON")
   while IFS= read -r install_path; do
     skills_root="${install_path}/skills"
     [[ -d "$skills_root" ]] || continue
@@ -153,18 +164,7 @@ if [[ -d "$PLUGINS_CACHE" ]] && [[ -f "$INSTALLED_JSON" ]]; then
         register_shared_dir "$skill_name" "$source"
       fi
     done
-  done < <(python3 -c "
-import json
-with open('$INSTALLED_JSON') as f:
-    data = json.load(f)
-seen = set()
-for entries in data.get('plugins', {}).values():
-    for entry in entries:
-        path = entry.get('installPath', '')
-        if path and path not in seen:
-            seen.add(path)
-            print(path)
-")
+  done <<< "$install_paths"
 fi
 
 # ---------------------------------------------------------------------------
@@ -183,12 +183,12 @@ done
 # ---------------------------------------------------------------------------
 for target_dir in "$FORGE_SKILLS_DIR"/*/; do
   [[ -d "$target_dir" ]] || continue
+  [[ ! -L "${target_dir%/}" && -f "$target_dir/$OWNERSHIP_MARKER" ]] || continue
   skill_name=$(basename "$target_dir")
   if ! printf '%b' "$expected_entries" | grep -qxF "$skill_name"; then
     mkdir -p "$ARCHIVE_DIR"
-    # Overwrite any previously archived version
-    rm -rf "${ARCHIVE_DIR:?}/$skill_name"
-    mv "$target_dir" "$ARCHIVE_DIR/$skill_name"
+    archive_version=$(mktemp -d "$ARCHIVE_DIR/${skill_name}.XXXXXX")
+    mv "$target_dir" "$archive_version/$skill_name"
     archived=$((archived + 1))
   fi
 done

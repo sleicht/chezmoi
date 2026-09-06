@@ -74,7 +74,7 @@ for entry in "${SENSITIVE_FILES[@]}"; do
             chmod "$required_perm" "$file"
             echo "Fixed permissions: $file ($current_perm -> $required_perm)"
 
-            ((fixes_made++))
+            ((++fixes_made))
         fi
     done
 done

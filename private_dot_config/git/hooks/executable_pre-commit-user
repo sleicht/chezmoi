@@ -3,8 +3,9 @@
 # Deployed by chezmoi to ~/.config/git/hooks/pre-commit
 
 # Delegate to repo-local hook if it exists (e.g., pre-commit framework)
-if [[ -x .git/hooks/pre-commit ]]; then
-  exec .git/hooks/pre-commit "$@"
+repo_hooks="$(git rev-parse --git-common-dir)/hooks"
+if [[ -x "$repo_hooks/pre-commit" && ! "$repo_hooks/pre-commit" -ef "$0" && ! "$repo_hooks/pre-commit" -ef "$(dirname "$0")/pre-commit" ]]; then
+  exec "$repo_hooks/pre-commit" "$@"
 fi
 
 # Skip if gitleaks is not installed
@@ -13,7 +14,7 @@ if ! command -v gitleaks &> /dev/null; then
 fi
 
 # Scan staged changes
-gitleaks protect --staged --verbose 2>&1
+gitleaks protect --staged --redact --verbose 2>&1
 exit_code=$?
 
 if [[ $exit_code -ne 0 ]]; then

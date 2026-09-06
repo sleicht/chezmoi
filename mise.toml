@@ -1,2 +1,6 @@
 [tools]
 go = "1.26"
+
+[tasks.test]
+description = "Run isolated dotfiles regression checks"
+run = "python3 -B scripts/test-dotfiles.py"
