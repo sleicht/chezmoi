@@ -18,6 +18,7 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 
 # === Architecture / Homebrew detection ===
+{{- if eq .chezmoi.os "darwin" }}
 ARCH="$(uname -m)"
 if [ "$ARCH" = "x86_64" ]; then
   export ARCHFLAGS="-arch x86_64"
@@ -41,16 +42,28 @@ elif [ "$ARCH" = "arm64" ]; then
   export BUNDLE_USER_PLUGIN="$XDG_DATA_HOME/bundle/arm64/plugin"
 fi
 unset ARCH
+{{- else if ne .machine_type "container" }}
+export HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/home/linuxbrew/.linuxbrew}"
+export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
+export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX/Homebrew"
+{{- end }}
 
 # === Compiler flags ===
 # Required because openssl is keg-only in brew (see: brew info openssl)
-export LDFLAGS="-L$HOMEBREW_PREFIX/opt/openssl/lib"
-export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openssl/include"
-export PKG_CONFIG_PATH="$HOMEBREW_PREFIX/opt/openssl/lib/pkgconfig"
+if [ -n "${HOMEBREW_PREFIX-}" ]; then
+  export LDFLAGS="-L$HOMEBREW_PREFIX/opt/openssl/lib"
+  export CPPFLAGS="-I$HOMEBREW_PREFIX/opt/openssl/include"
+  export PKG_CONFIG_PATH="$HOMEBREW_PREFIX/opt/openssl/lib/pkgconfig"
+fi
 
 # === Locale ===
+{{- if and (eq .machine_type "container") (eq .chezmoi.os "linux") }}
+export LANG='C.UTF-8'
+export LC_ALL='C.UTF-8'
+{{- else }}
 export LANG='en_US.UTF-8'
 export LC_ALL='en_US.UTF-8'
+{{- end }}
 
 # === Python ===
 export PYTHONIOENCODING='UTF-8'

@@ -71,14 +71,13 @@ Use the `container` machine type for a minimal shell experience without Homebrew
 FROM ubuntu:24.04
 RUN apt-get update && apt-get install -y zsh curl git \
  && sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply \
-      --promptString machine_type=container \
-      --promptString 'Personal email address=' \
+      --promptString 'Machine type (client/personal/server/container)=container' \
       --exclude=encrypted \
       sleicht/chezmoi \
  && chsh -s "$(command -v zsh)"
 ```
 
-This deploys only shell config (zsh, sheldon plugins, Spaceship prompt, git config) — no encrypted files, desktop apps, or package management.
+This deploys Zsh with built-in completion and a basic prompt, plus Git configuration. It needs no plugin manager, vault, signing key or desktop applications. Set your Git identity locally before committing.
 
 ### Existing Machine
 

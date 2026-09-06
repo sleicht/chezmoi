@@ -1,4 +1,3 @@
-{{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
 notify = ["{{ .chezmoi.homeDir }}/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
 {{- if eq .machine_type "client" }}
 model = "gpt-5-6-sol"
@@ -10,6 +9,7 @@ model_reasoning_effort = "high"
 approvals_reviewer = "auto_review"
 
 {{- if eq .machine_type "client" }}
+{{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
 model_provider = "litellm"
 model_catalog_json = "models.json"
 

@@ -32,17 +32,32 @@ if [ -f "$HOME/.bin/san-proxy.sh" ]; then
 fi
 {{- end }}
 
+{{- if eq .machine_type "container" }}
+# Minimal container shell: built-in completion and prompt, no plugin dependencies.
+autoload -Uz compinit
+compinit
+bindkey -e
+PROMPT='%n@%m %~ %# '
+{{- else }}
 # === Plugin management (sheldon) ===
 _sheldon_cache="${XDG_CACHE_HOME:-$HOME/.cache}/sheldon/source.zsh"
 _sheldon_lock="${XDG_DATA_HOME:-$HOME/.local/share}/sheldon/plugins.lock"
 
-if [[ ! -f "$_sheldon_cache" || "$_sheldon_lock" -nt "$_sheldon_cache" ]]; then
+if [[ ! -s "$_sheldon_cache" || "$_sheldon_lock" -nt "$_sheldon_cache" ]]; then
   mkdir -p "${_sheldon_cache:h}"
-  sheldon source > "$_sheldon_cache"
+  _sheldon_tmp=$(mktemp "${_sheldon_cache}.XXXXXX")
+  if [[ -n "$_sheldon_tmp" ]]; then
+    if sheldon source > "$_sheldon_tmp" && [[ -s "$_sheldon_tmp" ]]; then
+      mv -f "$_sheldon_tmp" "$_sheldon_cache"
+    else
+      rm -f "$_sheldon_tmp"
+    fi
+  fi
 fi
 
-source "$_sheldon_cache"
-unset _sheldon_cache _sheldon_lock
+[[ -s "$_sheldon_cache" ]] && source "$_sheldon_cache"
+unset _sheldon_cache _sheldon_lock _sheldon_tmp
+{{- end }}
 
 # === Startup monitoring ===
 if [[ -n "$ZSHRC_START_TIME" ]]; then

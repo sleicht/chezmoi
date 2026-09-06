@@ -316,9 +316,14 @@ function jcb() {
 }
 
 load_gitlab_projects () {
+  {{- if eq .machine_type "client" }}
   SEARCH=$1
   {{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
   glab api graphql --hostname {{ $cc.gitlab_domain.value }} -f query="{ projects(first: 100, search: \"$SEARCH\") { nodes { id sshUrlToRepo fullPath }}}"
+  {{- else }}
+  echo "GitLab project search is only configured on client machines; pass an SSH URL." >&2
+  return 1
+  {{- end }}
 }
 clone_repo() {
   if [[ "$target_dir" == "." ]]; then

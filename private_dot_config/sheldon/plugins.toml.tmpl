@@ -30,7 +30,11 @@ apply = ["defer"]
 
 [plugins.forgit]
 {{- if eq .chezmoi.os "darwin" }}
+{{- if eq .chezmoi.arch "arm64" }}
 local = "/opt/homebrew/share/forgit"
+{{- else }}
+local = "/usr/local/share/forgit"
+{{- end }}
 {{- else }}
 local = "/home/linuxbrew/.linuxbrew/share/forgit"
 {{- end }}
@@ -47,7 +51,11 @@ apply = ["defer"]
 
 [plugins.zsh-abbr]
 {{- if eq .chezmoi.os "darwin" }}
+{{- if eq .chezmoi.arch "arm64" }}
 local = "/opt/homebrew/share/zsh-abbr"
+{{- else }}
+local = "/usr/local/share/zsh-abbr"
+{{- end }}
 {{- else }}
 local = "/home/linuxbrew/.linuxbrew/share/zsh-abbr"
 {{- end }}
