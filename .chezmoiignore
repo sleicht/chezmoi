@@ -36,6 +36,7 @@ LICENSE.md
 AGENTS.md
 AIDER.md
 CLAUDE.md
+mise.toml
 .gitignore
 .gitmodules
 .editorconfig
