@@ -1,3 +1,11 @@
+{{- if eq .machine_type "container" -}}
+# Container Git configuration has no vault, signing or desktop dependencies.
+[init]
+  defaultBranch = main
+[core]
+  excludesfile = ~/.gitignore_global
+  attributesFile = ~/.gitattributes_global
+{{- else -}}
 # Managed by chezmoi - edit with: chezmoi edit ~/.gitconfig
 # Machine type: {{ .machine_type }}
 # To apply changes: chezmoi apply
@@ -260,3 +268,4 @@
 # Allow local customizations in the .gitconfig_local file
 [include]
   path = ~/.gitconfig_local
+{{- end }}
