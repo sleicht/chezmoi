@@ -195,6 +195,7 @@ packages:
     # Common casks - casks needed on all machines
     common_casks:
       - "aerospace"
+      - "barutsrb/tap/omniwm"
       - "agentsview"
       - "arc"
       - "atuin-desktop"

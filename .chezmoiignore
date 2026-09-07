@@ -87,6 +87,8 @@ Brewfile_Personal
 # macOS-only configs — ignore on Linux
 .config/aerospace
 .config/aerospace/**
+.config/omniwm
+.config/omniwm/**
 .config/sketchybar
 .config/sketchybar/**
 Library
