@@ -49,7 +49,6 @@ packages:
   darwin:
     # Taps - merged from all sources, deduplicated
     taps:
-      - "barutsrb/tap"
       - "cj-systems/gitflow-cjs"
       - "derailed/k9s"
       - "FelixKratz/formulae"
@@ -195,7 +194,7 @@ packages:
     # Common casks - casks needed on all machines
     common_casks:
       - "aerospace"
-      - "barutsrb/tap/omniwm"
+      - "omniwm"
       - "agentsview"
       - "arc"
       - "atuin-desktop"

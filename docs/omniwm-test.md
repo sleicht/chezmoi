@@ -5,7 +5,7 @@ Hyprspace starter bindings. Target: OmniWM v0.6.8, settings schema 3.
 
 ## Try it
 
-1. Install: `brew install --cask barutsrb/tap/omniwm`.
+1. Install: `brew install --cask omniwm`.
 2. Unlock the vault yourself with `rbw unlock`, then preview and deploy with
    `mise run d` and `mise run a`.
 3. Quit Hyprspace/AeroSpace and SwipeAeroSpace before opening OmniWM. Stop
