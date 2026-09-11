@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>OmniWM — Keyboard Shortcuts</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --background: #f3f5f8;
+      --surface: #fff;
+      --text: #172334;
+      --muted: #536176;
+      --line: #dce2ea;
+      --accent: #285aaf;
+      --key: #edf1f7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font: 15px/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main { max-width: 1180px; margin: auto; padding: 48px 24px; }
+    header { margin-bottom: 28px; }
+    .eyebrow { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 6px 0 10px; font-size: clamp(30px, 5vw, 46px); line-height: 1.15; letter-spacing: -.04em; }
+    h2 { margin: 0 0 14px; font-size: 19px; line-height: 1.3; }
+    p { margin: 8px 0; }
+    .subtitle, .note, footer { color: var(--muted); }
+    .legend { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+    section { padding: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+    .wide { grid-column: 1 / -1; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { color: var(--muted); font-size: 12px; font-weight: 600; }
+    th, td { padding: 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th + th, td + td { padding-left: 18px; }
+    tbody tr:last-child td { border-bottom: 0; }
+    kbd { display: inline-block; padding: 1px 5px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; background: var(--key); font: 12px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: nowrap; }
+    .note { font-size: 13px; margin: 0 0 12px; }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    ul { padding-left: 20px; margin-bottom: 0; }
+    li + li { margin-top: 6px; }
+    footer { margin-top: 24px; font-size: 13px; }
+    @media (prefers-color-scheme: dark) {
+      :root { --background: #101720; --surface: #18222f; --text: #e7edf5; --muted: #abb9cc; --line: #354457; --accent: #9fc2ff; --key: #253347; }
+    }
+    @media (max-width: 760px) {
+      main { padding: 28px 14px; }
+      .grid { grid-template-columns: 1fr; }
+      section { padding: 18px; }
+    }
+    @media print {
+      :root { color-scheme: light; --background: #fff; --surface: #fff; --text: #000; --muted: #333; --line: #ccc; --accent: #000; --key: #fff; }
+      body { font-size: 10pt; }
+      main { max-width: none; padding: 0; }
+      h1 { font-size: 26pt; }
+      .grid { display: block; }
+      section { margin-bottom: 14px; padding: 14px; break-inside: avoid; }
+      kbd { font-size: 9pt; }
+      th, td { padding-top: 5px; padding-bottom: 5px; }
+      a { color: inherit; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">OmniWM · Aerospace-based trial · v0.6.8</p>
+    <h1>Keyboard shortcuts</h1>
+    <p class="subtitle">Your configured bindings for focus, movement, workspaces and window management.</p>
+    <div class="legend">
+      <span><kbd>Ctrl</kbd> = Control ⌃ (Super)</span>
+      <span><kbd>Alt</kbd> = Option ⌥</span>
+      <span><kbd>Shift</kbd> = ⇧</span>
+    </div>
+  </header>
+  <div class="grid">
+    <section>
+      <h2>Navigation (focus)</h2>
+      <table>
+        <thead><tr><th scope="col">Shortcut</th><th scope="col">Action</th></tr></thead>
+        <tbody>
+          <tr data-action="focus.left"><td><kbd>Ctrl</kbd> + <kbd>←</kbd></td><td>Focus left</td></tr>
+          <tr data-action="focus.down"><td><kbd>Ctrl</kbd> + <kbd>↓</kbd></td><td>Focus down</td></tr>
+          <tr data-action="focus.up"><td><kbd>Ctrl</kbd> + <kbd>↑</kbd></td><td>Focus up</td></tr>
+          <tr data-action="focus.right"><td><kbd>Ctrl</kbd> + <kbd>→</kbd></td><td>Focus right</td></tr>
+          <tr data-action="switchWorkspace.previous"><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>↑</kbd></td><td>Previous workspace</td></tr>
+          <tr data-action="switchWorkspace.next"><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>↓</kbd></td><td>Next workspace</td></tr>
+          <tr data-action="workspaceBackAndForth"><td><kbd>Alt</kbd> + <kbd>Tab</kbd></td><td>Back-and-forth between workspaces</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section>
+      <h2>Move windows</h2>
+      <p class="note">The original Right/Down movement swap is deliberately preserved: → moves down; ↓ moves right.</p>
+      <table>
+        <thead><tr><th scope="col">Shortcut</th><th scope="col">Action</th></tr></thead>
+        <tbody>
+          <tr data-action="move.left"><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>←</kbd></td><td>Move window left</td></tr>
+          <tr data-action="move.down"><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>→</kbd></td><td>Move window down</td></tr>
+          <tr data-action="move.up"><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>↑</kbd></td><td>Move window up</td></tr>
+          <tr data-action="move.right"><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>↓</kbd></td><td>Move window right</td></tr>
+          <tr data-action="moveWindowToWorkspaceUp"><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>↑</kbd></td><td>Move to previous workspace</td></tr>
+          <tr data-action="moveWindowToWorkspaceDown"><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>↓</kbd></td><td>Move to next workspace</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section>
+      <h2>Window management</h2>
+      <p class="note">Workspaces use the Dwindle layout. Native macOS fullscreen has no assigned shortcut.</p>
+      <table>
+        <thead><tr><th scope="col">Shortcut</th><th scope="col">Action</th></tr></thead>
+        <tbody>
+          <tr data-action="closeFocusedWindow"><td><kbd>Ctrl</kbd> + <kbd>Q</kbd></td><td>Close focused window</td></tr>
+          <tr data-action="toggleFullscreen"><td><kbd>Ctrl</kbd> + <kbd>F</kbd></td><td>Toggle OmniWM fullscreen</td></tr>
+          <tr data-action="toggleFocusedWindowFloating"><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd></td><td>Toggle floating / tiling</td></tr>
+          <tr data-action="toggleSplit"><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>O</kbd></td><td>Flip split orientation (horizontal / vertical)</td></tr>
+          <tr data-action="openCommandPalette"><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Space</kbd></td><td>Open command palette</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section>
+      <h2>Resize windows</h2>
+      <p class="note">Use the Equal (=) and Minus (−) keys. Add Shift for height. These are direct shortcuts; no resize mode is required.</p>
+      <table>
+        <thead><tr><th scope="col">Shortcut</th><th scope="col">Action</th></tr></thead>
+        <tbody>
+          <tr data-action="resizeGrow.horizontal"><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>=</kbd></td><td>Grow width</td></tr>
+          <tr data-action="resizeShrink.horizontal"><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>−</kbd></td><td>Shrink width</td></tr>
+          <tr data-action="resizeGrow.vertical"><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>=</kbd></td><td>Grow height</td></tr>
+          <tr data-action="resizeShrink.vertical"><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>−</kbd></td><td>Shrink height</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section class="wide">
+      <h2>Workspaces — switch or move a window</h2>
+      <p class="note">Shortcuts address workspace slots: slot 1 is workspace 0. Workspaces 0–6 use the main display; workspace 7 uses the secondary display.</p>
+      <table>
+        <thead><tr><th scope="col">Workspace</th><th scope="col">Switch</th><th scope="col">Move window to</th></tr></thead>
+        <tbody>
+          <tr><td>0 · File managers</td><td data-action="switchWorkspaceSlot.1"><kbd>Ctrl</kbd> + <kbd>0</kbd></td><td data-action="moveToWorkspaceSlot.1"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>0</kbd></td></tr>
+          <tr><td>1 · Terminal</td><td data-action="switchWorkspaceSlot.2"><kbd>Ctrl</kbd> + <kbd>1</kbd></td><td data-action="moveToWorkspaceSlot.2"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>1</kbd></td></tr>
+          <tr><td>2 · IDE</td><td data-action="switchWorkspaceSlot.3"><kbd>Ctrl</kbd> + <kbd>2</kbd></td><td data-action="moveToWorkspaceSlot.3"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>2</kbd></td></tr>
+          <tr><td>3 · Web</td><td data-action="switchWorkspaceSlot.4"><kbd>Ctrl</kbd> + <kbd>3</kbd></td><td data-action="moveToWorkspaceSlot.4"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>3</kbd></td></tr>
+          <tr><td>4 · Mail</td><td data-action="switchWorkspaceSlot.5"><kbd>Ctrl</kbd> + <kbd>4</kbd></td><td data-action="moveToWorkspaceSlot.5"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>4</kbd></td></tr>
+          <tr><td>5 · Social</td><td data-action="switchWorkspaceSlot.6"><kbd>Ctrl</kbd> + <kbd>5</kbd></td><td data-action="moveToWorkspaceSlot.6"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>5</kbd></td></tr>
+          <tr><td>6 · Free</td><td data-action="switchWorkspaceSlot.7"><kbd>Ctrl</kbd> + <kbd>6</kbd></td><td data-action="moveToWorkspaceSlot.7"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>6</kbd></td></tr>
+          <tr><td>7 · Secondary display</td><td data-action="switchWorkspaceSlot.8"><kbd>Ctrl</kbd> + <kbd>7</kbd></td><td data-action="moveToWorkspaceSlot.8"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>7</kbd></td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section>
+      <h2>Monitors</h2>
+      <p class="note">Moves to the physical neighbouring monitor, rather than cycling through a wrapped monitor order.</p>
+      <table>
+        <thead><tr><th scope="col">Shortcut</th><th scope="col">Action</th></tr></thead>
+        <tbody>
+          <tr data-action="moveWindowToMonitor.left"><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>←</kbd></td><td>Move window to the monitor on the left</td></tr>
+          <tr data-action="moveWindowToMonitor.right"><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>→</kbd></td><td>Move window to the monitor on the right</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section>
+      <h2>Config &amp; differences from AeroSpace</h2>
+      <p>Settings live-reload. There is no reload shortcut.</p>
+      <p class="note">The following AeroSpace shortcuts have no binding in this trial:</p>
+      <ul>
+        <li><kbd>Ctrl</kbd> + <kbd>Enter</kbd> — launch Ghostty</li>
+        <li><kbd>Ctrl</kbd> + <kbd>F11</kbd> — alternate fullscreen</li>
+        <li><kbd>Ctrl</kbd> + <kbd>9</kbd> — alternate back-and-forth</li>
+        <li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>←</kbd> / <kbd>→</kbd> — workspace aliases</li>
+        <li><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>R</kbd> — resize mode</li>
+        <li><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>S</kbd> — accordion</li>
+        <li><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>;</kbd> — service mode</li>
+        <li><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>Tab</kbd> — move whole workspace to next monitor</li>
+        <li><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> — reload config</li>
+      </ul>
+    </section>
+    <section class="wide">
+      <h2>Window auto-assignment</h2>
+      <p class="note">Initial placement defaults for new windows. Other windows default to floating.</p>
+      <table>
+        <thead><tr><th scope="col">App</th><th scope="col">Workspace</th><th scope="col">Layout</th></tr></thead>
+        <tbody>
+          <tr data-app="com.apple.finder"><td>Finder</td><td>0 · File managers</td><td>Floating</td></tr>
+          <tr data-app="com.cocoatech.PathFinder"><td>Path Finder</td><td>0 · File managers</td><td>Floating</td></tr>
+          <tr data-app="io.tailscale.ipn.macos"><td>Tailscale</td><td>0 · File managers</td><td>Floating</td></tr>
+          <tr data-app="com.mitchellh.ghostty"><td>Ghostty</td><td>1 · Terminal</td><td>Tiled</td></tr>
+          <tr data-app="com.t3tools.t3code"><td>T3 Code</td><td>1 · Terminal</td><td>Tiled</td></tr>
+          <tr data-app="com.gitbutler.app"><td>GitButler</td><td>1 · Terminal</td><td>Tiled</td></tr>
+          <tr data-app="com.cmuxterm.app"><td>cmux</td><td>1 · Terminal</td><td>Tiled</td></tr>
+          <tr data-app="com.jetbrains.intellij"><td>IntelliJ</td><td>2 · IDE</td><td>Tiled</td></tr>
+          <tr data-app="com.sublimetext.4"><td>Sublime Text</td><td>2 · IDE</td><td>Tiled</td></tr>
+          <tr data-app="com.google.Chrome"><td>Chrome</td><td>3 · Web</td><td>Floating</td></tr>
+          <tr data-app="app.zen-browser.zen"><td>Zen Browser</td><td>3 · Web</td><td>Floating</td></tr>
+          <tr data-app="com.vivaldi.Vivaldi"><td>Vivaldi</td><td>3 · Web</td><td>Floating</td></tr>
+          <tr data-app="company.thebrowser.Browser"><td>Arc</td><td>3 · Web</td><td>Floating</td></tr>
+          <tr data-app="com.readdle.SparkDesktop"><td>Spark</td><td>4 · Mail</td><td>Tiled</td></tr>
+          <tr data-app="com.flexibits.fantastical2.mac"><td>Fantastical</td><td>4 · Mail</td><td>Tiled</td></tr>
+          <tr data-app="com.microsoft.Outlook"><td>Outlook</td><td>4 · Mail</td><td>Tiled</td></tr>
+          <tr data-app="net.whatsapp.WhatsApp"><td>WhatsApp</td><td>5 · Social</td><td>Tiled</td></tr>
+          <tr data-app="ch.threema.threema-desktop"><td>Threema</td><td>5 · Social</td><td>Tiled</td></tr>
+          <tr data-app="com.infomaniak.chat"><td>Infomaniak Chat</td><td>5 · Social</td><td>Tiled</td></tr>
+          <tr data-app="com.apple.MobileSMS"><td>Messages</td><td>5 · Social</td><td>Tiled</td></tr>
+          <tr data-app="com.tinyspeck.slackmacgap"><td>Slack</td><td>5 · Social</td><td>Tiled</td></tr>
+          <tr data-app="com.microsoft.teams2"><td>Microsoft Teams</td><td>5 · Social</td><td>Tiled</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+  <footer>
+    Source: <a href="settings.toml">settings.toml</a> · Local configuration, schema 3.
+    <br>Based on the AeroSpace cheatsheet; bindings and app layouts reflect the OmniWM trial configuration.
+  </footer>
+</main>
+</body>
+</html>
