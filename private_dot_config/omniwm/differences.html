@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>OmniWM — Default vs Current Config</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --background: #f3f5f8;
+      --surface: #fff;
+      --text: #172334;
+      --muted: #536176;
+      --line: #dce2ea;
+      --accent: #285aaf;
+      --key: #edf1f7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font: 15px/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main { max-width: 1180px; margin: auto; padding: 48px 24px; }
+    header { margin-bottom: 28px; }
+    .eyebrow { color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 6px 0 10px; font-size: clamp(30px, 5vw, 46px); line-height: 1.15; letter-spacing: -.04em; }
+    h2 { margin: 0 0 14px; font-size: 19px; line-height: 1.3; }
+    p { margin: 8px 0; }
+    .subtitle, .note, footer { color: var(--muted); }
+    section { padding: 24px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { color: var(--muted); font-size: 12px; font-weight: 600; }
+    th, td { padding: 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th + th, td + td { padding-left: 18px; }
+    tbody tr:last-child td { border-bottom: 0; }
+    kbd { display: inline-block; padding: 1px 5px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; background: var(--key); font: 12px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; white-space: nowrap; }
+    .note { font-size: 13px; margin: 0 0 12px; }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    ul { padding-left: 20px; margin-bottom: 0; }
+    li + li { margin-top: 6px; }
+    footer { margin-top: 24px; font-size: 13px; }
+    @media (prefers-color-scheme: dark) {
+      :root { --background: #101720; --surface: #18222f; --text: #e7edf5; --muted: #abb9cc; --line: #354457; --accent: #9fc2ff; --key: #253347; }
+    }
+    @media (max-width: 760px) {
+      main { padding: 28px 14px; }
+      section { padding: 18px; }
+    }
+    @media print {
+      :root { color-scheme: light; --background: #fff; --surface: #fff; --text: #000; --muted: #333; --line: #ccc; --accent: #000; --key: #fff; }
+      body { font-size: 10pt; }
+      main { max-width: none; padding: 0; }
+      h1 { font-size: 26pt; }
+      section { margin-bottom: 14px; padding: 14px; break-inside: avoid; }
+      kbd { font-size: 9pt; }
+      th, td { padding-top: 5px; padding-bottom: 5px; }
+      a { color: inherit; }
+    }
+    nav { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 18px; }
+    section + section { margin-top: 20px; }
+    .table-wrap { overflow-x: auto; }
+    .comparison { min-width: 600px; }
+    .comparison td:first-child { width: 40%; }
+    .comparison td:not(:first-child) { width: 30%; }
+    code { font: 12px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace; overflow-wrap: anywhere; }
+    small { display: block; color: var(--muted); }
+    .badge { display: inline-block; margin: 4px 8px 0 0; padding: 4px 10px; border: 1px solid var(--line); border-radius: 6px; }
+    @media print {
+      section { break-inside: auto; }
+      tr { break-inside: avoid; }
+      thead { display: table-header-group; }
+      .comparison { min-width: 0; }
+      .table-wrap { overflow: visible; }
+      nav { display: none; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">OmniWM · v0.6.8 · Configuration comparison</p>
+    <h1>Default vs your config</h1>
+    <p class="subtitle">Built-in v0.6.8 defaults compared with your repository’s <a href="settings.toml">settings.toml</a>, as at 11 September 2026.</p>
+    <p class="note">This is a static snapshot of the chezmoi source, not a live reading of the running app. Both sides use the same OmniWM version.</p>
+    <nav aria-label="Pages"><a href="omniwm.html">Keyboard shortcuts</a><a href="#settings">Settings</a><a href="#shortcuts">Shortcut changes</a><a href="#workspaces">Workspaces</a><a href="#apps">App rules</a><a href="#sources">Sources</a></nav>
+  </header>
+  <section>
+    <h2>What changes</h2>
+    <p>Your setup uses Dwindle, smaller gaps and no borders. Workspaces are numbered 0–7, with app-specific placement and a floating fallback.</p>
+    <p><span class="badge">10 remapped shortcuts</span><span class="badge">27 newly assigned</span><span class="badge">54 removed</span><span class="badge">3 active shortcuts unchanged</span></p>
+    <p class="note">40 active shortcuts in your config, versus 67 by default. All 188 assignable actions were compared; 94 are unassigned in both.</p>
+  </section>
+  <section id="settings">
+    <h2>Settings that differ</h2>
+    <p class="note">17 explicit values differ. One optional Niri value present in the defaults is omitted. Border width is stored but inactive; it does not add a border while borders are disabled.</p>
+    <div class="table-wrap">
+    <table class="comparison">
+      <thead><tr><th scope="col">Setting</th><th scope="col">Default</th><th scope="col">Your config</th></tr></thead>
+      <tbody>
+        <tr data-setting="general.defaultLayoutType" data-default="niri" data-current="dwindle"><td>Default layout<small><code>general.defaultLayoutType</code></small></td><td>Niri</td><td>Dwindle</td></tr>
+        <tr data-setting="gaps.size" data-default="16" data-current="3.0"><td>Inner gap<small><code>gaps.size</code></small></td><td>16</td><td>3</td></tr>
+        <tr data-setting="gaps.outer.left" data-default="0" data-current="5.0"><td>Outer gap — left<small><code>gaps.outer.left</code></small></td><td>0</td><td>5</td></tr>
+        <tr data-setting="gaps.outer.right" data-default="0" data-current="5.0"><td>Outer gap — right<small><code>gaps.outer.right</code></small></td><td>0</td><td>5</td></tr>
+        <tr data-setting="gaps.outer.top" data-default="0" data-current="5.0"><td>Outer gap — top<small><code>gaps.outer.top</code></small></td><td>0</td><td>5</td></tr>
+        <tr data-setting="gaps.outer.bottom" data-default="0" data-current="5.0"><td>Outer gap — bottom<small><code>gaps.outer.bottom</code></small></td><td>0</td><td>5</td></tr>
+        <tr data-setting="borders.enabled" data-default="true" data-current="false"><td>Window borders<small><code>borders.enabled</code></small></td><td>Enabled</td><td>Disabled</td></tr>
+        <tr data-setting="borders.width" data-default="5.0" data-current="2.0"><td>Border width<small><code>borders.width</code></small></td><td>5</td><td>2 (inactive while borders are disabled)</td></tr>
+        <tr data-setting="appearance.mode" data-default="dark" data-current="automatic"><td>Appearance<small><code>appearance.mode</code></small></td><td>Dark</td><td>Automatic</td></tr>
+        <tr data-setting="general.ipcEnabled" data-default="false" data-current="true"><td>IPC / command-line control<small><code>general.ipcEnabled</code></small></td><td>Disabled</td><td>Enabled</td></tr>
+        <tr data-setting="gestures.scrollEnabled" data-default="true" data-current="false"><td>Scroll gestures<small><code>gestures.scrollEnabled</code></small></td><td>Enabled</td><td>Disabled</td></tr>
+        <tr data-setting="hiddenBar.enabled" data-default="true" data-current="false"><td>Hidden menu-bar icons<small><code>hiddenBar.enabled</code></small></td><td>Enabled</td><td>Disabled</td></tr>
+        <tr data-setting="quakeTerminal.enabled" data-default="true" data-current="false"><td>Quake terminal<small><code>quakeTerminal.enabled</code></small></td><td>Enabled</td><td>Disabled</td></tr>
+        <tr data-setting="workspaceBar.showFloatingWindows" data-default="false" data-current="true"><td>Show floating windows in workspace bar<small><code>workspaceBar.showFloatingWindows</code></small></td><td>Disabled</td><td>Enabled</td></tr>
+        <tr data-setting="workspaceBar.position" data-default="overlappingmenubar" data-current="belowmenubar"><td>Workspace bar position<small><code>workspaceBar.position</code></small></td><td>Overlapping menu bar</td><td>Below menu bar</td></tr>
+        <tr data-setting="workspaceBar.reserveLayoutSpace" data-default="false" data-current="true"><td>Reserve space for workspace bar<small><code>workspaceBar.reserveLayoutSpace</code></small></td><td>Disabled</td><td>Enabled</td></tr>
+        <tr data-setting="workspaceBar.backgroundOpacity" data-default="0.1" data-current="0.9"><td>Workspace bar background opacity<small><code>workspaceBar.backgroundOpacity</code></small></td><td>10%</td><td>90%</td></tr>
+        <tr data-setting="niri.defaultContainerPrimarySpan" data-default="0.5" data-current="none"><td>Niri default container primary span<small><code>niri.defaultContainerPrimarySpan</code></small></td><td>0.5 (50%)</td><td>Not set; Niri is not the active layout</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+  <section>
+    <h2>Useful settings that stay the same</h2>
+    <p>Clipboard history, focus-follows-mouse and workspace swipes remain disabled. Animations, updates and mouse warping remain enabled. Dwindle split settings, the 24-pixel workspace bar height and the focus options retain their defaults.</p>
+  </section>
+  <section id="shortcuts">
+    <h2>Remapped shortcuts</h2>
+    <p class="note">Same action, different keys. Alt means Option ⌥; Ctrl means Control ⌃; Cmd means Command ⌘. Comparison is by action: the same key combination can perform a different action in your config.</p>
+    <div class="table-wrap">
+    <table class="comparison">
+      <thead><tr><th scope="col">Action</th><th scope="col">Default shortcut</th><th scope="col">Your shortcut</th></tr></thead>
+      <tbody>
+        <tr data-action="workspaceBackAndForth"><td>Back-and-forth between workspaces</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Tab</kbd></td><td><kbd>Alt</kbd> + <kbd>Tab</kbd></td></tr>
+        <tr data-action="focus.left"><td>Focus left</td><td><kbd>Alt</kbd> + <kbd>←</kbd></td><td><kbd>Ctrl</kbd> + <kbd>←</kbd></td></tr>
+        <tr data-action="focus.down"><td>Focus down</td><td><kbd>Alt</kbd> + <kbd>↓</kbd></td><td><kbd>Ctrl</kbd> + <kbd>↓</kbd></td></tr>
+        <tr data-action="focus.up"><td>Focus up</td><td><kbd>Alt</kbd> + <kbd>↑</kbd></td><td><kbd>Ctrl</kbd> + <kbd>↑</kbd></td></tr>
+        <tr data-action="focus.right"><td>Focus right</td><td><kbd>Alt</kbd> + <kbd>→</kbd></td><td><kbd>Ctrl</kbd> + <kbd>→</kbd></td></tr>
+        <tr data-action="move.left"><td>Move left</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>←</kbd></td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>←</kbd></td></tr>
+        <tr data-action="move.down"><td>Move down</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>↓</kbd></td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>→</kbd></td></tr>
+        <tr data-action="move.up"><td>Move up</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>↑</kbd></td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>↑</kbd></td></tr>
+        <tr data-action="move.right"><td>Move right</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>→</kbd></td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>↓</kbd></td></tr>
+        <tr data-action="toggleFullscreen"><td>Toggle OmniWM fullscreen</td><td><kbd>Alt</kbd> + <kbd>Enter</kbd></td><td><kbd>Ctrl</kbd> + <kbd>F</kbd></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+  <p class="note">The Right/Down movement swap is intentional: Ctrl + Alt + → moves down; Ctrl + Alt + ↓ moves right.</p>
+  <section id="added">
+    <h2>Newly assigned shortcuts</h2>
+    <p class="note">These actions have no built-in shortcut. Your numeric bindings select workspace slots, not the default numbered-workspace actions.</p>
+    <div class="table-wrap">
+    <table class="comparison">
+      <thead><tr><th scope="col">Action</th><th scope="col">Default shortcut</th><th scope="col">Your shortcut</th></tr></thead>
+      <tbody>
+        <tr data-action="switchWorkspaceSlot.1"><td>Switch to slot 1 (workspace 0)</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>0</kbd></td></tr>
+        <tr data-action="switchWorkspaceSlot.2"><td>Switch to slot 2 (workspace 1)</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>1</kbd></td></tr>
+        <tr data-action="switchWorkspaceSlot.3"><td>Switch to slot 3 (workspace 2)</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>2</kbd></td></tr>
+        <tr data-action="switchWorkspaceSlot.4"><td>Switch to slot 4 (workspace 3)</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>3</kbd></td></tr>
+        <tr data-action="switchWorkspaceSlot.5"><td>Switch to slot 5 (workspace 4)</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>4</kbd></td></tr>
+        <tr data-action="switchWorkspaceSlot.6"><td>Switch to slot 6 (workspace 5)</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>5</kbd></td></tr>
+        <tr data-action="switchWorkspaceSlot.7"><td>Switch to slot 7 (workspace 6)</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>6</kbd></td></tr>
+        <tr data-action="switchWorkspaceSlot.8"><td>Switch to slot 8 (workspace 7)</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>7</kbd></td></tr>
+        <tr data-action="moveToWorkspaceSlot.1"><td>Move to slot 1 (workspace 0)</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>0</kbd></td></tr>
+        <tr data-action="moveToWorkspaceSlot.2"><td>Move to slot 2 (workspace 1)</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>1</kbd></td></tr>
+        <tr data-action="moveToWorkspaceSlot.3"><td>Move to slot 3 (workspace 2)</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>2</kbd></td></tr>
+        <tr data-action="moveToWorkspaceSlot.4"><td>Move to slot 4 (workspace 3)</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>3</kbd></td></tr>
+        <tr data-action="moveToWorkspaceSlot.5"><td>Move to slot 5 (workspace 4)</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>4</kbd></td></tr>
+        <tr data-action="moveToWorkspaceSlot.6"><td>Move to slot 6 (workspace 5)</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>5</kbd></td></tr>
+        <tr data-action="moveToWorkspaceSlot.7"><td>Move to slot 7 (workspace 6)</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>6</kbd></td></tr>
+        <tr data-action="moveToWorkspaceSlot.8"><td>Move to slot 8 (workspace 7)</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>7</kbd></td></tr>
+        <tr data-action="switchWorkspace.next"><td>Switch workspace next</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>↓</kbd></td></tr>
+        <tr data-action="switchWorkspace.previous"><td>Switch workspace previous</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>↑</kbd></td></tr>
+        <tr data-action="moveWindowToMonitor.left"><td>Move window to monitor left</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>←</kbd></td></tr>
+        <tr data-action="moveWindowToMonitor.right"><td>Move window to monitor right</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>→</kbd></td></tr>
+        <tr data-action="toggleSplit"><td>Flip split orientation</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>O</kbd></td></tr>
+        <tr data-action="resizeGrow.horizontal"><td>Grow width</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>=</kbd></td></tr>
+        <tr data-action="resizeGrow.vertical"><td>Grow height</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>=</kbd></td></tr>
+        <tr data-action="resizeShrink.horizontal"><td>Shrink width</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>−</kbd></td></tr>
+        <tr data-action="resizeShrink.vertical"><td>Shrink height</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>−</kbd></td></tr>
+        <tr data-action="toggleFocusedWindowFloating"><td>Toggle focused window floating</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd></td></tr>
+        <tr data-action="closeFocusedWindow"><td>Close focused window</td><td><span class="note">Unassigned</span></td><td><kbd>Ctrl</kbd> + <kbd>Q</kbd></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+  <section id="removed">
+    <h2>Default shortcuts removed</h2>
+    <p class="note">Unassigned means the keyboard binding was removed; it does not necessarily disable the action. In particular, default Alt + 1–9 workspace bindings are replaced by your Ctrl + 0–7 slot bindings.</p>
+    <div class="table-wrap">
+    <table class="comparison">
+      <thead><tr><th scope="col">Action</th><th scope="col">Default shortcut</th><th scope="col">Your shortcut</th></tr></thead>
+      <tbody>
+        <tr data-action="switchWorkspace.0"><td>Switch to workspace 1</td><td><kbd>Alt</kbd> + <kbd>1</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="switchWorkspace.1"><td>Switch to workspace 2</td><td><kbd>Alt</kbd> + <kbd>2</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="switchWorkspace.2"><td>Switch to workspace 3</td><td><kbd>Alt</kbd> + <kbd>3</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="switchWorkspace.3"><td>Switch to workspace 4</td><td><kbd>Alt</kbd> + <kbd>4</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="switchWorkspace.4"><td>Switch to workspace 5</td><td><kbd>Alt</kbd> + <kbd>5</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="switchWorkspace.5"><td>Switch to workspace 6</td><td><kbd>Alt</kbd> + <kbd>6</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="switchWorkspace.6"><td>Switch to workspace 7</td><td><kbd>Alt</kbd> + <kbd>7</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="switchWorkspace.7"><td>Switch to workspace 8</td><td><kbd>Alt</kbd> + <kbd>8</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="switchWorkspace.8"><td>Switch to workspace 9</td><td><kbd>Alt</kbd> + <kbd>9</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="moveToWorkspace.0"><td>Move to workspace 1</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>1</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="moveToWorkspace.1"><td>Move to workspace 2</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>2</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="moveToWorkspace.2"><td>Move to workspace 3</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>3</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="moveToWorkspace.3"><td>Move to workspace 4</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>4</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="moveToWorkspace.4"><td>Move to workspace 5</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>5</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="moveToWorkspace.5"><td>Move to workspace 6</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>6</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="moveToWorkspace.6"><td>Move to workspace 7</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>7</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="moveToWorkspace.7"><td>Move to workspace 8</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>8</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="moveToWorkspace.8"><td>Move to workspace 9</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>9</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="focusPrevious"><td>Focus previous</td><td><kbd>Alt</kbd> + <kbd>Tab</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="moveColumnToWorkspaceUp"><td>Move column to workspace up</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>Page Up</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="moveColumnToWorkspaceDown"><td>Move column to workspace down</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>Page Down</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="focusMonitorNext"><td>Focus monitor next</td><td><kbd>Ctrl</kbd> + <kbd>Cmd</kbd> + <kbd>Tab</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="focusMonitorLast"><td>Focus monitor last</td><td><kbd>Ctrl</kbd> + <kbd>Cmd</kbd> + <kbd>`</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="moveColumn.left"><td>Move column left</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>←</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="moveColumn.right"><td>Move column right</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>→</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="moveColumnToFirst"><td>Move column to first</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Home</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="moveColumnToLast"><td>Move column to last</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>End</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="toggleColumnTabbed"><td>Toggle column tabbed</td><td><kbd>Alt</kbd> + <kbd>T</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="focusColumnFirst"><td>Focus column first</td><td><kbd>Alt</kbd> + <kbd>Home</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="focusColumnLast"><td>Focus column last</td><td><kbd>Alt</kbd> + <kbd>End</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="focusColumn.0"><td>Focus column 1</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>1</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="focusColumn.1"><td>Focus column 2</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>2</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="focusColumn.2"><td>Focus column 3</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>3</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="focusColumn.3"><td>Focus column 4</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>4</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="focusColumn.4"><td>Focus column 5</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>5</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="focusColumn.5"><td>Focus column 6</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>6</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="focusColumn.6"><td>Focus column 7</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>7</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="focusColumn.7"><td>Focus column 8</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>8</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="focusColumn.8"><td>Focus column 9</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>9</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="cycleSizeForward"><td>Cycle size forward</td><td><kbd>Alt</kbd> + <kbd>.</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="cycleSizeBackward"><td>Cycle size backward</td><td><kbd>Alt</kbd> + <kbd>,</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="toggleContainerFullPrimarySpan"><td>Toggle container full primary span</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="expandContainerToAvailablePrimarySpan"><td>Expand container to available primary span</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="resetWindowSecondarySpan"><td>Reset window secondary span</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>R</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="setContainerPrimarySpan.decrease10Percent"><td>Shrink container primary span by 10%</td><td><kbd>Alt</kbd> + <kbd>−</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="setContainerPrimarySpan.increase10Percent"><td>Grow container primary span by 10%</td><td><kbd>Alt</kbd> + <kbd>=</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="setWindowSecondarySpan.decrease10Percent"><td>Shrink window secondary span by 10%</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>−</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="setWindowSecondarySpan.increase10Percent"><td>Grow window secondary span by 10%</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>=</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="balanceSizes"><td>Balance sizes</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>B</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="raiseAllFloatingWindows"><td>Raise all floating windows</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>R</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="openMenuAnywhere"><td>Open menu anywhere</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>M</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="toggleQuakeTerminal"><td>Toggle quake terminal</td><td><kbd>Alt</kbd> + <kbd>`</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="toggleWorkspaceLayout"><td>Toggle workspace layout</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd></td><td><span class="note">Unassigned</span></td></tr>
+        <tr data-action="toggleOverview"><td>Toggle overview</td><td><kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd></td><td><span class="note">Unassigned</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+  <section id="unchanged">
+    <h2>Active shortcuts unchanged</h2>
+    <p class="note">These three shortcuts are the same on both sides.</p>
+    <div class="table-wrap">
+    <table class="comparison">
+      <thead><tr><th scope="col">Action</th><th scope="col">Default shortcut</th><th scope="col">Your shortcut</th></tr></thead>
+      <tbody>
+        <tr data-action="moveWindowToWorkspaceUp"><td>Move window to previous workspace</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>↑</kbd></td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>↑</kbd></td></tr>
+        <tr data-action="moveWindowToWorkspaceDown"><td>Move window to next workspace</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>↓</kbd></td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Shift</kbd> + <kbd>↓</kbd></td></tr>
+        <tr data-action="openCommandPalette"><td>Open command palette</td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Space</kbd></td><td><kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>Space</kbd></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+  <section id="workspaces">
+    <h2>Workspaces and monitors</h2>
+    <p class="note">Matched by workspace name. Defaults contain nine Niri workspaces (1–9); yours contains eight Dwindle workspaces (0–7). Default emoji labels are removed. Internal workspace UUIDs are also replaced.</p>
+    <div class="table-wrap">
+    <table class="comparison">
+      <thead><tr><th scope="col">Workspace</th><th scope="col">Default</th><th scope="col">Your config</th></tr></thead>
+      <tbody>
+        <tr data-workspace="0"><td>0</td><td>Not configured</td><td>Dwindle · Main display</td></tr>
+        <tr data-workspace="1"><td>1</td><td>Niri · Main display</td><td>Dwindle · Main display</td></tr>
+        <tr data-workspace="2"><td>2</td><td>Niri · Main display</td><td>Dwindle · Main display</td></tr>
+        <tr data-workspace="3"><td>3</td><td>Niri · Main display</td><td>Dwindle · Main display</td></tr>
+        <tr data-workspace="4"><td>4</td><td>Niri · Main display</td><td>Dwindle · Main display</td></tr>
+        <tr data-workspace="5"><td>5</td><td>Niri · Main display</td><td>Dwindle · Main display</td></tr>
+        <tr data-workspace="6"><td>6</td><td>Niri · Secondary display · label ❤️</td><td>Dwindle · Main display</td></tr>
+        <tr data-workspace="7"><td>7</td><td>Niri · Secondary display · label 🚀</td><td>Dwindle · Secondary display</td></tr>
+        <tr data-workspace="8"><td>8</td><td>Niri · Main display</td><td>Not configured</td></tr>
+        <tr data-workspace="9"><td>9</td><td>Niri · Main display</td><td>Not configured</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+  <section id="apps">
+    <h2>App rules</h2>
+    <p class="note">The 13 built-in rules specify minimum window sizes, with automatic layout and no workspace assignment. Your config replaces them with 22 app-specific placement/layout rules and a catch-all floating rule. None of your rules sets a minimum size.</p>
+    <div class="table-wrap">
+    <table class="comparison">
+      <thead><tr><th scope="col">App</th><th scope="col">Default rule</th><th scope="col">Your rule</th></tr></thead>
+      <tbody>
+        <tr data-app="company.thebrowser.Browser"><td>Arc<small><code>company.thebrowser.Browser</code></small></td><td>No app-specific rule</td><td>Workspace 3 · Floating</td></tr>
+        <tr data-app="com.google.Chrome"><td>Chrome<small><code>com.google.Chrome</code></small></td><td>Minimum 500 × 375; automatic layout</td><td>Workspace 3 · Floating</td></tr>
+        <tr data-app="com.cmuxterm.app"><td>cmux<small><code>com.cmuxterm.app</code></small></td><td>No app-specific rule</td><td>Workspace 1 · Tiled</td></tr>
+        <tr data-app="com.openai.codex"><td>Codex<small><code>com.openai.codex</code></small></td><td>Minimum 800 × 600; automatic layout</td><td>No app-specific rule; floating fallback</td></tr>
+        <tr data-app="com.eltima.cmd1.pro.mas"><td>Commander One PRO<small><code>com.eltima.cmd1.pro.mas</code></small></td><td>Minimum 950 × 550; automatic layout</td><td>No app-specific rule; floating fallback</td></tr>
+        <tr data-app="company.thebrowser.dia"><td>Dia<small><code>company.thebrowser.dia</code></small></td><td>Minimum 500 × 420; automatic layout</td><td>No app-specific rule; floating fallback</td></tr>
+        <tr data-app="com.hnc.Discord"><td>Discord<small><code>com.hnc.Discord</code></small></td><td>Minimum 800 × 500; automatic layout</td><td>No app-specific rule; floating fallback</td></tr>
+        <tr data-app="com.flexibits.fantastical2.mac"><td>Fantastical<small><code>com.flexibits.fantastical2.mac</code></small></td><td>No app-specific rule</td><td>Workspace 4 · Tiled</td></tr>
+        <tr data-app="com.apple.finder"><td>Finder<small><code>com.apple.finder</code></small></td><td>No app-specific rule</td><td>Workspace 0 · Floating</td></tr>
+        <tr data-app="org.mozilla.firefox"><td>Firefox<small><code>org.mozilla.firefox</code></small></td><td>Minimum 500 × 120; automatic layout</td><td>No app-specific rule; floating fallback</td></tr>
+        <tr data-app="com.mitchellh.ghostty"><td>Ghostty<small><code>com.mitchellh.ghostty</code></small></td><td>Minimum 90 × 48; automatic layout</td><td>Workspace 1 · Tiled</td></tr>
+        <tr data-app="com.gitbutler.app"><td>GitButler<small><code>com.gitbutler.app</code></small></td><td>No app-specific rule</td><td>Workspace 1 · Tiled</td></tr>
+        <tr data-app="com.infomaniak.chat"><td>Infomaniak Chat<small><code>com.infomaniak.chat</code></small></td><td>No app-specific rule</td><td>Workspace 5 · Tiled</td></tr>
+        <tr data-app="com.jetbrains.intellij"><td>IntelliJ<small><code>com.jetbrains.intellij</code></small></td><td>No app-specific rule</td><td>Workspace 2 · Tiled</td></tr>
+        <tr data-app="com.apple.MobileSMS"><td>Messages<small><code>com.apple.MobileSMS</code></small></td><td>Minimum 660 × 320; automatic layout</td><td>Workspace 5 · Tiled</td></tr>
+        <tr data-app="com.microsoft.teams2"><td>Microsoft Teams<small><code>com.microsoft.teams2</code></small></td><td>No app-specific rule</td><td>Workspace 5 · Tiled</td></tr>
+        <tr data-app="com.microsoft.Outlook"><td>Outlook<small><code>com.microsoft.Outlook</code></small></td><td>Minimum 930 × 650; automatic layout</td><td>Workspace 4 · Tiled</td></tr>
+        <tr data-app="com.cocoatech.PathFinder"><td>Path Finder<small><code>com.cocoatech.PathFinder</code></small></td><td>No app-specific rule</td><td>Workspace 0 · Floating</td></tr>
+        <tr data-app="com.apple.Safari"><td>Safari<small><code>com.apple.Safari</code></small></td><td>Minimum 574 × 220; automatic layout</td><td>No app-specific rule; floating fallback</td></tr>
+        <tr data-app="com.tinyspeck.slackmacgap"><td>Slack<small><code>com.tinyspeck.slackmacgap</code></small></td><td>No app-specific rule</td><td>Workspace 5 · Tiled</td></tr>
+        <tr data-app="com.readdle.SparkDesktop"><td>Spark<small><code>com.readdle.SparkDesktop</code></small></td><td>No app-specific rule</td><td>Workspace 4 · Tiled</td></tr>
+        <tr data-app="com.spotify.client"><td>Spotify<small><code>com.spotify.client</code></small></td><td>Minimum 800 × 600; automatic layout</td><td>No app-specific rule; floating fallback</td></tr>
+        <tr data-app="com.sublimetext.4"><td>Sublime Text<small><code>com.sublimetext.4</code></small></td><td>No app-specific rule</td><td>Workspace 2 · Tiled</td></tr>
+        <tr data-app="com.t3tools.t3code"><td>T3 Code<small><code>com.t3tools.t3code</code></small></td><td>No app-specific rule</td><td>Workspace 1 · Tiled</td></tr>
+        <tr data-app="io.tailscale.ipn.macos"><td>Tailscale<small><code>io.tailscale.ipn.macos</code></small></td><td>No app-specific rule</td><td>Workspace 0 · Floating</td></tr>
+        <tr data-app="ch.threema.threema-desktop"><td>Threema<small><code>ch.threema.threema-desktop</code></small></td><td>No app-specific rule</td><td>Workspace 5 · Tiled</td></tr>
+        <tr data-app="com.vivaldi.Vivaldi"><td>Vivaldi<small><code>com.vivaldi.Vivaldi</code></small></td><td>No app-specific rule</td><td>Workspace 3 · Floating</td></tr>
+        <tr data-app="net.whatsapp.WhatsApp"><td>WhatsApp<small><code>net.whatsapp.WhatsApp</code></small></td><td>No app-specific rule</td><td>Workspace 5 · Tiled</td></tr>
+        <tr data-app="dev.zed.Zed"><td>Zed<small><code>dev.zed.Zed</code></small></td><td>Minimum 360 × 240; automatic layout</td><td>No app-specific rule; floating fallback</td></tr>
+        <tr data-app="app.zen-browser.zen"><td>Zen Browser<small><code>app.zen-browser.zen</code></small></td><td>Minimum 500 × 495; automatic layout</td><td>Workspace 3 · Floating</td></tr>
+        <tr data-app=""><td>Other windows</td><td>No catch-all rule; automatic layout</td><td>Floating via title pattern <code>.*</code>; no workspace assignment</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+  <section id="sources">
+    <h2>Comparison sources</h2>
+    <p>Baseline: OmniWM’s built-in defaults at tag <strong>v0.6.8</strong>, not the customised compatibility fixture used when preparing the migration.</p>
+    <ul>
+      <li><a href="https://github.com/BarutSRB/OmniWM/blob/v0.6.8/Sources/OmniWM/Core/Config/SettingsExport.swift">SettingsExport.defaults()</a> — general settings and appearance.</li>
+      <li><a href="https://github.com/BarutSRB/OmniWM/blob/v0.6.8/Sources/OmniWM/Core/Input/ActionCatalog.swift">Action catalogue</a> — default bindings for all assignable actions.</li>
+      <li><a href="https://github.com/BarutSRB/OmniWM/blob/v0.6.8/Sources/OmniWM/Core/Config/BuiltInSettingsDefaults.swift">Built-in workspace and app rules</a> — workspace names, display roles and minimum sizes.</li>
+      <li><a href="settings.toml">Your settings.toml</a> — current repository source. Refresh this comparison if that file changes.</li>
+    </ul>
+    <p class="note">Comparison covers saved configuration. Runtime state, launch-at-login and macOS permissions are outside this file.</p>
+  </section>
+  <footer><a href="omniwm.html">← Keyboard shortcuts</a> · Works offline; source links require an internet connection.</footer>
+</main>
+</body>
+</html>
