@@ -56,8 +56,6 @@ packages:
       - "ggozad/formulas"
       - "jackielii/tap"
       - "jetbrains/junie"
-      - name: "jundot/omlx"
-        url: "https://github.com/jundot/omlx"
       - "manaflow-ai/cmux"
       - "mediosz/tap"
       - "neurosnap/tap"
@@ -306,8 +304,6 @@ packages:
       - "firebase-cli"
       - "hledger"
       - "jetbrains/junie/junie"
-      - "jundot/omlx/omlx"
-      - "neurosnap/tap/zmx"
       # rbenv removed - mise manages ruby
       # rust removed - mise manages rust via stable channel
       - "tailscale"
