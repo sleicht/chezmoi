@@ -22,8 +22,7 @@ policies:
       read: "**/*"
 
   # -- File writes --
-  # No blanket allow; unmatched writes fall through to confirm
-  # (matches Claude Code defaultMode: "default" behaviour)
+  # Broad write access, matching the deployed policy
   - permission: allow
     rule:
       write: "**/*"
@@ -31,6 +30,24 @@ policies:
   # -- Commands: allow safe operations --------------------------------
 
   # Gradle
+  - permission: allow
+    rule:
+      command: "./gradlew :ktor-actuator:test*"
+  - permission: allow
+    rule:
+      command: "./gradlew :patient-directory-service:pds-server:ktlintCheck*"
+  - permission: allow
+    rule:
+      command: "./gradlew :pds-server:compileKotlin*"
+  - permission: allow
+    rule:
+      command: "./gradlew :pds-server:dependencyInsight*"
+  - permission: allow
+    rule:
+      command: "./gradlew :pds-server:ktfmtFormat*"
+  - permission: allow
+    rule:
+      command: "./gradlew :prax-ui:jvmTest*"
   - permission: allow
     rule:
       command: "./gradlew clean*"
@@ -52,6 +69,9 @@ policies:
   - permission: allow
     rule:
       command: "./gradlew ktlintFormat*"
+  - permission: allow
+    rule:
+      command: "./gradlew publishToMavenLocal*"
 
   # File tests (broader than Claude Code's per-file patterns)
   - permission: allow
@@ -93,6 +113,9 @@ policies:
   # Filesystem
   - permission: allow
     rule:
+      command: "command -v*"
+  - permission: allow
+    rule:
       command: "fd *"
   - permission: allow
     rule:
@@ -107,12 +130,12 @@ policies:
     rule:
       command: "rg *"
 
-  # Git (all non-destructive; destructive ops denied below)
+  # Git (selected destructive operations denied below)
   - permission: allow
     rule:
       command: "git *"
 
-  # GitButler (all non-destructive)
+  # GitButler
   - permission: allow
     rule:
       command: "but *"
@@ -220,6 +243,9 @@ policies:
       command: "mise run*"
   - permission: allow
     rule:
+      command: "mise tasks*"
+  - permission: allow
+    rule:
       command: "mvn dependency:tree *"
   - permission: allow
     rule:
@@ -227,6 +253,9 @@ policies:
   - permission: allow
     rule:
       command: "shellcheck *"
+  - permission: allow
+    rule:
+      command: "sonar analyze*"
 
   # Utilities
   - permission: allow
@@ -253,6 +282,12 @@ policies:
   - permission: allow
     rule:
       command: "jq *"
+  - permission: allow
+    rule:
+      command: "hooks_path=\"$(git config*"
+  - permission: allow
+    rule:
+      command: "if [[*"
   - permission: allow
     rule:
       command: "watchexec *"
