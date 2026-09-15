@@ -291,6 +291,7 @@ packages:
       - "podman-desktop"
       - "soapui"
       - "tablepro"
+      - "tabularis"
       - "transcribex"
       - "utm@beta"
       - "visual-studio-code"
