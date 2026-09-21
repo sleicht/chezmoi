@@ -68,15 +68,11 @@ Confirmed assumptions and conventions bind the session. Apply them without re-as
 <!-- sonar:begin:codex-secrets-on-read -->
 # SonarQube secrets scanning for files protocol
 
-Before displaying, quoting, searching, or otherwise loading file contents into model context, scan the exact file or smallest practical scope with the deterministic scanner:
+Before reading any file in this workspace, scan it for secrets with the deterministic scanner:
 
 ```bash
-sonar analyze secrets <file-or-directory>
+sonar analyze secrets <path/to/file>
 ```
-
-Filename-only discovery does not require a scan. Build, test, and other tools may read files internally without a scan provided their contents are not emitted into model context.
-
-If the scanner fails or is unavailable without producing a deterministic result, do not read the content; report the blocker.
 
 If the command reports that the file contains a secret, **do not read the file**. Instead:
 
