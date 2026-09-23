@@ -60,13 +60,13 @@ defaultModel: litellm/gpt-5.6-sol:high
 modelProviderOrder: 
   - litellm
 modelRoles: 
-  default: litellm/claude-opus-5
+  default: litellm/claude-opus-5-5
   advisor: litellm/gpt-5-6-terra
-  plan: litellm/gpt-5-6-sol
-  smol: litellm/gpt-5-6-luna
-  slow: litellm/gpt-5-6-sol:high
+  plan: litellm/gpt-6-sol
+  smol: litellm/gpt-6-luna
+  slow: litellm/gpt-6-sol:high
   task: litellm/gpt-5-6-terra
-  commit: openai-codex/gpt-5-6-luna
+  commit: openai-codex/gpt-6-luna
 {{- else }}
 modelRoles:
   default: openai-codex/gpt-5.6-sol:medium

@@ -18,7 +18,7 @@
 # Main model:
 
 ## Specify the model to use for the main chat
-model: vertex_ai/claude-sonnet-4-5@20250929
+model: vertex_ai/claude-sonnet-5
 
 ########################
 # API Keys and settings:
