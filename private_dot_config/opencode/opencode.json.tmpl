@@ -25,6 +25,21 @@
         "baseURL": "{{ $cc.litellm_url.value }}/v1"
       },
       "models": {
+        "claude-opus": {
+          "name": "Claude Opus"
+        },
+        "claude-sonnet": {
+          "name": "Claude Sonnet"
+        },
+        "gemini-flash": {
+          "name": "Gemini Flash"
+        },
+        "gpt-luna": {
+          "name": "GPT Luna"
+        },
+        "gpt-sol": {
+          "name": "GPT Sol"
+        },
         "claude-haiku-4-5": {
           "name": "Claude Haiku 4.5",
           "attachment": true,
@@ -34,11 +49,11 @@
           },
           "limit": {
             "context": 200000,
-            "output": 8192
+            "output": 64000
           }
         },
-        "claude-sonnet-5": {
-          "name": "Claude Sonnet 5",
+        "claude-sonnet-5-5": {
+          "name": "Claude Sonnet 5.5",
           "attachment": true,
           "modalities": {
             "input": ["text", "image"],
@@ -46,7 +61,7 @@
           },
           "limit": {
             "context": 1000000,
-            "output": 32000
+            "output": 128000
           },
           "variants": {
             "low": { "reasoningEffort": "low" },
@@ -63,8 +78,8 @@
             "output": ["text"]
           },
           "limit": {
-            "context": 200000,
-            "output": 32000
+            "context": 1000000,
+            "output": 128000
           },
           "variants": {
             "low": { "reasoningEffort": "low" },
@@ -74,25 +89,32 @@
             "max": { "reasoningEffort": "max" }
           }
         },
-        "gemini-3.1-flash-lite": {
-          "name": "Gemini 3.1 Flash Lite",
+        "claude-fable-5-1": {
+          "name": "Claude Fable 5.1",
           "attachment": true,
           "modalities": {
             "input": ["text", "image"],
             "output": ["text"]
           },
           "limit": {
-            "context": 1048576,
-            "output": 8192
-          },
-          "variants": {
-            "low": { "reasoningEffort": "low" },
-            "medium": { "reasoningEffort": "medium" },
-            "high": { "reasoningEffort": "high" }
+            "context": 1000000,
+            "output": 128000
           }
         },
-        "gemini-3.5-flash": {
-          "name": "Gemini 3.5 Flash",
+        "claude-haiku-5-5": {
+          "name": "Claude Haiku 5.5",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 1000000,
+            "output": 128000
+          }
+        },
+        "gemini-3.5-flash-lite": {
+          "name": "Gemini 3.5 Flash Lite",
           "attachment": true,
           "modalities": {
             "input": ["text", "image"],
@@ -108,16 +130,45 @@
             "high": { "reasoningEffort": "high" }
           }
         },
-        "gpt-5-5": {
-          "name": "GPT 5.5",
+        "gemini-3.8-flash": {
+          "name": "Gemini 3.8 Flash",
           "attachment": true,
           "modalities": {
             "input": ["text", "image"],
             "output": ["text"]
           },
           "limit": {
-            "context": 128000,
-            "output": 16384
+            "context": 1048576,
+            "output": 65536
+          },
+          "variants": {
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" }
+          }
+        },
+        "gemini-4-argon": {
+          "name": "Gemini 4 Argon",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 1048576,
+            "output": 1048576
+          }
+        },
+        "gpt-6.1-sol": {
+          "name": "GPT 6.1 Sol",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 922000,
+            "output": 128000
           },
           "variants": {
             "none": { "reasoningEffort": "none" },
@@ -135,7 +186,7 @@
             "output": ["text"]
           },
           "limit": {
-            "context": 1000000,
+            "context": 922000,
             "output": 128000
           },
           "variants": {
@@ -146,34 +197,15 @@
             "xhigh": { "reasoningEffort": "xhigh" }
           }
         },
-        "gpt-5-6-terra": {
-          "name": "GPT 5.6 Terra",
+        "gpt-6-1-sol": {
+          "name": "GPT 6.1 Sol",
           "attachment": true,
           "modalities": {
             "input": ["text", "image"],
             "output": ["text"]
           },
           "limit": {
-            "context": 1000000,
-            "output": 128000
-          },
-          "variants": {
-            "none": { "reasoningEffort": "none" },
-            "low": { "reasoningEffort": "low" },
-            "medium": { "reasoningEffort": "medium" },
-            "high": { "reasoningEffort": "high" },
-            "xhigh": { "reasoningEffort": "xhigh" }
-          }
-        },
-        "gpt-6-sol": {
-          "name": "GPT 6 Sol",
-          "attachment": true,
-          "modalities": {
-            "input": ["text", "image"],
-            "output": ["text"]
-          },
-          "limit": {
-            "context": 1000000,
+            "context": 922000,
             "output": 128000
           },
           "variants": {
