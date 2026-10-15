@@ -18,7 +18,7 @@
 # Main model:
 
 ## Specify the model to use for the main chat
-model: vertex_ai/claude-sonnet-5
+model: vertex_ai/claude-sonnet-5-5
 
 ########################
 # API Keys and settings:
@@ -102,7 +102,7 @@ model: vertex_ai/claude-sonnet-5
 #auto-accept-architect: true
 
 ## Specify the model to use for commit messages and chat history summarization (default depends on --model)
-weak-model: vertex_ai/claude-haiku-4-5@20251001
+weak-model: vertex_ai/claude-haiku-5-5
 
 ## Specify the model to use for editor tasks (default depends on --model)
 #editor-model: xxx

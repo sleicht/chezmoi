@@ -46,7 +46,7 @@ const HARD_BLOCK_PATTERNS: Record<string, Array<{ pattern: RegExp; reason: strin
 	write: [{ pattern: /(\/etc\/|\/usr\/|\/var\/|\/sys\/|\/proc\/)/i, reason: "Cannot write to system directories" }],
 };
 
-const DEFAULT_MODEL = "claude-haiku-4-5";
+const DEFAULT_MODEL = "claude-haiku-5-5";
 const TIMEOUT_MS = 10_000;
 const CACHE_TTL_MS = 60 * 60 * 1000;
 const MAX_CACHE_SIZE = 500;
