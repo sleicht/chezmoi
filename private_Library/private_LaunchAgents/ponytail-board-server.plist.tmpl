@@ -1,0 +1,31 @@
+{{- if and (eq .chezmoi.os "darwin") (hasKey . "ponytail_board_server") .ponytail_board_server -}}
+{{- $token := output "sh" "-c" "chezmoi secret keyring get --service=ponytail-board --user=\"$1\" 2>/dev/null || true" "sh" .chezmoi.username | trim -}}
+{{- if eq $token "" }}{{ fail "ponytail board server needs a token, run chezmoi secret keyring set --service=ponytail-board --user=$USER" }}{{ end -}}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>ponytail-board-server</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>{{ lookPath "bun" }}</string>
+    <string>{{ .chezmoi.homeDir }}/.local/bin/ponytail-board-server</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PONYTAIL_BOARD_TOKEN</key>
+    <string>{{ $token | html }}</string>
+  </dict>
+  <key>StandardErrorPath</key>
+  <string>{{ .chezmoi.homeDir }}/Library/Logs/ponytail-board-server.log</string>
+  <key>StandardOutPath</key>
+  <string>{{ .chezmoi.homeDir }}/Library/Logs/ponytail-board-server.log</string>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+</dict>
+</plist>
+{{- end }}

@@ -131,6 +131,13 @@ run_onchange_after_07-budget-overlay.sh
 .ssh/config_server
 {{- end }}
 
+# Opt-in per machine via chezmoi init (data.ponytail_board_server)
+{{- if not (and (hasKey . "ponytail_board_server") .ponytail_board_server) }}
+.local/bin/ponytail-board-server
+Library/LaunchAgents/ponytail-board-server.plist
+run_onchange_after_08-ponytail-board-server.sh
+{{- end }}
+
 {{- if eq .machine_type "container" }}
 # Containers deploy only a self-contained shell and basic Git configuration.
 **

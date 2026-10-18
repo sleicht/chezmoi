@@ -1,0 +1,83 @@
+#!/usr/bin/env bun
+// Receives ponytail band webhook rows from other machines and keeps ~/.config/ponytail/band/board.html current.
+// Listens on loopback only; expose with `tailscale serve`, which adds the HTTPS the band requires.
+// Env: PONYTAIL_BOARD_TOKEN (required, same value as the clients' webhookToken), PONYTAIL_BOARD_PORT (default 8787).
+import { timingSafeEqual, createHash } from 'node:crypto'
+import { readdir } from 'node:fs/promises'
+import { homedir } from 'node:os'
+
+// Reuse the plugin's own CSV and board code so the formats never drift.
+const band = `${homedir()}/.claude/plugins/marketplaces/ponytail/hooks/band`
+const { boardHtml, tasksFrom } = await import(`${band}/board.ts`)
+const { upsertCsv } = await import(`${band}/metrics.ts`)
+
+const dir = `${process.env.XDG_CONFIG_HOME ?? `${homedir()}/.config`}/ponytail/band`
+const token = process.env.PONYTAIL_BOARD_TOKEN ?? ''
+if (token === '') throw new Error('PONYTAIL_BOARD_TOKEN is not set')
+const port = Number(process.env.PONYTAIL_BOARD_PORT ?? 8787)
+
+const digest = (s: string) => createHash('sha256').update(s).digest()
+const authorised = (header: string | null) => timingSafeEqual(digest(header ?? ''), digest(`Bearer ${token}`))
+
+const num = (v: unknown) => (typeof v === 'number' && Number.isFinite(v) ? v : 0)
+const str = (v: unknown, max = 200) => (typeof v === 'string' ? v.slice(0, max) : '')
+
+// Untrusted input: keep only the fields upsertCsv reads, with the types it expects.
+function snapshotFrom(body: any) {
+  const key = str(body?.key, 64)
+  const project = str(body?.project)
+  if (!/^[\w-]+$/.test(key) || project === '') return null
+  const t = body.tokens ?? {}
+  return {
+    key,
+    started: str(body.started, 16),
+    project,
+    name: str(body.name),
+    level: str(body.level, 20),
+    model: str(body.model, 80),
+    cost: num(body.cost),
+    turns: num(body.turns),
+    agentMs: num(body.agentMs),
+    tokens: { input: num(t.input), output: num(t.output), cacheRead: num(t.cacheRead), cacheWrite: num(t.cacheWrite) },
+    reuse: typeof body.reuse === 'number' ? num(body.reuse) : null,
+    reused: num(body.reused),
+    created: num(body.created),
+    callersOpen: num(body.callersOpen),
+    tests: str(body.tests, 40),
+  }
+}
+
+async function rebuild() {
+  const names = (await readdir(dir)).filter(n => n.endsWith('.csv'))
+  const texts = await Promise.all(names.map(n => Bun.file(`${dir}/${n}`).text()))
+  await Bun.write(`${dir}/board.html`, boardHtml(texts.flatMap(tasksFrom), Date.now()))
+}
+
+// Serialise writes: two rows arriving together would otherwise lose one in the read-modify-write.
+let queue = Promise.resolve()
+const store = (s: NonNullable<ReturnType<typeof snapshotFrom>>) =>
+  (queue = queue.then(async () => {
+    // remote- prefix keeps these files apart from the CSVs this machine's own band writes.
+    const file = Bun.file(`${dir}/remote-${s.project.replace(/[^\w.-]/g, '_')}.csv`)
+    await Bun.write(file, upsertCsv((await file.exists()) ? await file.text() : '', s))
+    await rebuild()
+  }))
+
+Bun.serve({
+  hostname: '127.0.0.1',
+  port,
+  maxRequestBodySize: 64 * 1024,
+  async fetch(req) {
+    if (req.method === 'GET') {
+      const board = Bun.file(`${dir}/board.html`)
+      return (await board.exists()) ? new Response(board) : new Response('no board yet', { status: 404 })
+    }
+    if (req.method !== 'POST') return new Response(null, { status: 405 })
+    if (!authorised(req.headers.get('authorization'))) return new Response(null, { status: 401 })
+    const s = snapshotFrom(await req.json().catch(() => null))
+    if (!s) return new Response('bad row', { status: 400 })
+    await store(s)
+    return new Response(null, { status: 204 })
+  },
+})
+console.log(`ponytail board server on 127.0.0.1:${port}, ledgers in ${dir}`)

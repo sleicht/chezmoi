@@ -1,0 +1,24 @@
+{{- if and (eq .chezmoi.os "darwin") (hasKey . "ponytail_board_server") .ponytail_board_server -}}
+#!/bin/bash
+# (Re)start the ponytail board server and expose it on the tailnet when its script or LaunchAgent changes
+# Server hash: {{ include "dot_local/bin/executable_ponytail-board-server" | sha256sum }}
+# LaunchAgent hash: {{ includeTemplate "private_Library/private_LaunchAgents/ponytail-board-server.plist.tmpl" . | sha256sum }}
+set -euo pipefail
+
+readonly LABEL="ponytail-board-server"
+readonly PLIST_PATH="${HOME}/Library/LaunchAgents/${LABEL}.plist"
+DOMAIN="gui/$(id -u)"
+readonly DOMAIN
+
+/usr/bin/plutil -lint "${PLIST_PATH}" > /dev/null
+launchctl bootout "${DOMAIN}/${LABEL}" 2>/dev/null || true
+launchctl bootstrap "${DOMAIN}" "${PLIST_PATH}"
+echo "  ${LABEL} LaunchAgent registered and started."
+
+# HTTPS on the tailnet only (serve, not funnel); the band refuses plain http to non-local hosts
+if command -v tailscale > /dev/null 2>&1; then
+    tailscale serve --bg --https=443 http://127.0.0.1:8787
+else
+    echo "WARNING: tailscale not found; run: tailscale serve --bg --https=443 http://127.0.0.1:8787" >&2
+fi
+{{- end }}
