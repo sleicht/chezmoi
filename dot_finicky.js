@@ -11,7 +11,7 @@
  * @type {FinickyConfig}
  */
 export default {
-    defaultBrowser: "Vivaldi",
+    defaultBrowser: "Crest",
     options: {
         // Check for updates. Default: true
         checkForUpdates: true,
