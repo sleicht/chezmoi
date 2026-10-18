@@ -42,3 +42,8 @@ paths = [
   '''.*\.md$''',
   '''README.*''',
 ]
+
+# Known false positive: test fixture string ('03-api') in gsd-tools.test.cjs
+commits = [
+  "6095066219bd1ac3d7f190dc7150b857f8f3db97",
+]
