@@ -21,6 +21,11 @@ providers:
       - id: claude-sonnet-5-5
         compat:
           cacheControlFormat: anthropic
+      - id: claude-fable-5-1
+        compat:
+          cacheControlFormat: anthropic
+      - id: gpt-6-1-sol
+      - id: gemini-4-argon
 {{- else }}
 # Personal machines currently rely on `omp` built-in providers and local auth.
 providers: {}
