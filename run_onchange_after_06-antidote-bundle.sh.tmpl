@@ -1,0 +1,21 @@
+#!/bin/bash
+# Installs missing plugins and rebuilds the static antidote bundle when the plugin list changes.
+# zsh_plugins.txt: {{ include "dot_zsh_plugins.txt.tmpl" | sha256sum }}
+
+set -eufo pipefail
+
+antidote_file="${HOMEBREW_PREFIX:-$(brew --prefix 2>/dev/null || true)}/opt/antidote/share/antidote/antidote.zsh"
+if [[ ! -r "$antidote_file" ]]; then
+  echo "WARNING: antidote not found, skipping bundle rebuild"
+  exit 0
+fi
+
+echo "==> Antidote plugins changed, rebuilding static bundle..."
+static_file="${ZDOTDIR:-$HOME}/.zsh_plugins.zsh"
+bundle_file="${ZDOTDIR:-$HOME}/.zsh_plugins.txt"
+bundle_tmp=$(mktemp "${static_file}.XXXXXX")
+trap 'rm -f "$bundle_tmp"' EXIT
+zsh -f -c 'source "$1"; antidote bundle < "$2"' antidote "$antidote_file" "$bundle_file" > "$bundle_tmp"
+mv -f "$bundle_tmp" "$static_file"
+rm -f "${static_file}.zwc"
+echo "==> Antidote bundle rebuilt. Open a new terminal to pick up changes."

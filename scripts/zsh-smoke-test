@@ -108,17 +108,17 @@ fi
 # Verify autosuggestions loaded
 check "zsh-autosuggestions loaded" '[[ $autosuggestions_loaded -eq 1 ]]'
 
-# For syntax highlighting, just verify sheldon will source it (it's deferred)
-# Check if sheldon config includes it
-if [[ -f ~/.config/sheldon/plugins.toml ]]; then
-  if grep -q "zsh-syntax-highlighting" ~/.config/sheldon/plugins.toml 2>/dev/null; then
-    check "zsh-syntax-highlighting configured in sheldon" 'true'
+# For syntax highlighting, just verify antidote will source it (it's deferred)
+# Check if antidote plugin list includes it
+if [[ -f ~/.zsh_plugins.txt ]]; then
+  if grep -q "zsh-syntax-highlighting" ~/.zsh_plugins.txt 2>/dev/null; then
+    check "zsh-syntax-highlighting configured in antidote" 'true'
   else
-    check "zsh-syntax-highlighting configured in sheldon" 'false'
+    check "zsh-syntax-highlighting configured in antidote" 'false'
   fi
 else
-  # If no sheldon config, skip this check
-  check "zsh-syntax-highlighting configured in sheldon" 'false'
+  # If no antidote plugin list, skip this check
+  check "zsh-syntax-highlighting configured in antidote" 'false'
 fi
 
 # 8. LAST_SHELL_STARTUP_MS set (confirms self-monitoring active)

@@ -1,5 +1,5 @@
 #!/bin/bash
 # Create optional private ZSH config directory
-# Sheldon conditionally sources *.zsh files from here (see plugins.toml.tmpl)
+# antidote sources *.zsh files from here via ~/.zsh.d/private-sync.zsh
 
 mkdir -p "$HOME/.zsh.d.private"

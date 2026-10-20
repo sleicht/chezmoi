@@ -23,7 +23,7 @@ packages:
       - "chezmoi"
       - "mise"
       - "spaceship"
-      - "sheldon"
+      - "antidote"
       - "zsh"
       # CLI essentials
       - "atuin"
@@ -69,6 +69,7 @@ packages:
     cross_platform_brews:
       - "ack"
       - "age"
+      - "antidote"
       - "archey4"
       - "atuin"
       - "bash"
@@ -148,7 +149,6 @@ packages:
       - "rlwrap"
       - "screen"
       - "semgrep"
-      - "sheldon"
       - "shellcheck"
       - "shfmt"
       - "spaceship"
@@ -428,5 +428,3 @@ tools:
       idiomatic_version_files:
         - node
         - python
-  sheldon:
-  # Plugin list goes here when needed

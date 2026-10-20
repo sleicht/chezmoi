@@ -72,8 +72,8 @@ zle -N autosuggest-accept fixture_widget
 export LAST_SHELL_STARTUP_MS=1
 zsh-defer() { [[ "$1" == -a ]] || return 1; shift; "$@"; }
 ''')
-        self.write(self.home / ".config/sheldon/plugins.toml", "zsh-syntax-highlighting")
-        smoke = (ROOT / "scripts/zsh-smoke-test").read_text().replace("~/.config", str(self.home / ".config"))
+        self.write(self.home / ".zsh_plugins.txt", "zsh-syntax-highlighting")
+        smoke = (ROOT / "scripts/zsh-smoke-test").read_text().replace("~/.zsh_plugins.txt", str(self.home / ".zsh_plugins.txt"))
         path = self.write(self.home / "smoke.zsh", smoke)
         result = self.run_cmd(["zsh", str(path)])
         self.assertIn("Passed: 13", result.stdout)

@@ -177,7 +177,7 @@ run_onchange_after_08-ponytail-board-server.sh
 # Phase 2: .config/git/ (.gitconfig, .gitconfig_local, .gitignore_global,
 #           .gitattributes_global)
 # Phase 3/5: .config/mise/
-# Phase 5: .config/sheldon/
+# Phase 5: .zsh_plugins.txt
 # Phase 6: .ssh/
 # -----------------------------------------------------------------------------
 

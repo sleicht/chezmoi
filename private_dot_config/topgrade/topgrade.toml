@@ -1,6 +1,6 @@
 [misc]
 # Steps to skip during updates
-# "shell" covers oh-my-zsh/oh-my-bash — not needed since we use sheldon (separate step)
+# "shell" covers oh-my-zsh/oh-my-bash — not needed since we use antidote (separate step)
 disable = ["shell", "containers", "helm", "gem", "git_repos"]
 cleanup = true
 
@@ -10,3 +10,7 @@ autoremove = true
 
 [chezmoi]
 exclude_encrypted = true
+
+[commands]
+# topgrade has no built-in antidote step
+"antidote" = "zsh -c 'source \"$HOMEBREW_PREFIX/opt/antidote/share/antidote/antidote.zsh\" && antidote update --bundles'"

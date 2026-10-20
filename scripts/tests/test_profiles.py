@@ -39,28 +39,22 @@ class ProfileTests(Fixture):
         self.env.pop("HOMEBREW_PREFIX", None)
         for arch, prefix in [("amd64", "/usr/local"), ("arm64", "/opt/homebrew")]:
             with self.subTest(arch=arch):
-                plugins = tomllib.loads(self.render("private_dot_config/sheldon/plugins.toml.tmpl", arch=arch))
-                self.assertTrue(plugins["plugins"]["forgit"]["local"].startswith(prefix))
-                self.assertTrue(plugins["plugins"]["zsh-abbr"]["local"].startswith(prefix))
+                plugins = self.render("dot_zsh_plugins.txt.tmpl", arch=arch)
+                self.assertIn(f"{prefix}/share/forgit path:forgit.plugin.zsh", plugins)
+                self.assertIn(f"{prefix}/share/zsh-abbr path:zsh-abbr.zsh", plugins)
         profile = self.render("dot_profile.tmpl", os_name="linux", arch="amd64")
         result = self.script(profile + '\nprintf "%s" "$HOMEBREW_PREFIX"', shell="sh")
         self.assertEqual(result.stdout, "/home/linuxbrew/.linuxbrew")
 
-    def test_failed_sheldon_generation_is_retried_and_preserves_good_cache(self):
+    def test_zshrc_loads_antidote_and_tolerates_missing_install(self):
         self.write(self.home / ".profile", "")
-        self.env.pop("XDG_CACHE_HOME", None)
-        self.env.pop("XDG_DATA_HOME", None)
         rc = self.render("dot_zshrc.tmpl")
-        cache = self.home / ".cache/sheldon/source.zsh"
-        self.write(cache, "")
-        self.stub("sheldon", 'echo partial; exit 1')
-        self.script(rc, shell="zsh")
-        self.assertEqual(cache.read_text(), "")
-        self.stub("sheldon", 'echo "export SHELDON_FIXTURE=ok"')
-        result = self.script(rc + '\nprintf "%s" "$SHELDON_FIXTURE"', shell="zsh")
+        self.env["HOMEBREW_PREFIX"] = str(self.home / "missing")
+        result = self.script(rc, shell="zsh")
+        self.assertNotIn("antidote", result.stderr)
+        prefix = self.home / "brew"
+        self.write(prefix / "opt/antidote/share/antidote/antidote.zsh",
+                   'antidote() { [[ "$1" == load ]] && export ANTIDOTE_FIXTURE=ok; }')
+        self.env["HOMEBREW_PREFIX"] = str(prefix)
+        result = self.script(rc + '\nprintf "%s" "$ANTIDOTE_FIXTURE"', shell="zsh")
         self.assertEqual(result.stdout, "ok")
-        self.write(self.home / ".local/share/sheldon/plugins.lock", "new lock")
-        self.stub("sheldon", 'echo partial; exit 1')
-        result = self.script(rc + '\nprintf "%s" "$SHELDON_FIXTURE"', shell="zsh")
-        self.assertEqual(result.stdout, "ok")
-        self.assertEqual(cache.read_text(), "export SHELDON_FIXTURE=ok\n")

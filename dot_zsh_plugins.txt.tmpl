@@ -1,0 +1,50 @@
+{{- $brew := "/home/linuxbrew/.linuxbrew" -}}
+{{- if eq .chezmoi.os "darwin" -}}
+{{-   if eq .chezmoi.arch "arm64" }}{{ $brew = "/opt/homebrew" }}{{ else }}{{ $brew = "/usr/local" }}{{ end -}}
+{{- end -}}
+# Synchronous prerequisites, in declaration order.
+mroth/evalcache
+romkatv/zsh-defer
+# compinit must finish before deferred fzf-tab and completion plugins.
+~/.zsh.d/compinit.zsh
+
+Aloxaf/fzf-tab kind:defer
+junegunn/fzf-git.sh kind:defer
+{{ $brew }}/share/forgit path:forgit.plugin.zsh kind:defer
+zsh-users/zsh-syntax-highlighting kind:defer
+zsh-users/zsh-autosuggestions kind:defer
+{{ $brew }}/share/zsh-abbr path:zsh-abbr.zsh kind:defer
+
+ohmyzsh/ohmyzsh path:plugins/gitfast kind:defer
+ohmyzsh/ohmyzsh path:plugins/zoxide kind:defer
+ohmyzsh/ohmyzsh path:plugins/kubectl kind:defer
+ohmyzsh/ohmyzsh path:plugins/gcloud kind:defer
+ohmyzsh/ohmyzsh path:plugins/mvn kind:defer
+ohmyzsh/ohmyzsh path:plugins/macos kind:defer
+
+# Shared synchronous files retain their explicit order.
+~/.zsh.d/prompt.zsh
+~/.zsh.d/external-sync.zsh
+~/.zsh.d/completions-sync.zsh
+~/.zsh.d/aliases.zsh
+~/.zsh.d/functions.zsh
+~/.zsh.d/variables.zsh
+{{- if eq .machine_type "client" }}
+~/.zsh.d/tls.zsh
+{{- end }}
+~/.zsh.d/keybinds.zsh
+~/.zsh.d/forge.zsh
+
+# Private files run synchronously, alphabetically; missing/empty directories are skipped.
+~/.zsh.d/private-sync.zsh
+
+~/.zsh.d/external-defer.zsh kind:defer
+~/.zsh.d/sdkmanrc-shim.zsh kind:defer
+~/.zsh.d/completions-defer.zsh kind:defer
+~/.zsh.d/atuin.zsh kind:defer
+~/.zsh.d/carapace.zsh kind:defer
+~/.zsh.d/intelli-shell.zsh kind:defer
+~/.zsh.d/ssh-defer.zsh kind:defer
+~/.zsh.d/lens-completion.zsh kind:defer
+~/.zsh.d/projects.zsh kind:defer
+~/.zsh.d/worktrunk.zsh kind:defer

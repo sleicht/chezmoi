@@ -17,7 +17,7 @@ Personal dotfiles for macOS, managed with [chezmoi](https://www.chezmoi.io/) and
 
 | Category      | Tools                                                                                                                                                                                                                                                                                                                                                                            |
 |---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Shell**     | ZSH · `.profile` (POSIX base env) · [Sheldon](https://sheldon.cli.rs/) (plugin manager, cached source) · [Spaceship](https://spaceship-prompt.sh/) (prompt) · [zsh-defer](https://github.com/romkatv/zsh-defer) (lazy loading) · [evalcache](https://github.com/mroth/evalcache) (cached eval inits) · `pj` (fzf project picker)                                                       |
+| **Shell**     | ZSH · `.profile` (POSIX base env) · [antidote](https://antidote.sh/) (plugin manager, static bundle) · [Spaceship](https://spaceship-prompt.sh/) (prompt) · [zsh-defer](https://github.com/romkatv/zsh-defer) (lazy loading) · [evalcache](https://github.com/mroth/evalcache) (cached eval inits) · `pj` (fzf project picker)                                                       |
 | **Terminal**  | [Ghostty](https://ghostty.org/) · [Kitty](https://sw.kovidgoyal.net/kitty/) · [WezTerm](https://wezfurlong.org/wezterm/)                                                                                                                                                                                                                                                         |
 | **Editor**    | EditorConfig · [aider](https://aider.chat/) (AI pair programming)                                                                                                                                                                                                                                                                                                                |
 | **Git**       | [Lazygit](https://github.com/jesseduffield/lazygit) · [Gitleaks](https://gitleaks.io/) (secret scanning) · global config + hooks                                                                                                                                                                                                                                                 |
@@ -125,7 +125,7 @@ pj                        # fzf picker: Enter=cd, Ctrl+E=editor, Ctrl+O=cd+edito
 
 Discovers git repos under `~/Projects` and `~/git`, sorted by [zoxide](https://github.com/ajeetdsouza/zoxide) frecency. Shows branch, dirty status, relative time, and detected editor (IntelliJ/Sublime). Persistent disk cache with 1-hour TTL.
 
-Update everything (Homebrew, mise, chezmoi, sheldon, etc.) in one go with [topgrade](https://github.com/topgrade-rs/topgrade):
+Update everything (Homebrew, mise, chezmoi, antidote, etc.) in one go with [topgrade](https://github.com/topgrade-rs/topgrade):
 
 ```bash
 topgrade                  # update all detected tools
@@ -157,13 +157,13 @@ The bar displays active workspaces with app icons (via [sketchybar-app-font](htt
 ├── dot_bash_profile                   # → ~/.bash_profile (sources .profile)
 ├── dot_zshenv                         # → ~/.zshenv (startup timing, zprof, PATH dedup)
 ├── dot_zprofile                       # → ~/.zprofile (Homebrew, mise shims)
-├── dot_zshrc.tmpl                     # → ~/.zshrc (sources .profile, cached Sheldon)
+├── dot_zshrc.tmpl                     # → ~/.zshrc (sources .profile, loads antidote)
 ├── dot_zlogin                         # → ~/.zlogin (background zcompile)
+├── dot_zsh_plugins.txt.tmpl           # → ~/.zsh_plugins.txt (ordered antidote plugin list)
 ├── dot_zsh.d/                         # → ~/.zsh.d/ (modular ZSH config, sync/defer split)
-│   ├── projects.zsh                   #   pj() project picker (deferred via Sheldon)
+│   ├── projects.zsh                   #   pj() project picker (deferred via antidote)
 ├── dot_Brewfile.tmpl                  # → ~/.Brewfile (machine-aware packages)
 ├── private_dot_config/                # → ~/.config/
-│   ├── sheldon/plugins.toml           #   plugin manager (sync + defer groups)
 │   ├── ghostty/config                 #   terminal config
 │   ├── mise/config.toml.tmpl          #   runtime versions
 │   ├── mise/tasks/                    #   mise task scripts (dotfiles, git, projects)

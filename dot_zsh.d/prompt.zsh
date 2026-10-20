@@ -36,6 +36,6 @@ fi
 # Atuin keybindings: must be sync (Ctrl+R widget — overwrites tv's Ctrl+R)
 source "$XDG_CONFIG_HOME/atuin/atuin-keybindings.zsh"
 
-# NOTE: forge loads via forge.zsh (after keybinds.zsh in sheldon sync order)
+# NOTE: forge loads via forge.zsh (after keybinds.zsh in antidote sync order)
 
 preexec() { print '' }
