@@ -204,6 +204,7 @@ Configs adapt based on machine type (set during `chezmoi init`):
 - **Secrets** — pulled from Bitwarden at apply time via templates
 - **Permissions** — `run_after_` script enforces 600/700 on sensitive files
 - **Pre-commit** — gitleaks scans every commit for accidental secret exposure
+- **eMudhra CA remediation** — affected roots from the [October 2026 advisory](https://emudhra.we-have-a-problem.com/#macos-curl) are filtered by public key from the corporate bundle (client) and, once via `sudo`, from `/etc/ssl/cert.pem`; pip on client machines uses only the corporate bundle (`legacy-certs`). Java keystores need `remove-emudhra-certs --dry-run`, then `remove-emudhra-certs` (and `sudo remove-emudhra-certs /Library/Java/JavaVirtualMachines` for system JDKs); rerun after JDK installs. After a macOS update restores the system bundle, rerun: `chezmoi execute-template < "$(chezmoi source-path)/run_once_after_remediate-emudhra.sh.tmpl" | /bin/bash`
 
 ### Age Encryption Bootstrap
 

@@ -1,0 +1,90 @@
+#!/bin/bash
+# Remove affected eMudhra roots from every local Java cacerts keystore.
+# Usage: remove-emudhra-certs [-n|--dry-run] [JDK parent directory...]
+# shortcut: assumes the default "changeit" store password, as JDK cacerts ship.
+set -euo pipefail
+
+{{ includeTemplate "filter-emudhra.sh" . }}
+
+dry_run=false
+if [[ "${1:-}" == -n || "${1:-}" == --dry-run ]]; then
+  dry_run=true
+  shift
+fi
+if [[ $# -eq 0 ]]; then
+  set -- "$HOME/.sdkman/candidates/java" "$HOME/.local/share/mise/installs/java" \
+    "$HOME/Library/Java/JavaVirtualMachines" /Library/Java/JavaVirtualMachines \
+    "${HOMEBREW_PREFIX:-/opt/homebrew}/opt"
+fi
+
+# Version aliases (mise "21", "latest", SDKMAN "current") resolve to the same JDK.
+jdk_homes=$(
+  shopt -s nullglob
+  for parent in "$@"; do
+    for cacerts in "$parent"/*/{,Contents/Home/,libexec/openjdk.jdk/Contents/Home/}lib/security/cacerts; do
+      realpath "${cacerts%/lib/security/cacerts}"
+    done
+  done | sort -u
+)
+if [[ -z "$jdk_homes" ]]; then
+  echo "No Java keystores found under: $*" >&2
+  exit 1
+fi
+
+work_dir=$(mktemp -d)
+trap 'rm -rf "$work_dir"' EXIT
+keystores=0
+affected_keystores=0
+matched=0
+failed=0
+while IFS= read -r jdk_home; do
+  keytool="$jdk_home/bin/keytool"
+  cacerts="$jdk_home/lib/security/cacerts"
+  keystores=$((keystores + 1))
+  echo "==> Inspecting $cacerts"
+  if ! listing=$("$keytool" -J-Duser.language=en -list -rfc \
+    -keystore "$cacerts" -storepass changeit 2>&1); then
+    echo "  WARNING: could not list keystore: $listing" >&2
+    failed=$((failed + 1))
+    continue
+  fi
+
+  rm -f "$work_dir"/*
+  # keytool ends PEM lines with CRLF.
+  awk -v directory="$work_dir" '
+    { sub(/\r$/, "") }
+    /^Alias name: / {
+      sub(/^Alias name: /, "")
+      file = directory "/alias-" ++count
+      print > file
+      close(file)
+    }
+    /^-----BEGIN CERTIFICATE-----$/ { writing = 1 }
+    writing { print > (directory "/cert-" count ".pem") }
+    /^-----END CERTIFICATE-----$/ { writing = 0; close(directory "/cert-" count ".pem") }
+  ' <<< "$listing"
+
+  matched_before=$matched
+  for alias_file in "$work_dir"/alias-*; do
+    [[ -e "$alias_file" ]] || continue
+    alias=$(< "$alias_file")
+    status=$(emudhra_root_status "$work_dir/cert-${alias_file##*-}.pem")
+    [[ "$status" == affected ]] || continue
+    matched=$((matched + 1))
+    if [[ "$dry_run" == true ]]; then
+      echo "  Would remove: $alias"
+    elif output=$("$keytool" -J-Duser.language=en -delete -alias "$alias" \
+      -keystore "$cacerts" -storepass changeit 2>&1); then
+      echo "  Removed: $alias"
+    else
+      echo "  WARNING: could not remove $alias (rerun with sudo for system JDKs): $output" >&2
+      failed=$((failed + 1))
+    fi
+  done
+  if [[ "$matched" -gt "$matched_before" ]]; then
+    affected_keystores=$((affected_keystores + 1))
+  fi
+done <<< "$jdk_homes"
+
+echo "==> $matched affected certificate(s) in $affected_keystores of $keystores keystore(s)"
+[[ "$failed" -eq 0 ]]

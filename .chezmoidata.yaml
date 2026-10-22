@@ -78,6 +78,7 @@ packages:
       - "bat-extras"
       - "bottom"
       - "broot"
+      - "ca-certificates"
       - "carapace"
       - "catimg"
       - "chezmoi"

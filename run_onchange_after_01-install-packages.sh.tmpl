@@ -9,5 +9,6 @@ if ! command -v brew &> /dev/null; then
 fi
 
 echo "==> Installing Homebrew packages..."
+brew update
 brew bundle --global --verbose
 echo "==> Homebrew package installation complete."

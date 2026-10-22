@@ -5,6 +5,8 @@
 
 set -euo pipefail
 
+{{ includeTemplate "filter-emudhra.sh" . }}
+
 CERT_DIR="$HOME/.tls"
 REPO="git@gitlab.sanet17.ch:security/desired-state-configuration.git"
 EXPIRY_THRESHOLD_DAYS=30
@@ -31,6 +33,7 @@ for cert in "${CERTS[@]}"; do
 done
 
 if [[ "$needs_refresh" == "false" ]]; then
+    filter_emudhra_roots "$CERT_DIR/ca-bundle.trust.crt"
     echo "==> All certificates valid for >${EXPIRY_THRESHOLD_DAYS} days, skipping fetch"
     exit 0
 fi
@@ -56,6 +59,9 @@ for cert in "${CERTS[@]}"; do
         echo "  Ask #guild-security to update security/desired-state-configuration/static/$cert"
         ((++failed))
         continue
+    fi
+    if [[ "$cert" == "ca-bundle.trust.crt" ]]; then
+        filter_emudhra_roots "$src"
     fi
     cp "$src" "$dst"
     chmod 600 "$dst"

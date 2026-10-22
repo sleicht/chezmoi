@@ -93,6 +93,7 @@ Brewfile_Personal
 Library
 Library/**
 .local/bin/budget-overlay.swift
+.local/bin/remove-emudhra-certs
 run_onchange_after_07-budget-overlay.sh
 .config/karabiner
 .config/karabiner/**
