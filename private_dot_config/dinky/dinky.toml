@@ -20,6 +20,12 @@ float-windows-without-fullscreen = true   # progress windows, About, Calculator 
 # rows = 3
 # expand = 'columns'           # columns | rows | accordion (overflow in last cell)
 
+[workspace.2]                   # editors
+layout = 'accordion'
+
+[workspace.3]                   # browsers, mail and calendar
+layout = 'accordion'
+
 [accordion]
 padding = 30                    # points the neighbours peek out by
 orientation = 'auto'            # auto: run along the container's longer side | keep
@@ -80,6 +86,59 @@ shift = 'both'
 [[rules]]
 app-id = 'com.apple.systempreferences'   # also: app-name, title (regexes), kind (normal|dialog|sheet|panel)
 run = 'layout floating'
+
+# Workspace 1: terminal and agents
+[[rules]]
+app-id = 'com.cmuxterm.app'
+run = 'move-window-to-workspace 1'
+
+[[rules]]
+app-id = 'com.t3tools.t3code'
+run = 'move-window-to-workspace 1'
+
+# Workspace 2: editors
+[[rules]]
+app-id = 'com.sublimetext.4'
+run = 'move-window-to-workspace 2'
+
+[[rules]]
+app-id = 'com.jetbrains.intellij'
+run = 'move-window-to-workspace 2'
+
+# Workspace 3: browsers, mail and calendar
+[[rules]]
+app-id = 'com.pauldavis.crest'
+run = 'move-window-to-workspace 3'
+
+[[rules]]
+app-id = 'com.readdle.SparkDesktop'
+run = 'move-window-to-workspace 3'
+
+[[rules]]
+app-id = 'com.google.Chrome'
+run = 'move-window-to-workspace 3'
+
+[[rules]]
+app-id = 'com.flexibits.fantastical2.mac'
+run = 'move-window-to-workspace 3'
+
+# Workspace 4: chat
+[[rules]]
+app-id = 'ch.threema.threema-desktop'
+run = 'move-window-to-workspace 4'
+
+[[rules]]
+app-id = 'com.infomaniak.chat'
+run = 'move-window-to-workspace 4'
+
+[[rules]]
+app-id = 'com.apple.MobileSMS'
+run = 'move-window-to-workspace 4'
+
+# Workspace 5: Claude
+[[rules]]
+app-id = 'com.anthropic.claudefordesktop'
+run = 'move-window-to-workspace 5'
 
 [mode.main]
 ctrl-left = 'workspace prev'
