@@ -216,6 +216,7 @@ packages:
       - "git-credential-manager"
       - "gitbutler"
       - "homerow"
+      - "hotkeyclash"
       - "istat-menus"
       - "jetbrains-toolbox"
       - "karabiner-elements"
