@@ -5,14 +5,21 @@
   },
   "mcpServers": {
     "intellij": {
-      "url": "http://127.0.0.1:64342/stream",
-      "lifecycle": "lazy",
-      "idleTimeout": 10,
-      "exposeResources": true
+      "url": "http://127.0.0.1:64343/stream"
     },
     "agent-search": {
-      "command": "sh",
-      "args": ["-c", "python $HOME/git/stuff/agent-search/mcp-server/server.py"]
+      "command": "$HOME/.local/bin/uv",
+      "args": [
+        "run",
+        "--no-sync",
+        "--directory",
+        "$HOME/git/stuff/agent-search/mcp-server",
+        "python",
+        "server.py"
+      ]
+    },
+    "sanitas-developer-tools": {
+      "url": "https://mcp.gcp.sanet17.ch/mcp"
     }
   }
 }
