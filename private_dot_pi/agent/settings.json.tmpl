@@ -1,8 +1,8 @@
 {
-{{- if eq .machine_type "client" }}
-  "defaultModel": "gpt-5-6-terra",
-  "defaultProvider": "litellm",
   "defaultThinkingLevel": "low",
+{{- if eq .machine_type "client" }}
+  "defaultModel": "gpt-sol",
+  "defaultProvider": "litellm",
   "enabledModels": [
     "litellm/claude-haiku-5-5",
     "litellm/claude-sonnet-5=5",
@@ -12,14 +12,20 @@
     "litellm/gpt-luna"
   ],
 {{- else }}
-  "defaultThinkingLevel": "low",
+  "defaultModel": "gpt-6.1-sol",
+  "defaultProvider": "openai-codex",
 {{- end }}
   "enableInstallTelemetry": false,
-  "lastChangelogVersion": "0.80.6",
   "packages": [
+    "npm:pi-provider-litellm",
     "npm:pi-lens@3.8.53",
-    "npm:pi-mcp-adapter@2.10.0",
-    "npm:@dkmnx/pi-clarify@0.1.9",
+    {
+      "source": "npm:pi-mcp-adapter@2.10.0",
+      "extensions": [
+        "-index.ts"
+      ]
+    },
+    "npm:@dkmnx/pi-clarify@0.4.2",
     "npm:@vanillagreen/pi-caveman@1.2.4",
     "npm:@gotgenes/pi-subagents@16.4.0",
 {{- if eq .machine_type "personal" }}
@@ -45,9 +51,37 @@
         }
       }
     }
-  }
-{{- if eq .machine_type "personal" }}
- ,"defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.6-sol"
-{{- end }}
+  },
+  "lastChangelogVersion": "1.4.0",
+  "skills": [
+    "!**/gitlab-operations/SKILL.md",
+    "!**/jira-issue-picker/SKILL.md",
+    "!**/jira-release-ticket-manager/SKILL.md",
+    "!**/jira/SKILL.md",
+    "!**/wiki-pages/SKILL.md",
+    "-~/.agents/skills/commit-message/SKILL.md",
+    "-~/.agents/skills/excalidraw-diagram/SKILL.md",
+    "-~/.agents/skills/gitbutler/SKILL.md",
+    "-~/.agents/skills/library-insight-2/SKILL.md",
+    "-~/.agents/skills/library-insight/SKILL.md",
+    "-~/.agents/skills/manage-skills/SKILL.md",
+    "-~/.agents/skills/plannotator-annotate/SKILL.md",
+    "-~/.agents/skills/plannotator-last/SKILL.md",
+    "-~/.agents/skills/plannotator-review/SKILL.md",
+    "-~/.agents/skills/supacode-cli/SKILL.md",
+    "-~/.agents/skills/supacode-deeplinks/SKILL.md",
+    "-~/.pi/agent/skills/architecture-2/SKILL.md",
+    "-~/.pi/agent/skills/compose-test-2/SKILL.md",
+    "-~/.pi/agent/skills/entity-model-2/SKILL.md",
+    "-~/.pi/agent/skills/flyway-migration-2/SKILL.md",
+    "-~/.pi/agent/skills/implement-2/SKILL.md",
+    "-~/.pi/agent/skills/implement-ui-2/SKILL.md",
+    "-~/.pi/agent/skills/implementation-status-2/SKILL.md",
+    "-~/.pi/agent/skills/ktor-test-2/SKILL.md",
+    "-~/.pi/agent/skills/reference-2/SKILL.md",
+    "-~/.pi/agent/skills/requirements-2/SKILL.md",
+    "-~/.pi/agent/skills/reverse-engineer-2/SKILL.md",
+    "-~/.pi/agent/skills/use-case-diagram-2/SKILL.md",
+    "-~/.pi/agent/skills/use-case-spec-2/SKILL.md"
+  ]
 }
