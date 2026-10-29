@@ -58,3 +58,14 @@ class ProfileTests(Fixture):
         self.env["HOMEBREW_PREFIX"] = str(prefix)
         result = self.script(rc + '\nprintf "%s" "$ANTIDOTE_FIXTURE"', shell="zsh")
         self.assertEqual(result.stdout, "ok")
+
+    def test_private_plugins_load_before_private_scripts(self):
+        loader = (ROOT / "dot_zsh.d/private-sync.zsh").read_text()
+        harness = 'order=(); antidote() { order+=("antidote:${2:t}:${3:t}"); }\n' + loader + '\nprint -r -- "${(j:,:)order}"'
+        private = self.home / ".zsh.d.private"
+        self.write(private / "a.zsh", "order+=(a)")
+        self.write(private / "plugins.txt", "")
+        self.assertEqual(self.script(harness, shell="zsh").stdout.strip(), "a")
+        self.write(private / "plugins.txt", "zsh-users/zsh-history-substring-search\n")
+        self.assertEqual(self.script(harness, shell="zsh").stdout.strip(),
+                         "antidote:plugins.txt:.zsh_plugins.private.zsh,a")

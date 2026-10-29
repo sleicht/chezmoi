@@ -132,6 +132,19 @@ topgrade                  # update all detected tools
 topgrade -n               # dry-run — preview what would be updated
 ```
 
+### Personal Plugins
+
+Create `~/.zsh.d.private/plugins.txt` with one antidote bundle per line:
+
+```text
+zsh-users/zsh-history-substring-search
+ohmyzsh/ohmyzsh path:plugins/docker
+```
+
+Open a new terminal. Antidote installs missing plugins and loads this list before your private `*.zsh` scripts, where you can configure plugins and keybindings. The loader caches the bundle in `~/.zsh_plugins.private.zsh` and rebuilds it when the list changes. No manual `source`, cache paths, or `chezmoi apply` are needed.
+
+`~/.zsh_plugins.txt` remains the shared, managed list. Do not use `chezmoi add` for personal files.
+
 ### SketchyBar (Status Bar)
 
 [SketchyBar](https://github.com/FelixKratz/SketchyBar) provides a workspace-aware status bar driven by AeroSpace callbacks. After first `chezmoi apply`:
