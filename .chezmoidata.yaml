@@ -186,10 +186,11 @@ packages:
       - "sketchybar"
       # krunkit for podman desktop
       - "krunkit"
-#      - "slp/krun/gvproxy"
-#      - "slp/krun/libkrunfw"
-#      - "slp/krun/virglrenderer"
-#      - "slp/krun/libkrun"
+      - "dtc"
+      - "libepoxy"
+      - "molten-vk"
+      - "slp/krunkit/virglrenderer"
+      - "slp/krunkit/libkrun-efi"
 
     # Common casks - casks needed on all machines
     common_casks:
