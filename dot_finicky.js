@@ -11,7 +11,7 @@
  * @type {FinickyConfig}
  */
 export default {
-    defaultBrowser: "Crest",
+    defaultBrowser: "Zen",
     options: {
         // Check for updates. Default: true
         checkForUpdates: true,
