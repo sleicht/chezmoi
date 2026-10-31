@@ -20,6 +20,9 @@ float-windows-without-fullscreen = true   # progress windows, About, Calculator 
 # rows = 3
 # expand = 'columns'           # columns | rows | accordion (overflow in last cell)
 
+[workspace.1]                   # terminal and agents
+layout = 'scrolling'
+
 [workspace.2]                   # editors
 layout = 'accordion'
 
