@@ -94,11 +94,11 @@ Library
 Library/**
 .local/bin/budget-overlay.swift
 .local/bin/remove-emudhra-certs
-run_onchange_after_07-budget-overlay.sh
+07-budget-overlay.sh
 .config/karabiner
 .config/karabiner/**
 .finicky.js
-run_once_before_macos-defaults.sh
+macos-defaults.sh
 {{- end }}
 
 {{- if eq .chezmoi.os "darwin" }}
@@ -126,7 +126,7 @@ run_once_before_macos-defaults.sh
 Library/LaunchAgents/com.client.claude-vertex-env.plist
 Library/LaunchAgents/com.sanitas.litellm-budget-overlay.plist
 .local/bin/budget-overlay.swift
-run_onchange_after_07-budget-overlay.sh
+07-budget-overlay.sh
 {{- end }}
 {{- if ne .machine_type "server" }}
 .ssh/config_server
@@ -136,7 +136,7 @@ run_onchange_after_07-budget-overlay.sh
 {{- if not (and (hasKey . "ponytail_board_server") .ponytail_board_server) }}
 .local/bin/ponytail-board-server
 Library/LaunchAgents/ponytail-board-server.plist
-run_onchange_after_08-ponytail-board-server.sh
+08-ponytail-board-server.sh
 {{- end }}
 
 {{- if eq .machine_type "container" }}
