@@ -18,6 +18,8 @@ packages:
       - "neovim"
 
   linux:
+    taps:
+      - "olets/tap"
     brews:
       # Core — required for the shell config to function
       - "chezmoi"
