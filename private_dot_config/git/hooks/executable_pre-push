@@ -19,7 +19,8 @@ while read -r local_ref local_sha remote_ref remote_sha; do
   [[ -n "$local_ref" && -n "$remote_ref" ]] || continue
   [[ "$local_sha" =~ ^0+$ ]] && continue # Deleted ref
 
-  log_opts="$local_sha"
+  # New branches only introduce commits not already present on this remote.
+  log_opts="$local_sha --not --remotes=${1:-origin}"
   if [[ ! "$remote_sha" =~ ^0+$ ]] && git cat-file -e "${remote_sha}^{commit}" 2>/dev/null; then
     log_opts="${remote_sha}..${local_sha}"
   fi
