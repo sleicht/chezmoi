@@ -7,12 +7,12 @@
   },
   "featureFlags": {
     "irc": false,
-    "rules": true,
-    "ws3": true
+    "ws3": true,
+    "gpui": false
   },
   "onboardingComplete": true,
   "telemetry": {
-    "appDistinctId": "019d3eea-aef8-7192-b99c-4a13a84c7c7b",
+    "appDistinctId": "user_36612",
     "migratedFromLegacy": true,
     "appErrorReportingEnabled": false,
     "appMetricsEnabled": false
@@ -23,8 +23,6 @@
     "notifyOnPermissionRequest": true
   },
   "fetch": {
-    "autoFetchIntervalMinutes": {
-      "$serde_json::private::Number": "5"
-    }
+    "autoFetchIntervalMinutes": 5
   }
 }
