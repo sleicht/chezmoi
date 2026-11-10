@@ -1,0 +1,70 @@
+{
+  "hooks": {
+    "PermissionRequest": [],
+    "PostToolUse": [],
+    "PreToolUse": [],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/sh -c 'rex __internal session-start --agent codex 2>/dev/null || true'",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/c803964/.hindsight/coding-agents/dist/codex-sessionstart-hook.js\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "/Users/c803964/.local/bin/plannotator",
+            "timeout": 345600,
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/c803964/.hindsight/coding-agents/dist/codex-stop-hook.js\"",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [],
+    "SubagentStop": [],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/Users/c803964/.codex/hooks/sonar-secrets/build-scripts/prompt-secrets.sh'",
+            "timeout": 60
+          }
+        ],
+        "matcher": "*"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"/Users/c803964/.hindsight/coding-agents/dist/codex-hook.js\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -14,6 +14,7 @@
 {{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
     "{{ $cc.marketplace_name.value }}@git+{{ $cc.marketplace_url_https.value }}",
 {{- end }}
+    "{{ .chezmoi.homeDir }}/.hindsight/coding-agents"
   ],
   "provider": {
 {{- if eq .machine_type "client" }}

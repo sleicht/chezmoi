@@ -1,146 +1,73 @@
-notify = ["{{ .chezmoi.homeDir }}/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
+approvals_reviewer = "auto_review"
 {{- if eq .machine_type "client" }}
 model = "gpt-sol"
 {{- else }}
 model = "gpt-6-1-sol"
 {{- end }}
-service_tier = "fast"
-model_reasoning_effort = "high"
-approvals_reviewer = "auto_review"
-
 {{- if eq .machine_type "client" }}
 {{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
-model_provider = "litellm"
 model_catalog_json = "models.json"
-
-[model_providers.litellm]
-name = "LiteLLM"
-base_url = "{{ $cc.litellm_url.value }}/v1"
-env_key = "OPENAI_API_KEY"
-env_key_instructions = "Set OPENAI_API_KEY to your LiteLLM API key."
-wire_api = "responses"
-supports_websockets = false
+model_provider = "litellm"
 {{- end }}
+model_reasoning_effort = "high"
+notify = ["{{ .chezmoi.homeDir }}/.codex/computer-use/Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient", "turn-ended"]
+service_tier = "fast"
 
-[mcp_servers.idea]
-url = "http://127.0.0.1:64342/stream"
-
-[mcp_servers.node_repl]
-args = []
-command = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
-startup_timeout_sec = 120
-
-[mcp_servers.node_repl.env]
-NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
-NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
-NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
-NODE_REPL_TRUSTED_CODE_PATHS = "{{ .chezmoi.homeDir }}/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
-CODEX_HOME = "{{ .chezmoi.homeDir }}/.codex"
-BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
-NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
-NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
-NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
-BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
-BROWSER_USE_CODEX_APP_VERSION = "26.707.62119"
-CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
-
-[mcp_servers.sonarqube]
-command = "sonar"
-args = [ "run", "mcp" ]
-
-[mcp_servers.computer-use]
-command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"
-args = [ "mcp" ]
-cwd = "."
-enabled = false
-
-{{- if eq .machine_type "personal" }}
-[mcp_servers.tolaria]
-command = "node"
-args = [ "/Applications/Tolaria.app/Contents/Resources/mcp-server/index.js" ]
-
-[mcp_servers.tolaria.env]
-VAULT_PATH = "{{ .chezmoi.homeDir }}/Documents/Getting Started"
-
-[mcp_servers.gitnexus]
-command = "{{ .chezmoi.homeDir }}/.npm-global/bin/gitnexus"
-args = [ "mcp" ]
-{{- end }}
-
-[plugins."visualize@openai-bundled"]
-enabled = true
-
-{{- if eq .machine_type "personal" }}
-[plugins."coderabbit@openai-curated"]
-enabled = true
-
-[plugins."spark-cli-skills@spark-codex-marketplace"]
-enabled = true
-{{- end }}
-
-[plugins."browser@openai-bundled"]
-enabled = true
-
-{{- if eq .machine_type "personal" }}
-[plugins."documents@openai-primary-runtime"]
-enabled = true
-
-[plugins."pdf@openai-primary-runtime"]
-enabled = true
-
-[plugins."spreadsheets@openai-primary-runtime"]
-enabled = true
-
-[plugins."presentations@openai-primary-runtime"]
-enabled = true
-
-[plugins."template-creator@openai-primary-runtime"]
-enabled = true
-{{- end }}
-
-[plugins."computer-use@openai-bundled"]
-enabled = true
-
-[plugins."chrome@openai-bundled"]
-enabled = true
-
-[plugins."sites@openai-bundled"]
-enabled = true
-
-[plugins."codex-app-tools@openai-bundled"]
-enabled = true
+[desktop]
+ambient-suggestions-enabled = false
+conversationDetailMode = "STEPS_PROSE"
+dock-icon-preference = "codex-system"
+followUpQueueMode = "queue"
+realtimeVoiceScreenContextEnabled = true
+[desktop.open-in-target-preferences]
+global = "intellij"
 
 [features]
 hooks = true
 js_repl = false
 
-[desktop]
-conversationDetailMode = "STEPS_PROSE"
-ambient-suggestions-enabled = false
-followUpQueueMode = "queue"
-dock-icon-preference = "codex-system"
-realtimeVoiceScreenContextEnabled = true
+[hooks]
+[hooks.state]
+[hooks.state."{{ .chezmoi.homeDir }}/.codex/hooks.json:stop:2:0"]
+trusted_hash = "sha256:e1914b5f2b132d72a3094732018b98b2e9c2d06e60488076a7077dae810075ee"
+[hooks.state."{{ .chezmoi.homeDir }}/.codex/hooks.json:user_prompt_submit:3:0"]
+trusted_hash = "sha256:006dd27647265e6e3098f05a1332a44cb7ed24fffc614946c5bb7e3a46220deb"
+[hooks.state."{{ .chezmoi.homeDir }}/.codex/hooks.json:user_prompt_submit:4:0"]
+trusted_hash = "sha256:0ed2e80d466217f724852af10583a099f7c18a0e71216f4a7a97d87a967085cf"
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:5aa5ec474e0bb546f207794993b37fdf7507e54a64e09216be164c5b7b42a197"
+trusted_content_hash = "sha256:6804e4c51c303675fd5831d2a00343eb1f4be827daf5eba231f7668b5a8ce431"
+[hooks.state."{{ .chezmoi.homeDir }}/.codex/hooks.json:session_start:4:0"]
+trusted_hash = "sha256:7ac16f27c7b29bec5952047d0a2193dc7595d731faca5a12c3c476194bd2d532"
+[hooks.state."{{ .chezmoi.homeDir }}/.codex/hooks.json:session_start:5:0"]
+trusted_hash = "sha256:dd8a4a054e342e74d47bc8a7f0240b3fd18bd43e69eff9a685962e0fb9d08779"
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:session_start:0:0"]
+trusted_hash = "sha256:defea43402fc8edba23234c694a1117cf80efc2da38968a40a1004cd9d63f725"
+trusted_content_hash = "sha256:6804e4c51c303675fd5831d2a00343eb1f4be827daf5eba231f7668b5a8ce431"
+[hooks.state."ponytail@ponytail:hooks/claude-codex-hooks.json:subagent_start:0:0"]
+trusted_hash = "sha256:5b2c1dfa8c7ecc5e8881c8e69479f65d46ed727e0bc5b8e7b4553cee9e5c3daf"
+trusted_content_hash = "sha256:6804e4c51c303675fd5831d2a00343eb1f4be827daf5eba231f7668b5a8ce431"
+[hooks.state."{{ .chezmoi.homeDir }}/.codex/hooks.json:stop:4:0"]
+trusted_hash = "sha256:45d6999044507b4fce42c6b9121853571f066e384fc6c53c443fc8486a638835"
+[hooks.state."{{ .chezmoi.homeDir }}/.codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:7ac16f27c7b29bec5952047d0a2193dc7595d731faca5a12c3c476194bd2d532"
+[hooks.state."{{ .chezmoi.homeDir }}/.codex/hooks.json:session_start:1:0"]
+trusted_hash = "sha256:dd8a4a054e342e74d47bc8a7f0240b3fd18bd43e69eff9a685962e0fb9d08779"
+[hooks.state."{{ .chezmoi.homeDir }}/.codex/hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:006dd27647265e6e3098f05a1332a44cb7ed24fffc614946c5bb7e3a46220deb"
+[hooks.state."{{ .chezmoi.homeDir }}/.codex/hooks.json:user_prompt_submit:1:0"]
+trusted_hash = "sha256:0ed2e80d466217f724852af10583a099f7c18a0e71216f4a7a97d87a967085cf"
+[hooks.state."{{ .chezmoi.homeDir }}/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:e1914b5f2b132d72a3094732018b98b2e9c2d06e60488076a7077dae810075ee"
+[hooks.state."{{ .chezmoi.homeDir }}/.codex/hooks.json:stop:1:0"]
+trusted_hash = "sha256:45d6999044507b4fce42c6b9121853571f066e384fc6c53c443fc8486a638835"
 
-[desktop.open-in-target-preferences]
-global = "intellij"
-
-[tui.model_availability_nux]
-gpt-sol = 4
-gpt-luna = 4
-
-[projects."{{ .chezmoi.homeDir }}/.local/share/chezmoi"]
-trust_level = "trusted"
+[marketplaces]
+[marketplaces.ponytail]
+source = "https://github.com/DietrichGebert/ponytail.git"
+source_type = "git"
 
 {{- if eq .machine_type "personal" }}
-[projects."{{ .chezmoi.homeDir }}/jessie.ai/app-jessie"]
-trust_level = "trusted"
-
-[projects."{{ .chezmoi.homeDir }}/git/forbut"]
-trust_level = "trusted"
-
-[projects."{{ .chezmoi.homeDir }}/git/forgit"]
-trust_level = "trusted"
-
 [marketplaces.openai-bundled]
 last_updated = "2026-08-18T19:51:06Z"
 source_type = "local"
@@ -164,5 +91,134 @@ source_type = "local"
 source = "/Users/stephanlv_fanaka/.cache/codex-runtimes/codex-primary-runtime/plugins/openai-primary-runtime"
 {{- end }}
 
+[mcp_servers]
+[mcp_servers.computer-use]
+command = "./Codex Computer Use.app/Contents/SharedSupport/SkyComputerUseClient.app/Contents/MacOS/SkyComputerUseClient"
+args = ["mcp"]
+cwd = "."
+enabled = false
+
+[mcp_servers.idea]
+url = "http://127.0.0.1:64342/stream"
+
+[mcp_servers.node_repl]
+command = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+startup_timeout_sec = 120.0
+
+[mcp_servers.node_repl.env]
+BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
+BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
+BROWSER_USE_CODEX_APP_VERSION = "26.707.62119"
+CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
+CODEX_HOME = "{{ .chezmoi.homeDir }}/.codex"
+NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
+NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
+NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
+NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
+NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "{{ .chezmoi.homeDir }}/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+
+[mcp_servers.sonarqube]
+command = "sonar"
+args = ["run", "mcp"]
+
+[mcp_servers.aegis]
+command = "node"
+args = ["{{ .chezmoi.homeDir }}/git/stuff/aegis/vault-mcp.ts"]
+
+{{- if eq .machine_type "personal" }}
+[mcp_servers.tolaria]
+command = "node"
+args = [ "/Applications/Tolaria.app/Contents/Resources/mcp-server/index.js" ]
+
+[mcp_servers.tolaria.env]
+VAULT_PATH = "{{ .chezmoi.homeDir }}/Documents/Getting Started"
+
+[mcp_servers.gitnexus]
+command = "{{ .chezmoi.homeDir }}/.npm-global/bin/gitnexus"
+args = [ "mcp" ]
+{{- end }}
+
+
+{{- if eq .machine_type "client" }}
+{{- $cc := rbwFields "claude-client-config" "--folder" "dotfiles/client" }}
+[model_providers]
+[model_providers.litellm]
+base_url = "{{ $cc.litellm_url.value }}/v1"
+env_key = "OPENAI_API_KEY"
+env_key_instructions = "Set OPENAI_API_KEY to your LiteLLM API key."
+name = "LiteLLM"
+supports_websockets = false
+wire_api = "responses"
+{{- end }}
+
+[plugins]
+[plugins."browser@openai-bundled"]
+enabled = true
+[plugins."chrome@openai-bundled"]
+enabled = true
+[plugins."codex-app-tools@openai-bundled"]
+enabled = true
+[plugins."computer-use@openai-bundled"]
+enabled = true
+[plugins."ponytail@ponytail"]
+enabled = true
+[plugins."sites@openai-bundled"]
+enabled = true
+[plugins."visualize@openai-bundled"]
+enabled = true
+
+{{- if eq .machine_type "personal" }}
+[plugins."coderabbit@openai-curated"]
+enabled = true
+[plugins."spark-cli-skills@spark-codex-marketplace"]
+enabled = true
+[plugins."documents@openai-primary-runtime"]
+enabled = true
+[plugins."pdf@openai-primary-runtime"]
+enabled = true
+[plugins."spreadsheets@openai-primary-runtime"]
+enabled = true
+[plugins."presentations@openai-primary-runtime"]
+enabled = true
+[plugins."template-creator@openai-primary-runtime"]
+enabled = true
+{{- end }}
+
+[projects]
+[projects."{{ .chezmoi.homeDir }}/.local/share/chezmoi"]
+trust_level = "trusted"
+{{- if eq .machine_type "client" }}
+[projects."{{ .chezmoi.homeDir }}/git/base/dotfiles"]
+trust_level = "trusted"
+[projects."{{ .chezmoi.homeDir }}/git/rh/platform"]
+trust_level = "trusted"
+[projects."{{ .chezmoi.homeDir }}/git/stuff/ai-unified-marketplace"]
+trust_level = "trusted"
+{{- end }}
+{{- if eq .machine_type "personal" }}
+[projects."{{ .chezmoi.homeDir }}/jessie.ai/app-jessie"]
+trust_level = "trusted"
+
+[projects."{{ .chezmoi.homeDir }}/git/forbut"]
+trust_level = "trusted"
+
+[projects."{{ .chezmoi.homeDir }}/git/forgit"]
+trust_level = "trusted"
+{{- end }}
+
+[shell_environment_policy]
 [shell_environment_policy.set]
 NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S = "9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"
+
+[tui]
+screen_reader_detection_done = true
+[tui.model_availability_nux]
+gpt-sol = 4
+gpt-luna = 4
+
+[mcp_servers.hindsight]
+command = "node"
+args = ["{{ .chezmoi.homeDir }}/.hindsight/coding-agents/dist/mcp-server.js"]
+env = { HINDSIGHT_MCP_HARNESS = "codex" }
