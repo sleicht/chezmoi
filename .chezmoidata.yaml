@@ -59,6 +59,7 @@ packages:
       - "jackielii/tap"
       - "manaflow-ai/cmux"
       - "mediosz/tap"
+      - "mikker/tap"
       - "neurosnap/tap"
       - "nikitabobko/tap"
       - "olets/tap"
