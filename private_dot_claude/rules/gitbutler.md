@@ -6,7 +6,7 @@
 - For commit just/only/specific changes on a new branch (selected-change requests), use the two-command fast path from the GitButler skill: `but diff`, then `but commit -b <branch> -m "message" <id> <id>`.
 - For that fast path, after the commit succeeds, stop and summarize; do not run separate branch, staging, status, or diff commands unless the commit output is missing information you need.
 - Use the installed GitButler skill for command recipes and syntax before guessing flags, using `--help`, or translating Git habits directly.
-- After a successful GitButler write command, use the workspace state it returns. Rerun status or diff only when that output lacks information you need or files changed since.
+- Mutation commands report their result without appending workspace status. Add `--status-after` only when the next step needs resulting workspace IDs or details; otherwise do not rerun status or diff to verify success.
 - Use a dedicated GitButler branch for each agent session, unless the user asks for a different branch structure. Commit only changes that belong to that session.
 - Do not push or open pull requests unless the user asks.
 - Keep commit messages and pull request descriptions succinct: explain what changed, why it changed, and any important decision.
@@ -35,18 +35,18 @@
 
 ### Update from the target branch automatically
 
-- When GitButler status shows new changes on the target branch, run `but pull --check`.
-- If the check is clean and the update affects only this session's branches, update the workspace with `but pull`.
-- If the check reports conflicts or the update would affect another agent's branch, ask before updating.
+- When GitButler status shows new changes on the target branch and the workspace holds only this session's branches, update with `but pull` directly — its output reports the result and `but undo` reverts it.
+- If an update you started on your own initiative reports conflicted commits, stop and ask before resolving them (`but undo` reverts the pull if the user prefers).
+- When other agents' branches are applied, run `but pull --check` first and ask before updating if it reports conflicts or their branches would move.
 - If the user asks you to handle update conflicts, use GitButler's conflict tools. Ask before resolving semantic conflicts, dependency updates, generated files, or conflicts involving another person's work.
 
 ### Branch naming
 
-- When creating a GitButler branch for an agent session, use `feature/<jira-ticket>-<short-description>`.
+- When creating a GitButler branch for an agent session, use `feature/<JIRA_TICKET>-<short-description>`.
 
 ### Commit message convention
 
-- Follow the `<jira-ticket>: type(scope): summary` commit-message convention when writing commit messages.
+- Follow the `<ticket>: <type>(<scope>): <description>` commit-message convention when writing commit messages.
 
 ### Commit checkpoints after each turn
 
