@@ -63,7 +63,6 @@ packages:
       - "nikitabobko/tap"
       - "olets/tap"
       - "rcmdnk/file"
-      - "slp/krunkit"
       - "vet-run/vet"
 
     # Cross-platform formulae — installed on both macOS and Linux
@@ -192,14 +191,11 @@ packages:
       - "dtc"
       - "libepoxy"
       - "molten-vk"
-      - "slp/krunkit/virglrenderer"
-      - "slp/krunkit/libkrun-efi"
 
     # Common casks - casks needed on all machines
     common_casks:
       - "aerospace"
       - "agentsview"
-      - "arc"
       - "atuin-desktop"
       - "bartender"
       - "bb"
@@ -209,7 +205,6 @@ packages:
       - "claude"
       - "claude-code@latest"
       - "codex"
-      - "crest-browser"
       - "crisp"
       - "dash"
       - "devpod"
@@ -327,6 +322,8 @@ packages:
       - "cardhop"
       - "chatgpt"
       - "chiri"
+      - "rustgis"
+      - "kugelblitz"
       - "cleanmymac"
       - "coderabbit"
       - "daisydisk"
