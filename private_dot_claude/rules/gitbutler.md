@@ -7,7 +7,7 @@
 - For that fast path, after the commit succeeds, stop and summarize; do not run separate branch, staging, status, or diff commands unless the commit output is missing information you need.
 - Use the installed GitButler skill for command recipes and syntax before guessing flags, using `--help`, or translating Git habits directly.
 - Mutation commands report their result without appending workspace status. Add `--status-after` only when the next step needs resulting workspace IDs or details; otherwise do not rerun status or diff to verify success.
-- Use a dedicated GitButler branch for each agent session, unless the user asks for a different branch structure. Commit only changes that belong to that session.
+- For sessions that modify files, use a dedicated GitButler branch unless the user asks for a different branch structure. Commit only changes that belong to that session. Read-only work must not create branches or commits.
 - Do not push or open pull requests unless the user asks.
 - Keep commit messages and pull request descriptions succinct: explain what changed, why it changed, and any important decision.
 
@@ -42,11 +42,11 @@
 
 ### Branch naming
 
-- When creating a GitButler branch for an agent session, use `feature/<JIRA_TICKET>-<short-description>`.
+- When creating a GitButler branch for an agent session, use `feature/<JIRA_TICKET>-<short-description>` for ticketed work or `chore/<short-description>` for ticketless work.
 
 ### Commit message convention
 
-- Follow the `<ticket>: <type>(<scope>): <description>` commit-message convention when writing commit messages.
+- Follow the `<ticket>: <type>(<scope>): <description>` commit-message convention for ticketed work. For ticketless work, use `<type>(<scope>): <description>` without a ticket prefix.
 
 ### Commit checkpoints after each turn
 

@@ -12,7 +12,7 @@ Never directly inspect or search `build`, `node_modules`, `dist`, or `__pycache_
 
 ## Version Control
 
-Before any Git or GitButler mutation or remote write — commits, branches, merges, rebases, tags, stashes, worktrees, pushes, MR/PR changes — read `~/.agents/gitbutler.md` for policy and naming rules.
+Use GitButler (`but`) for version control. Before any version-control operation or remote write, read `~/.agents/gitbutler.md` for the authoritative policy and naming rules.
 
 ## MR Review
 
@@ -68,11 +68,13 @@ Confirmed assumptions and conventions bind the session. Apply them without re-as
 <!-- sonar:begin:codex-secrets-on-read -->
 # SonarQube secrets scanning for files protocol
 
-Before reading any file in this workspace, scan it for secrets with the deterministic scanner:
+Before exposing file contents in this workspace — including reads, content searches and diffs — scan every affected file for secrets with the deterministic scanner:
 
 ```bash
 sonar analyze secrets <path/to/file>
 ```
+
+Only expose contents after the scan succeeds and reports no secrets, unless a specific finding has been approved as a false positive below. If the scan fails, retry through authorised access or stop reading the affected files. Scanner errors are not clean results.
 
 If the command reports that the file contains a secret, **do not read the file**. Instead:
 
