@@ -13,19 +13,80 @@ providers:
     api: openai-completions
     models:
       - id: claude-haiku-5-5
+        contextWindow: 1000000
+        maxTokens: 128000
+        reasoning: true
+        input: [text, image]
+        compat:
+          cacheControlFormat: anthropic
+      - id: claude-opus
+        contextWindow: 1000000
+        maxTokens: 128000
+        reasoning: true
+        input: [text, image]
         compat:
           cacheControlFormat: anthropic
       - id: claude-opus-5-5
+        contextWindow: 1000000
+        maxTokens: 128000
+        reasoning: true
+        input: [text, image]
+        compat:
+          cacheControlFormat: anthropic
+      - id: claude-sonnet
+        contextWindow: 1000000
+        maxTokens: 128000
+        reasoning: true
+        input: [text, image]
         compat:
           cacheControlFormat: anthropic
       - id: claude-sonnet-5-5
+        contextWindow: 1000000
+        maxTokens: 128000
+        reasoning: true
+        input: [text, image]
         compat:
           cacheControlFormat: anthropic
-      - id: claude-fable-5-1
-        compat:
-          cacheControlFormat: anthropic
+      - id: gpt-sol
+        contextWindow: 922000
+        maxTokens: 128000
+        reasoning: true
+        input: [text, image]
       - id: gpt-6-1-sol
+        contextWindow: 922000
+        maxTokens: 128000
+        reasoning: true
+        input: [text, image]
+      - id: gpt-luna
+        contextWindow: 922000
+        maxTokens: 128000
+        reasoning: true
+        input: [text, image]
+      - id: gpt-6-luna
+        contextWindow: 922000
+        maxTokens: 128000
+        reasoning: true
+        input: [text, image]
+      - id: gemini-flash
+        contextWindow: 1048576
+        maxTokens: 65536
+        reasoning: true
+        input: [text, image]
+      - id: gemini-4-hydrogen
+        contextWindow: 1048576
+        maxTokens: 1048576
+        reasoning: true
+        input: [text, image]
       - id: gemini-4-argon
+        contextWindow: 1048576
+        maxTokens: 1048576
+        reasoning: true
+        input: [text, image]
+      - id: gemini-4-carbon
+        contextWindow: 1048576
+        maxTokens: 1048576
+        reasoning: true
+        input: [text, image]
 {{- else }}
 # Personal machines currently rely on `omp` built-in providers and local auth.
 providers: {}
