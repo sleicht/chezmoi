@@ -1,0 +1,125 @@
+{
+  "hooks": {
+    "PermissionRequest": [],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/codex-notify-hook.sh' # notchbar-agents-codex-hook",
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'{{ .chezmoi.homeDir }}/.codex/hooks/sonar-secrets/build-scripts/posttool-secrets.sh'",
+            "timeout": 60
+          }
+        ],
+        "matcher": "*"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/codex-notify-hook.sh' # notchbar-agents-codex-hook",
+            "type": "command"
+          }
+        ],
+        "matcher": "Bash"
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "/bin/sh -c 'rex __internal session-start --agent codex 2>/dev/null || true'",
+            "timeout": 5,
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "command": "node \"{{ .chezmoi.homeDir }}/.hindsight/coding-agents/dist/codex-sessionstart-hook.js\"",
+            "timeout": 30,
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/codex-notify-hook.sh' # notchbar-agents-codex-hook",
+            "type": "command"
+          }
+        ],
+        "matcher": "startup|resume"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "{{ .chezmoi.homeDir }}/.local/bin/plannotator",
+            "timeout": 345600,
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "command": "node \"{{ .chezmoi.homeDir }}/.hindsight/coding-agents/dist/codex-stop-hook.js\"",
+            "timeout": 60,
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/codex-notify-hook.sh' # notchbar-agents-codex-hook",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [],
+    "SubagentStop": [],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "command": "node \"{{ .chezmoi.homeDir }}/.hindsight/coding-agents/dist/codex-hook.js\"",
+            "timeout": 30,
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/codex-notify-hook.sh' # notchbar-agents-codex-hook",
+            "type": "command"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'{{ .chezmoi.homeDir }}/.codex/hooks/sonar-secrets/build-scripts/prompt-secrets.sh'",
+            "timeout": 60
+          }
+        ],
+        "matcher": "*"
+      }
+    ]
+  }
+}
