@@ -112,6 +112,44 @@
             "output": 128000
           }
         },
+        "gpt-6-2-astra": {
+          "name": "GPT 6.2 Astra",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 922000,
+            "output": 128000
+          },
+          "variants": {
+            "none": { "reasoningEffort": "none" },
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" },
+            "xhigh": { "reasoningEffort": "xhigh" }
+          }
+        },
+        "gpt-6-2-sol": {
+          "name": "GPT 6.2 Sol",
+          "attachment": true,
+          "modalities": {
+            "input": ["text", "image"],
+            "output": ["text"]
+          },
+          "limit": {
+            "context": 922000,
+            "output": 128000
+          },
+          "variants": {
+            "none": { "reasoningEffort": "none" },
+            "low": { "reasoningEffort": "low" },
+            "medium": { "reasoningEffort": "medium" },
+            "high": { "reasoningEffort": "high" },
+            "xhigh": { "reasoningEffort": "xhigh" }
+          }
+        },
         "gpt-sol": {
           "name": "GPT Sol",
           "attachment": true,
