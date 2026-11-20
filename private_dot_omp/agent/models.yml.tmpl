@@ -97,6 +97,11 @@ providers:
         maxTokens: 1048576
         reasoning: true
         input: [text, image]
+      - id: gemini-4-neon
+        contextWindow: 1048576
+        maxTokens: 1048576
+        reasoning: true
+        input: [text, image]
 {{- else }}
 # Personal machines currently rely on `omp` built-in providers and local auth.
 providers: {}
