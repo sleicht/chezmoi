@@ -51,18 +51,6 @@
     "ENABLE_LSP_TOOLS": "1"
   },
   "extraKnownMarketplaces": {
-    "cavekit-marketplace": {
-      "source": {
-        "repo": "JuliusBrussee/cavekit",
-        "source": "github"
-      }
-    },
-    "caveman": {
-      "source": {
-        "repo": "JuliusBrussee/caveman",
-        "source": "github"
-      }
-    },
     "plannotator": {
       "source": {
         "repo": "backnotprop/plannotator",
@@ -192,7 +180,15 @@
 {{- end }}
     ],
     "SessionStart": [
-{{- if eq .machine_type "personal" }}
+      {
+        "hooks": [
+          {
+            "command": "node \"{{ .chezmoi.homeDir }}/.hindsight/coding-agents/dist/claude-sessionstart-hook.js\"",
+            "timeout": 30,
+            "type": "command"
+          }
+        ]
+      },
       {
         "hooks": [
           {
@@ -201,21 +197,11 @@
           }
         ]
       },
-{{- end }}
       {
         "hooks": [
           {
             "command": "/bin/sh -c 'rex __internal session-start --agent claude 2>/dev/null || true'",
             "timeout": 5,
-            "type": "command"
-          }
-        ]
-      },
-      {
-        "hooks": [
-          {
-            "command": "node \"{{ .chezmoi.homeDir }}/.hindsight/coding-agents/dist/claude-sessionstart-hook.js\"",
-            "timeout": 30,
             "type": "command"
           }
         ]
@@ -230,9 +216,8 @@
             "type": "command"
           }
         ]
-      }
-{{- if eq .machine_type "personal" }}
-      ,{
+      },
+      {
         "hooks": [
           {
             "command": "'{{ .chezmoi.homeDir }}/Library/Application Support/Bartender/NotchBar/AgentStatus/hooks/claude-event-hook.sh' Idle # notchbar-agents-claude-hook",
@@ -240,14 +225,21 @@
           }
         ]
       }
-{{- end }}
     ],
     "StopFailure": [],
     "SubagentStart": [],
     "SubagentStop": [],
     "TeammateIdle": [],
     "UserPromptSubmit": [
-{{- if eq .machine_type "personal" }}
+      {
+        "hooks": [
+          {
+            "command": "node \"{{ .chezmoi.homeDir }}/.hindsight/coding-agents/dist/claude-hook.js\"",
+            "timeout": 30,
+            "type": "command"
+          }
+        ]
+      },
       {
         "hooks": [
           {
@@ -256,7 +248,6 @@
           }
         ]
       },
-{{- end }}
       {
         "hooks": [
           {
@@ -266,15 +257,6 @@
           }
         ],
         "matcher": "*"
-      },
-      {
-        "hooks": [
-          {
-            "command": "node \"{{ .chezmoi.homeDir }}/.hindsight/coding-agents/dist/claude-hook.js\"",
-            "timeout": 30,
-            "type": "command"
-          }
-        ]
       }
     ]
   },
