@@ -99,6 +99,14 @@ run = 'move-window-to-workspace 1'
 app-id = 'com.t3tools.t3code'
 run = 'move-window-to-workspace 1'
 
+[[rules]]
+app-id = 'com.superlogical.rex'
+run = 'move-window-to-workspace 1'
+
+[[rules]]
+app-id = 'com.bitwarden.desktop'
+run = 'move-window-to-workspace 1'
+
 # Workspace 2: editors
 [[rules]]
 app-id = 'com.sublimetext.4'
@@ -114,15 +122,27 @@ app-id = 'com.pauldavis.crest'
 run = 'move-window-to-workspace 3'
 
 [[rules]]
-app-id = 'com.readdle.SparkDesktop'
-run = 'move-window-to-workspace 3'
-
-[[rules]]
 app-id = 'com.google.Chrome'
 run = 'move-window-to-workspace 3'
 
 [[rules]]
+app-id = 'app.zen-browser.zen'
+run = 'move-window-to-workspace 3'
+
+[[rules]]
+app-id = 'com.phibrowser.Mac'
+run = 'move-window-to-workspace 3'
+
+[[rules]]
+app-id = 'com.readdle.SparkDesktop'
+run = 'move-window-to-workspace 3'
+
+[[rules]]
 app-id = 'com.flexibits.fantastical2.mac'
+run = 'move-window-to-workspace 3'
+
+[[rules]]
+app-id = 'org.ren.rencal'
 run = 'move-window-to-workspace 3'
 
 # Workspace 4: chat
@@ -138,7 +158,11 @@ run = 'move-window-to-workspace 4'
 app-id = 'com.apple.MobileSMS'
 run = 'move-window-to-workspace 4'
 
-# Workspace 5: Claude
+# Workspace 5: Others
+[[rules]]
+app-id = 'com.cocoatech.PathFinder'
+run = 'move-window-to-workspace 5'
+
 [[rules]]
 app-id = 'com.anthropic.claudefordesktop'
 run = 'move-window-to-workspace 5'
