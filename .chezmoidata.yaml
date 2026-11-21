@@ -314,9 +314,7 @@ packages:
     # Personal-specific casks
     personal_casks:
       - "adobe-digital-editions"
-      - "affinity-designer"
-      - "affinity-photo"
-      - "affinity-publisher"
+      - "affinity"
       - "balenaetcher"
       - "calibre"
       - "cardhop"
