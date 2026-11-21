@@ -230,8 +230,6 @@ packages:
       - "skills-manager"
       - "sonarqube-cli"
       - "sublime-text"
-      - "supacode"
-      - "supasidebar"
       - "t3-code@nightly"
       - "tolaria"
       - "uhk-agent"
