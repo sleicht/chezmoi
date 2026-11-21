@@ -42,6 +42,7 @@ elif [ "$ARCH" = "arm64" ]; then
   export BUNDLE_USER_PLUGIN="$XDG_DATA_HOME/bundle/arm64/plugin"
 fi
 unset ARCH
+export HOMEBREW_CASK_OPTS="--appdir=$HOME/Applications"
 {{- else if ne .machine_type "container" }}
 export HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/home/linuxbrew/.linuxbrew}"
 export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"

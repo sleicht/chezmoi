@@ -102,22 +102,22 @@ enabled = false
 url = "http://127.0.0.1:64342/stream"
 
 [mcp_servers.node_repl]
-command = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
+command = "{{ .chezmoi.homeDir }}/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node_repl"
 startup_timeout_sec = 120.0
 
 [mcp_servers.node_repl.env]
 BROWSER_USE_AVAILABLE_BACKENDS = "chrome,iab"
 BROWSER_USE_CODEX_APP_BUILD_FLAVOR = "prod"
 BROWSER_USE_CODEX_APP_VERSION = "26.707.62119"
-CODEX_CLI_PATH = "/Applications/ChatGPT.app/Contents/Resources/codex"
+CODEX_CLI_PATH = "{{ .chezmoi.homeDir }}/Applications/ChatGPT.app/Contents/Resources/codex"
 CODEX_HOME = "{{ .chezmoi.homeDir }}/.codex"
 NODE_REPL_INSTRUCTIONS_USE_CASE_BROWSER = "Control the in-app browser in conjunction with the Browser Plugin."
 NODE_REPL_INSTRUCTIONS_USE_CASE_CHROME = "Control the Chrome browser in conjunction with the Chrome Plugin. Prefer this method of controlling Chrome over alternatives (such as Computer Use) unless the user explicitly mentions an alternative."
 NODE_REPL_INSTRUCTIONS_USE_CASE_COMPUTER_USE = "Control desktop apps on macOS through Computer Use."
 NODE_REPL_NATIVE_PIPE_CONNECT_TIMEOUT_MS = "1000"
-NODE_REPL_NODE_MODULE_DIRS = "/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
-NODE_REPL_NODE_PATH = "/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
-NODE_REPL_TRUSTED_CODE_PATHS = "{{ .chezmoi.homeDir }}/.codex:/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_MODULE_DIRS = "{{ .chezmoi.homeDir }}/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
+NODE_REPL_NODE_PATH = "{{ .chezmoi.homeDir }}/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"
+NODE_REPL_TRUSTED_CODE_PATHS = "{{ .chezmoi.homeDir }}/.codex:{{ .chezmoi.homeDir }}/Applications/ChatGPT.app/Contents/Resources/cua_node/lib/node_modules"
 
 [mcp_servers.sonarqube]
 command = "sonar"
@@ -130,7 +130,7 @@ args = ["{{ .chezmoi.homeDir }}/git/stuff/aegis/vault-mcp.ts"]
 {{- if eq .machine_type "personal" }}
 [mcp_servers.tolaria]
 command = "node"
-args = [ "/Applications/Tolaria.app/Contents/Resources/mcp-server/index.js" ]
+args = [ "{{ .chezmoi.homeDir }}/Applications/Tolaria.app/Contents/Resources/mcp-server/index.js" ]
 
 [mcp_servers.tolaria.env]
 VAULT_PATH = "{{ .chezmoi.homeDir }}/Documents/Getting Started"

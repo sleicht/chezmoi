@@ -7,7 +7,7 @@ set -e
 exit 0
 {{ end -}}
 
-CMUX_BIN="/Applications/cmux.app/Contents/Resources/bin/cmux"
+CMUX_BIN="$HOME/Applications/cmux.app/Contents/Resources/bin/cmux"
 SYMLINK="/usr/local/bin/cmux"
 
 if [ ! -f "$CMUX_BIN" ]; then
