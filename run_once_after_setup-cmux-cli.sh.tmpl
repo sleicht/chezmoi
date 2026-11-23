@@ -8,12 +8,12 @@ exit 0
 {{ end -}}
 
 CMUX_BIN="$HOME/Applications/cmux.app/Contents/Resources/bin/cmux"
-SYMLINK="/usr/local/bin/cmux"
+SYMLINK="$HOME/.bin/cmux"
 
 if [ ! -f "$CMUX_BIN" ]; then
   echo "cmux app not found at $CMUX_BIN — skipping CLI symlink"
   exit 0
 fi
 
-sudo ln -sf "$CMUX_BIN" "$SYMLINK"
+ln -sf "$CMUX_BIN" "$SYMLINK"
 echo "cmux CLI linked at $SYMLINK"
