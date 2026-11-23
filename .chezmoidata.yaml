@@ -63,6 +63,7 @@ packages:
       - "neurosnap/tap"
       - "nikitabobko/tap"
       - "olets/tap"
+      - "phibrowser/tap"
       - "rcmdnk/file"
       - "vet-run/vet"
 
@@ -225,6 +226,7 @@ packages:
       - "manaflow-ai/cmux/cmux"
       - "obsidian"
       - "opencode-desktop"
+      - "phi"
       - "raindropio"
       - "raycast"
       - "skills-manager"
@@ -312,7 +314,6 @@ packages:
 
     # Personal-specific casks
     personal_casks:
-      - "adobe-digital-editions"
       - "affinity"
       - "balenaetcher"
       - "calibre"
