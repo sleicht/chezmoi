@@ -53,6 +53,9 @@
   ; Switch to a branch, creating it if necessary.
   go = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
 
+  ; Create a local branch tracking an origin branch without switching to it.
+  cob = "!f() { git fetch origin && git branch --track \"$1\" \"origin/${2:-$1}\"; }; f"
+
   # Show verbose output about tags, branches or remotes
   tags = tag -l
   branches = branch -a -vv
