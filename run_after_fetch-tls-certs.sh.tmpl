@@ -6,6 +6,7 @@
 set -euo pipefail
 
 {{ includeTemplate "filter-emudhra.sh" . }}
+{{ includeTemplate "check-removed-ca-roots.sh" . }}
 
 CERT_DIR="$HOME/.tls"
 REPO="git@gitlab.sanet17.ch:security/desired-state-configuration.git"
@@ -31,6 +32,11 @@ for cert in "${CERTS[@]}"; do
         break
     fi
 done
+
+if [[ "$needs_refresh" == "false" ]] && bundle_has_removed_root "$CERT_DIR/ca-bundle.trust.crt"; then
+    echo "==> Local CA bundle contains a root removed upstream, refreshing"
+    needs_refresh=true
+fi
 
 if [[ "$needs_refresh" == "false" ]]; then
     filter_emudhra_roots "$CERT_DIR/ca-bundle.trust.crt"
