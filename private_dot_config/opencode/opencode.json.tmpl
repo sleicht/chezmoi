@@ -377,6 +377,40 @@
             }
           }
         },
+        "gpt-6-luna-decisions": {
+          "name": "GPT 6 Luna Decisions",
+          "attachment": true,
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "limit": {
+            "context": 922000,
+            "output": 128000
+          },
+          "variants": {
+            "none": {
+              "reasoningEffort": "none"
+            },
+            "low": {
+              "reasoningEffort": "low"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "xhigh": {
+              "reasoningEffort": "xhigh"
+            }
+          }
+        },
         "gemini-4-argon": {
           "name": "Gemini 4 Argon",
           "attachment": true,

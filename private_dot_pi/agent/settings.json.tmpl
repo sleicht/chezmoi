@@ -19,7 +19,8 @@
     "litellm/gpt-sol",
     "litellm/gpt-6-1-sol",
     "litellm/gpt-luna",
-    "litellm/gpt-6-luna"
+    "litellm/gpt-6-luna",
+    "litellm/gpt-6-luna-decisions"
   ],
 {{- else }}
   "defaultModel": "gpt-6.1-sol",
@@ -27,7 +28,11 @@
 {{- end }}
   "enableInstallTelemetry": false,
   "packages": [
+{{- if eq .machine_type "client" }}
+    "{{ .chezmoi.homeDir }}/.pi/agent/extensions/pi-provider-litellm",
+{{- else }}
     "npm:pi-provider-litellm",
+{{- end }}
     "npm:pi-lens@3.8.53",
     {
       "source": "npm:pi-mcp-adapter@2.10.0",

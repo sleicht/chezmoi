@@ -90,7 +90,10 @@ function mapFromModelInfo(entry: ModelInfoEntry): ProviderModelConfig | undefine
   const id = entry.model_name;
   if (!id) return undefined;
   const info = entry.model_info ?? {};
-  if (info.mode && info.mode !== "chat") return undefined;
+  // LiteLLM labels this route as evaluation, but it supports Chat Completions.
+  if (info.mode && info.mode !== "chat" && !(info.mode === "evaluation" && id === "gpt-6-luna-decisions")) {
+    return undefined;
+  }
   return {
     id,
     name: id,
