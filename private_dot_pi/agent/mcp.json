@@ -20,6 +20,13 @@
     },
     "sanitas-developer-tools": {
       "url": "https://mcp.gcp.sanet17.ch/mcp"
+    },
+    "sonarqube": {
+      "command": "sonar",
+      "args": [
+        "run",
+        "mcp"
+      ]
     }
   }
 }

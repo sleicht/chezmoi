@@ -8,7 +8,7 @@
   "featureFlags": {
     "irc": false,
     "ws3": true,
-    "gpui": false
+    "gpui": true
   },
   "onboardingComplete": true,
   "telemetry": {
