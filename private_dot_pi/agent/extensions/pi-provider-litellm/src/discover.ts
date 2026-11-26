@@ -86,29 +86,53 @@ async function fetchJson<T>(
   }
 }
 
-function mapFromModelInfo(entry: ModelInfoEntry): ProviderModelConfig | undefined {
+function mapFromModelInfo(entry: ModelInfoEntry): ProviderModelConfig[] {
   const id = entry.model_name;
-  if (!id) return undefined;
+  if (!id) return [];
   const info = entry.model_info ?? {};
-  // LiteLLM labels this route as evaluation, but it supports Chat Completions.
-  if (info.mode && info.mode !== "chat" && !(info.mode === "evaluation" && id === "gpt-6-luna-decisions")) {
-    return undefined;
-  }
-  return {
-    id,
-    name: id,
-    reasoning: info.supports_reasoning ?? false,
-    input: info.supports_vision ? ["text", "image"] : ["text"],
-    cost: {
-      input: (info.input_cost_per_token ?? 0) * 1_000_000,
-      output: (info.output_cost_per_token ?? 0) * 1_000_000,
-      cacheRead: (info.cache_read_input_token_cost ?? 0) * 1_000_000,
-      cacheWrite: (info.cache_creation_input_token_cost ?? 0) * 1_000_000,
-    },
-    contextWindow: info.max_input_tokens ?? DEFAULT_CONTEXT_WINDOW,
-    maxTokens: info.max_output_tokens ?? DEFAULT_MAX_TOKENS,
-    compat: buildCompat(id),
+  const input: ("text" | "image")[] = info.supports_vision ? ["text", "image"] : ["text"];
+  const cost = {
+    input: (info.input_cost_per_token ?? 0) * 1_000_000,
+    output: (info.output_cost_per_token ?? 0) * 1_000_000,
+    cacheRead: (info.cache_read_input_token_cost ?? 0) * 1_000_000,
+    cacheWrite: (info.cache_creation_input_token_cost ?? 0) * 1_000_000,
   };
+  const contextWindow = info.max_input_tokens ?? DEFAULT_CONTEXT_WINDOW;
+
+  const isDecisions =
+    info.supported_endpoints?.includes("/v1/decisions") === true ||
+    (info.mode === "evaluation" && id === "gpt-6-luna-decisions");
+  // LiteLLM labels gpt-6-luna-decisions as evaluation, but it supports Chat Completions too.
+  const isChat = !info.mode || info.mode === "chat" || (info.mode === "evaluation" && id === "gpt-6-luna-decisions");
+
+  const mapped: ProviderModelConfig[] = [];
+
+  if (isChat) {
+    mapped.push({
+      id,
+      name: id,
+      reasoning: info.supports_reasoning ?? false,
+      input,
+      cost,
+      contextWindow,
+      maxTokens: info.max_output_tokens ?? DEFAULT_MAX_TOKENS,
+      compat: buildCompat(id),
+    });
+  }
+
+  if (isDecisions) {
+    mapped.push({
+      type: "classifier",
+      id,
+      name: id,
+      api: "openai-decisions",
+      input,
+      cost,
+      contextWindow,
+    });
+  }
+
+  return mapped;
 }
 
 function mapFromModelsList(entry: ModelsListEntry): ProviderModelConfig | undefined {
@@ -134,9 +158,7 @@ export async function discoverModels(
   const base = normalizeBaseUrl(baseUrl);
   const infoResult = await fetchJson<ModelInfoResponse>(`${base}/model/info`, apiKey, options);
   if (infoResult.ok) {
-    const models = (infoResult.data.data ?? [])
-      .map(mapFromModelInfo)
-      .filter((m): m is ProviderModelConfig => m !== undefined);
+    const models = (infoResult.data.data ?? []).flatMap(mapFromModelInfo);
     return { source: "model_info", models };
   }
   if (![401, 403, 404].includes(infoResult.status)) {

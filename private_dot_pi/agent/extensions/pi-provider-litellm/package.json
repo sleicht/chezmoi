@@ -54,8 +54,8 @@
     "node": ">=20.0.0"
   },
   "peerDependencies": {
-    "@earendil-works/pi-ai": "^0.79.6",
-    "@earendil-works/pi-coding-agent": "^0.79.6"
+    "@earendil-works/pi-ai": "^1.6.1",
+    "@earendil-works/pi-coding-agent": "^1.6.1"
   },
   "overrides": {
     "basic-ftp": "6.0.1",
@@ -63,8 +63,8 @@
     "protobufjs": "8.4.0"
   },
   "devDependencies": {
-    "@earendil-works/pi-ai": "^0.79.6",
-    "@earendil-works/pi-coding-agent": "^0.79.6",
+    "@earendil-works/pi-ai": "^1.6.1",
+    "@earendil-works/pi-coding-agent": "^1.6.1",
     "@biomejs/biome": "^2.5.0",
     "@types/node": "^25.9.3",
     "@typescript/native-preview": "7.0.0-dev.20260617.2",
