@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { Api, AssistantMessage, Model, OAuthCredentials, OAuthLoginCallbacks } from "@earendil-works/pi-ai";
+import { classify as classifyOpenAIDecisions } from "@earendil-works/pi-ai/api/openai-decisions";
 import type { ExtensionAPI, ProviderModelConfig } from "@earendil-works/pi-coding-agent";
 import { getAgentDir } from "@earendil-works/pi-coding-agent";
 import { fingerprint, readCache, writeCache } from "./cache.js";
@@ -273,11 +274,16 @@ export default async function (pi: ExtensionAPI): Promise<void> {
     modifyModels: modifyLiteLLMModels,
   };
 
+  const classifiers = {
+    "openai-decisions": { classify: classifyOpenAIDecisions },
+  };
+
   pi.registerProvider(PROVIDER_NAME, {
     baseUrl: creds.baseUrl ? `${creds.baseUrl}/v1` : "https://litellm.example.com/v1",
     apiKey: ENV_API_KEY,
     api: "openai-completions",
     models,
+    classifiers,
     oauth,
   });
 
@@ -313,6 +319,7 @@ export default async function (pi: ExtensionAPI): Promise<void> {
           apiKey: ENV_API_KEY,
           api: "openai-completions",
           models: result.models,
+          classifiers,
           oauth,
         });
         ctx.ui.notify(`LiteLLM: ${result.models.length} models refreshed (source: ${result.source})`, "info");
