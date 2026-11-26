@@ -1,23 +1,16 @@
+import json
 import shutil
 from fixtures import Fixture, ROOT
 
 
 class IntegrationTests(Fixture):
-    def test_provider_source_and_tsconfig_changes_trigger_rebuild(self):
-        source = self.home / "source"
-        base = "private_dot_pi/agent/extensions/"
-        script = base + "run_onchange_after_02-build-litellm-provider.sh.tmpl"
-        self.write(source / script, (ROOT / script).read_text())
-        provider = source / base / "pi-provider-litellm"
-        self.write(provider / "package.json", "{}")
-        ts = self.write(provider / "src/index.ts", "export {}")
-        config = self.write(provider / "tsconfig.json", "{}")
-        before = self.render(script, source=source)
-        ts.write_text("export const changed = true")
-        after = self.render(script, source=source)
-        self.assertNotEqual(before, after)
-        config.write_text('{"compilerOptions":{}}')
-        self.assertNotEqual(after, self.render(script, source=source))
+    def test_pi_client_uses_standalone_provider_only_when_built(self):
+        settings = "private_dot_pi/agent/settings.json.tmpl"
+        provider = self.home / "git/stuff/pi-provider-litellm"
+        self.assertIn("npm:pi-provider-litellm", json.loads(self.render(settings, machine="client"))["packages"])
+        self.write(provider / "dist/index.js", "")
+        self.assertIn(str(provider), json.loads(self.render(settings, machine="client"))["packages"])
+        self.assertIn("npm:pi-provider-litellm", json.loads(self.render(settings))["packages"])
 
     def test_budget_rebuild_tracks_rendered_values(self):
         script = "run_onchange_after_07-budget-overlay.sh.tmpl"

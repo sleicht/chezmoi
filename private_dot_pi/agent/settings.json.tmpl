@@ -31,8 +31,9 @@
 {{- end }}
   "enableInstallTelemetry": false,
   "packages": [
-{{- if eq .machine_type "client" }}
-    "{{ .chezmoi.homeDir }}/.pi/agent/extensions/pi-provider-litellm",
+{{- $liteLLMDir := joinPath .chezmoi.homeDir "git/stuff/pi-provider-litellm" }}
+{{- if and (eq .machine_type "client") (stat (joinPath $liteLLMDir "dist/index.js")) }}
+    {{ $liteLLMDir | toJson }},
 {{- else }}
     "npm:pi-provider-litellm",
 {{- end }}
