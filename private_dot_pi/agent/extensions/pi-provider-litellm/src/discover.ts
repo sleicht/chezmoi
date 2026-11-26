@@ -33,7 +33,7 @@ export function shouldSuppressReasoningContent(modelId: string): boolean {
   return isMoonshotModel(modelId) && !FORCED_THINKING_MODEL_PATTERN.test(modelId);
 }
 
-export function buildCompat(modelId: string): ProviderModelConfig["compat"] {
+export function buildCompat(modelId: string): Extract<ProviderModelConfig, { compat?: unknown }>["compat"] {
   if (isMoonshotModel(modelId)) {
     return {
       supportsStore: false,

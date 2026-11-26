@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { OAuthCredentials } from "@earendil-works/pi-ai";
-import { AuthStorage, getAgentDir } from "@earendil-works/pi-coding-agent";
+import { getAgentDir } from "@earendil-works/pi-coding-agent";
 import { normalizeBaseUrl } from "./discover.js";
 import type { AuthFileEntry, ResolvedCredentials } from "./types.js";
 
@@ -41,7 +41,7 @@ export async function resolveCredentials(): Promise<ResolvedCredentials> {
     entry?.type === "oauth"
       ? entry.access?.trim()
       : entry?.type === "api_key"
-        ? (await AuthStorage.create(getAuthPath()).getApiKey(PROVIDER_NAME, { includeFallback: false }))?.trim()
+        ? entry.key?.trim()
         : undefined;
   const rawBase = authBase || envBase;
   return {

@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { Api, AssistantMessage, Model, OAuthCredentials, OAuthLoginCallbacks } from "@earendil-works/pi-ai";
 import type { ExtensionAPI, ProviderModelConfig } from "@earendil-works/pi-coding-agent";
-import { AuthStorage, getAgentDir } from "@earendil-works/pi-coding-agent";
+import { getAgentDir } from "@earendil-works/pi-coding-agent";
 import { fingerprint, readCache, writeCache } from "./cache.js";
 import { setupLiteLLMCostTracking } from "./cost.js";
 import { discoverModels, normalizeBaseUrl, shouldSuppressReasoningContent } from "./discover.js";
@@ -45,7 +45,7 @@ async function resolveCredentials(): Promise<ResolvedCredentials> {
     entry?.type === "oauth"
       ? entry.access?.trim()
       : entry?.type === "api_key"
-        ? (await AuthStorage.create(getAuthPath()).getApiKey(PROVIDER_NAME, { includeFallback: false }))?.trim()
+        ? entry.key?.trim()
         : undefined;
   const rawBase = authBase || envBase;
   return {
