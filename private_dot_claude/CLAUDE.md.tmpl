@@ -12,7 +12,7 @@ Never directly inspect or search `build`, `node_modules`, `dist`, or `__pycache_
 
 ## Version Control
 
-Use GitButler (`but`) for version control. Before any version-control operation or remote write, read `~/.agents/gitbutler.md` for the authoritative policy and naming rules.
+Use GitButler (`but`) for version control. Before any version-control operation or remote write, read `~/.agents/rules/gitbutler.md` for the authoritative policy and naming rules.
 
 ## MR Review
 
@@ -46,6 +46,13 @@ When reviewing MR notes:
 - Git diffs: configured `git-delta` pager.
 - Continuous re-runs: use `watchexec` only when requested; otherwise run finite verification once.
 - API testing: `http`/`https`, not `curl`.
+
+## Decision Models in Codemode
+
+When triaging, filtering, or categorizing many items (e.g. Datadog logs, Jira issues, GitLab MRs/traces, large diffs, or UI screenshots), prefer `codemode` with `models.classify()` using `litellm/gpt-6-luna-decisions` (lookup via `models.getAvailableOfType("classifier", "litellm")`) before pulling full content into the main context.
+
+- Use it for: N-item classification, noise filtering, severity/category tagging, multimodal screenshot checks.
+- Do not use it for: single small items, code generation, or deep architectural reasoning.
 
 ## Java/Kotlin
 
